@@ -324,6 +324,23 @@ void ScrollObject::RemoveSound(const orxSTRING _zSoundName)
   orxObject_RemoveSound(mpstObject, _zSoundName);
 }
 
+orxFLOAT ScrollObject::GetLifeTime() const
+{
+  orxFLOAT fResult;
+
+  // Updates result
+  fResult = orxObject_GetLifeTime(mpstObject);
+
+  // Done!
+  return fResult;
+}
+
+void ScrollObject::SetLifeTime(orxFLOAT _fLifeTime)
+{
+  // Updates its lifetime
+  orxObject_SetLifeTime(mpstObject, _fLifeTime);
+}
+
 void ScrollObject::PushConfigSection(orxBOOL _bPushInstanceSection) const
 {
   // Pushes its model section

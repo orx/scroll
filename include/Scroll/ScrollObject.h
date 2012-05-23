@@ -64,6 +64,9 @@ public:
                 void                    AddSound(const orxSTRING _zSoundName);
                 void                    RemoveSound(const orxSTRING _zSoundName);
 
+		orxFLOAT		GetLifeTime() const; 
+		void			SetLifeTime(orxFLOAT _fLifeTime);
+
                 void                    PushConfigSection(orxBOOL _bPushInstanceSection = orxFALSE) const;
                 void                    PopConfigSection() const;
 
