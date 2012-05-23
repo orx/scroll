@@ -406,7 +406,7 @@ void ScrollObject::SetOrxObject(orxOBJECT *_pstObject)
 
 void ScrollObject::OnCreate()
 {
-#ifdef __orxDEBUG__
+#ifdef __SCROLL_DEBUG__
   // Is a derived class?
   if(typeid(ScrollObject) != typeid(*this))
   {
@@ -414,12 +414,12 @@ void ScrollObject::OnCreate()
     orxLOG("[ERROR] You need to override the ScrollObject::OnCreate() method for derived class %s!", typeid(*this).name());
     orxBREAK();
   }
-#endif // __orxDEBUG__
+#endif // __SCROLL_DEBUG__
 }
 
 void ScrollObject::OnDelete()
 {
-#ifdef __orxDEBUG__
+#ifdef __SCROLL_DEBUG__
   // Is a derived class?
   if(typeid(ScrollObject) != typeid(*this))
   {
@@ -427,7 +427,7 @@ void ScrollObject::OnDelete()
     orxLOG("[ERROR] You need to override the ScrollObject::OnDelete() method for derived class %s!", typeid(*this).name());
     orxBREAK();
   }
-#endif // __orxDEBUG__
+#endif // __SCROLL_DEBUG__
 }
 
 void ScrollObject::Update(const orxCLOCK_INFO &_rstInfo)

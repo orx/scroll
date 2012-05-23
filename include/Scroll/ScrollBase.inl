@@ -1084,13 +1084,13 @@ O * ScrollBase::GetNextObject(const O *_poObject) const
     // Updates result
     poResult = poBinder->GetNextObject(_poObject);
   }
-#ifdef __orxDEBUG__
+#ifdef __SCROLL_DEBUG__
   else
   {
     // Logs message
     orxLOG("Couldn't get next object of <%s>: no registered binder found!", typeid(O).name());
   }
-#endif // __orxDEBUG__
+#endif // __SCROLL_DEBUG__
 
   // Done!
   return poResult;
@@ -1111,13 +1111,13 @@ O * ScrollBase::GetPreviousObject(const O *_poObject) const
     // Updates result
     poResult = poBinder->GetPreviousObject(_poObject);
   }
-#ifdef __orxDEBUG__
+#ifdef __SCROLL_DEBUG__
   else
   {
     // Logs message
     orxLOG("Couldn't get previous object of <%s>: no registered binder found!", typeid(O).name());
   }
-#endif // __orxDEBUG__
+#endif // __SCROLL_DEBUG__
 
   // Done!
   return poResult;

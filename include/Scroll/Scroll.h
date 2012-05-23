@@ -2,6 +2,14 @@
 #define _SCROLL_H_
 
 
+//! Defines
+#if defined(__orxDEBUG__) && !defined(__orxANDROID__) && !defined(__orxANDROID_NATIVE__)
+
+  #define __SCROLL_DEBUG__
+
+#endif // __orxDEBUG__ && !__orxANDROID__ && !__orxANDROID_NATIVE__
+
+
 //! Includes
 #include "ScrollBase.h"
 

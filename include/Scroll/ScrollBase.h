@@ -4,9 +4,9 @@
 
 #include "orx/orx.h"
 
-#ifdef __orxDEBUG__
+#ifdef __SCROLL_DEBUG__
   #include <typeinfo>
-#endif // __orxDEBUG__
+#endif // __SCROLL_DEBUG__
 
 #include "ScrollObject.h"
 
@@ -15,7 +15,7 @@
 template<class T, class U>
 inline static T ScrollCast(U _p)
 {
-#ifdef __orxDEBUG__
+#ifdef __SCROLL_DEBUG__
   T pDummy = orxNULL;
 
   // Valid?
@@ -31,12 +31,12 @@ inline static T ScrollCast(U _p)
   // Done!
   return pDummy;
 
-#else // __orxDEBUG__
+#else // __SCROLL_DEBUG__
 
   // Done!
   return static_cast<T>(_p);
 
-#endif // __orxDEBUG__
+#endif // __SCROLL_DEBUG__
 }
 
 template<class Child, class Parent>
@@ -150,12 +150,12 @@ private:
 template<class O>
 inline static void ScrollBindObject(const orxSTRING _zName, orxS32 _s32SegmentSize = 128)
 {
-#ifdef __orxDEBUG__
+#ifdef __SCROLL_DEBUG__
   if(!ScrollIsA<O, ScrollObject>::Value)
   {
     orxLOG("[ERROR] Binding object <%s>: class %s has to derive from class ScrollObject!", _zName, typeid(O).name());
   }
-#endif // __orxDEBUG__
+#endif // __SCROLL_DEBUG__
 
   // Instances corresponding binder
   ScrollObjectBinder<O>::Register(_zName, _s32SegmentSize);
