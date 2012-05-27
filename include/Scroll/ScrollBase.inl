@@ -2141,6 +2141,7 @@ void ScrollObjectBinder<O>::DeleteObject(ScrollObject *_poObject, const orxSTRIN
   orxLinkList_Remove(&_poObject->mstChronoNode);
 
   // Deletes it
+  _poObject->~ScrollObject();
   operator delete(_poObject, mpstBank);
 }
 
