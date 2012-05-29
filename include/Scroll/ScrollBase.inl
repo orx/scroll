@@ -1168,6 +1168,7 @@ orxSTATUS ScrollBase::BaseInit()
     eResult = ((orxEvent_AddHandler(orxEVENT_TYPE_OBJECT, StaticEventHandler) != orxSTATUS_FAILURE)
             && (orxEvent_AddHandler(orxEVENT_TYPE_ANIM, StaticEventHandler) != orxSTATUS_FAILURE)
             && (orxEvent_AddHandler(orxEVENT_TYPE_RENDER, StaticEventHandler) != orxSTATUS_FAILURE)
+            && (orxEvent_AddHandler(orxEVENT_TYPE_SPAWNER, StaticEventHandler) != orxSTATUS_FAILURE)
             && (orxEvent_AddHandler(orxEVENT_TYPE_PHYSICS, StaticEventHandler) != orxSTATUS_FAILURE)) ? orxSTATUS_SUCCESS : orxSTATUS_FAILURE;
 
     // Successful?
@@ -1254,6 +1255,7 @@ void ScrollBase::BaseExit()
   orxEvent_RemoveHandler(orxEVENT_TYPE_OBJECT, StaticEventHandler);
   orxEvent_RemoveHandler(orxEVENT_TYPE_ANIM, StaticEventHandler);
   orxEvent_RemoveHandler(orxEVENT_TYPE_RENDER, StaticEventHandler);
+  orxEvent_RemoveHandler(orxEVENT_TYPE_SPAWNER, StaticEventHandler);
   orxEvent_RemoveHandler(orxEVENT_TYPE_PHYSICS, StaticEventHandler);
 
   // Deletes binder's table
@@ -1721,6 +1723,47 @@ orxSTATUS orxFASTCALL ScrollBase::StaticEventHandler(const orxEVENT *_pstEvent)
       break;
     }
 
+    // Spawner event
+    case orxEVENT_TYPE_SPAWNER:
+    {
+      // New object spawned ?
+      if(_pstEvent->eID == orxSPAWNER_EVENT_SPAWN)
+      {
+        orxSPAWNER *pstSpawner;
+
+        // Get spawner object
+		pstSpawner = orxSPAWNER(_pstEvent->hSender);
+        // Valid?
+        if (pstSpawner)
+        {
+          orxOBJECT * pstObject;
+
+          // Get object
+          pstObject = orxOBJECT(orxSpawner_GetOwner(pstSpawner));
+          
+          // Valid?
+		  if (pstObject)
+          {
+            ScrollObject * poObject;
+
+            // Get ScrollObject
+            poObject = (ScrollObject *)orxObject_GetUserData(pstObject);
+            // Valid?
+            if (poObject)
+            {
+              orxOBJECT *pstSpawnedObject;
+
+              // Get spawned object
+              pstSpawnedObject = orxOBJECT(_pstEvent->hRecipient);
+              // Call object callback
+              poObject->OnSpawn(pstSpawnedObject);
+            }
+          }
+        }
+      }
+      break;
+    }
+	
     default:
     {
       break;
