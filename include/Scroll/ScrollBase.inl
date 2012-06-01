@@ -1732,7 +1732,7 @@ orxSTATUS orxFASTCALL ScrollBase::StaticEventHandler(const orxEVENT *_pstEvent)
         orxSPAWNER *pstSpawner;
 
         // Get spawner object
-		pstSpawner = orxSPAWNER(_pstEvent->hSender);
+        pstSpawner = orxSPAWNER(_pstEvent->hSender);
         // Valid?
         if (pstSpawner)
         {
@@ -1742,7 +1742,7 @@ orxSTATUS orxFASTCALL ScrollBase::StaticEventHandler(const orxEVENT *_pstEvent)
           pstObject = orxOBJECT(orxSpawner_GetOwner(pstSpawner));
           
           // Valid?
-		  if (pstObject)
+          if (pstObject)
           {
             ScrollObject * poObject;
 
