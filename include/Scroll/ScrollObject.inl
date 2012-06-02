@@ -452,10 +452,6 @@ void ScrollObject::OnAnimEvent(const orxSTRING _zAnim, const orxSTRING _zEvent, 
 {
 }
 
-void ScrollObject::OnSpawn(orxOBJECT *_pstSpawnedObject)
-{
-}
-
 void ScrollObject::OnStartGame()
 {
 }
