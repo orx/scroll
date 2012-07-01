@@ -170,6 +170,7 @@ typedef struct __orxCOLOR_t
 #define orxDISPLAY_KZ_CONFIG_WIDTH          "ScreenWidth"
 #define orxDISPLAY_KZ_CONFIG_HEIGHT         "ScreenHeight"
 #define orxDISPLAY_KZ_CONFIG_DEPTH          "ScreenDepth"
+#define orxDISPLAY_KZ_CONFIG_POSITION       "ScreenPosition"
 #define orxDISPLAY_KZ_CONFIG_REFRESH_RATE   "RefreshRate"
 #define orxDISPLAY_KZ_CONFIG_FULLSCREEN     "FullScreen"
 #define orxDISPLAY_KZ_CONFIG_ALLOW_RESIZE   "AllowResize"
@@ -229,6 +230,18 @@ typedef struct __orxDISPLAY_EVENT_PAYLOAD_t
 #import <OpenGLES/ES1/glext.h>
 #import <OpenGLES/ES2/gl.h>
 #import <OpenGLES/ES2/glext.h>
+
+/** Orx view controller interface
+ */
+@interface orxViewController : UIViewController
+{
+@private
+  UIInterfaceOrientation eOrientation;
+}
+
+@property                     UIInterfaceOrientation eOrientation;
+
+@end
 
 /** Orx view interface
  */
