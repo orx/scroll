@@ -19,6 +19,7 @@ public:
     FlagSmoothed  = 0x00000002,
     FlagTiled     = 0x00000004,
     FlagRunTime   = 0x00000008,
+    FlagPausable  = 0x00000010,
 
     MaskAll       = 0xFFFFFFFF
   };
@@ -64,6 +65,9 @@ public:
                 void                    AddSound(const orxSTRING _zSoundName);
                 void                    RemoveSound(const orxSTRING _zSoundName);
 
+                void                    AddTrack(const orxSTRING _zTrackName);
+                void                    RemoveTrack(const orxSTRING _zTrackName);
+
                 orxFLOAT                GetLifeTime() const; 
                 void                    SetLifeTime(orxFLOAT _fLifeTime);
 
@@ -83,7 +87,7 @@ private:
   virtual       void                    Update(const orxCLOCK_INFO &_rstInfo);
   virtual       void                    OnStartGame();
   virtual       void                    OnStopGame();
-  virtual       void                    OnPauseGame(orxBOOL _bPause);
+  virtual       orxSTATUS               OnPauseGame(orxBOOL _bPause);
 
   virtual       orxBOOL                 OnRender();
 

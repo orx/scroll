@@ -36,6 +36,7 @@ const orxSTRING ScrollBase::szConfigScrollObjectColor         = "Color";
 const orxSTRING ScrollBase::szConfigScrollObjectAlpha         = "Alpha";
 const orxSTRING ScrollBase::szConfigScrollObjectSmoothing     = "Smoothing";
 const orxSTRING ScrollBase::szConfigScrollObjectTiling        = "Tiling";
+const orxSTRING ScrollBase::szConfigScrollObjectPausable      = "Pausable";
 
 
 //! Static variables
@@ -907,11 +908,16 @@ orxSTATUS ScrollBase::PauseGame(orxBOOL _bPause)
         poObject;
         poObject = GetNextObject(poObject))
     {
-      // Updates it
-      orxObject_Pause(poObject->GetOrxObject(), _bPause);
-
-      // Calls its callback
-      poObject->OnPauseGame(_bPause);
+      // Is pausable?
+      if(poObject->TestFlags(ScrollObject::FlagPausable))
+      {
+        // Calls its callback
+        if(poObject->OnPauseGame(_bPause) != orxSTATUS_FAILURE)
+        {
+          // Updates it
+          orxObject_Pause(poObject->GetOrxObject(), _bPause);
+        }
+      }
     }
 
     // Unlocks object list
@@ -1988,20 +1994,28 @@ ScrollObject *ScrollObjectBinder<O>::CreateObject(orxOBJECT *_pstOrxObject, cons
       xFlags &= ~ScrollObject::FlagSmoothed;
     }
 
-    // Stores flags
-    poResult->SetFlags(xFlags, ScrollObject::MaskAll);
-
     // Creates and protects its section
     orxConfig_PushSection(_zInstanceName);
     orxConfig_ProtectSection(_zInstanceName, orxTRUE);
     orxConfig_PopSection();
 
+    // Pushes its section
+    poResult->PushConfigSection();
+
+    // Is pausable?
+    if((orxConfig_HasValue(ScrollBase::szConfigScrollObjectPausable) == orxFALSE)
+    || (orxConfig_GetBool(ScrollBase::szConfigScrollObjectPausable) != orxFALSE))
+    {
+      // Updates flags
+      xFlags |= ScrollObject::FlagPausable;
+    }
+
+    // Stores flags
+    poResult->SetFlags(xFlags, ScrollObject::MaskAll);
+
     // Should use callback?
     if(poResult->TestFlags(ScrollObject::FlagSave | ScrollObject::FlagRunTime))
     {
-      // Pushes its section
-      poResult->PushConfigSection();
-
       // Calls it
       poResult->OnCreate();
 
@@ -2011,10 +2025,10 @@ ScrollObject *ScrollObjectBinder<O>::CreateObject(orxOBJECT *_pstOrxObject, cons
         // Calls its start game callback
         poResult->OnStartGame();
       }
-
-      // Pops section
-      poResult->PopConfigSection();
     }
+
+    // Pops section
+    poResult->PopConfigSection();
   }
   else
   {

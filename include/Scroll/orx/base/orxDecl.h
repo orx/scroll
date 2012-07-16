@@ -58,12 +58,22 @@
 /* *** Platform dependent base declarations */
 
 /* No processor defines? */
-#if !defined(__orxPPC__) && !defined(__orxX86_64__) && !defined(__orxX86__)
+#if !defined(__orxARM__) && !defined(__orxPPC__) && !defined(__orxPPC64__) && !defined(__orxX86_64__) && !defined(__orxX86__)
+
+  /* ARM? */
+  #if defined(__arm__) || defined(__ARMEL__) || defined(__ARM_EABI__)
+
+    #define __orxARM__
 
   /* PowerPC? */
-  #if defined(__ppc__) || defined(PPC) || defined(__PPC) || defined(__POWERPC__)
+  #elif defined(__ppc__) || defined(PPC) || defined(__PPC) || defined(__POWERPC__) || defined(__powerpc__)
 
     #define __orxPPC__
+
+  /* PowerPC 64? */
+  #elif defined(__powerpc64__) || defined(__POWERPC64__)
+
+    #define __orxPPC64__
 
   /* x86_64? */
   #elif defined(__x86_64)
@@ -77,7 +87,7 @@
 
   #endif
 
-#endif /* !__orxPPC__ && !__orxX86_64__ && !__orxX86__ */
+#endif /* !__orxARM__ && !__orxPPC__ && !__orxPPC64__ && !__orxX86_64__ && !__orxX86__ */
 
 /* Power PC? */
 #ifdef __orxPPC__
@@ -93,10 +103,15 @@
 #endif /* __orxPPC__ */
 
 /* No compiler defines? */
-#if !defined(__orxGCC__) && !defined(__orxMSVC__)
+#if !defined(__orxLLVM__) && !defined(__orxGCC__) && !defined(__orxMSVC__)
+
+  /* LLVM? */
+  #if defined(__llvm__)
+
+    #define __orxLLVM__
 
   /* GCC? */
-  #if defined(__GNUC__)
+  #elif defined(__GNUC__)
 
     #define __orxGCC__
 
@@ -107,25 +122,20 @@
 
   #else
 
-    #error "Couldn't guess compiler define. Please provide it (__orxGCC__/__orxMSVC__)"
+    #error "Couldn't guess compiler define. Please provide it (__orxLLVM__/__orxGCC__/__orxMSVC__)"
 
   #endif
 
-#endif /* !__orxGCC__ && !__orxMSVC__ */
+#endif /* !__orxLLVM__ && !__orxGCC__ && !__orxMSVC__ */
 
 
 /* No platform defines? */
-#if !defined(__orxWINDOWS__) && !defined(__orxMAC__) && !defined(__orxLINUX__) && !defined(__orxIOS__) && !defined(__orxANDROID__) && !defined(__orxANDROID_NATIVE__)
+#if !defined(__orxWINDOWS__) && !defined(__orxMAC__) && !defined(__orxLINUX__) && !defined(__orxIOS__) && !defined(__orxANDROID__) && !defined(__orxANDROID_NATIVE__) && !defined(__orxRASPBERRY_PI__)
 
   /* Windows? */
   #if defined(_WIN32) || defined(WIN32)
 
     #define __orxWINDOWS__
-
-  /* Linux? */
-  #elif defined(linux) || defined(__linux__)
-
-    #define __orxLINUX__
 
   /* iOS? */
   #elif TARGET_OS_IPHONE
@@ -145,6 +155,16 @@
 
     #endif /* __ANDROID_API__ >= 9 */
 
+  /* Raspberry Pi */
+  #elif defined(__orxARM__)
+
+    #define __orxRASPBERRY_PI__
+
+  /* Linux? */
+  #elif defined(linux) || defined(__linux__)
+
+    #define __orxLINUX__
+
   /* Mac? */
   #elif TARGET_OS_MAC
 
@@ -152,11 +172,11 @@
 
   #else
 
-    #error "Couldn't guess platform define. Please provide it (__orxWINDOWS__/__orxLINUX__/__orxMAC__/__orxIOS__/__orxANDROID__/__orxANDROID_NATIVE__)"
+    #error "Couldn't guess platform define. Please provide it (__orxWINDOWS__/__orxMAC__/__orxLINUX__/__orxIOS__/__orxANDROID__/__orxANDROID_NATIVE__/__orxRASPBERRY_PI__)"
 
   #endif
 
-#endif /* !__orxWINDOWS__ && !__orxMAC__ && !__orxLINUX__ && !__orxIOS__ */
+#endif /* !__orxWINDOWS__ && !__orxMAC__ && !__orxLINUX__ && !__orxIOS__ && !__orxANDROID__ && !__orxANDROID_NATIVE__ && !__orxRASPBERRY_PI__ */
 
 
 #ifdef __cplusplus
@@ -218,6 +238,10 @@
 
     #define orxINLINE         inline
 
+  #elif defined(__orxLLVM__)
+
+    #define orxINLINE         inline
+
   #elif defined(__orxMSVC__)
 
     #define orxINLINE         __inline
@@ -229,7 +253,7 @@
   /* Linux / Mac / iOS */
   #if defined(__orxLINUX__) || defined(__orxMAC__) || defined(__orxIOS__) || defined(__orxANDROID__) || defined(__orxANDROID_NATIVE__)
 
-    #if defined(__orxPPC__) || defined(__orxX86_64__) || defined(__orxIOS__) || defined(__orxANDROID__) || defined(__orxANDROID_NATIVE__)
+    #if defined(__orxARM__) || defined(__orxLLVM__) || defined(__orxPPC__) || defined(__orxPPC64__) || defined(__orxX86_64__) || defined(__orxIOS__) || defined(__orxANDROID__) || defined(__orxANDROID_NATIVE__) || defined(__orxRASPBERRY_PI__)
 
       #define orxFASTCALL
 
@@ -237,7 +261,7 @@
 
       #define orxCDECL
 
-    #else /* __orxPPC__ || __orxX86_64__ || __orxIOS__ || __orxANDROID__ || __orxANDROID_NATIVE__ */
+    #else /* __orxARM__ || __orxLLVM__ || __orxPPC__ || __orxPPC64__ || __orxX86_64__ || __orxIOS__ || __orxANDROID__ || __orxANDROID_NATIVE__ || __orxRASPBERRY_PI__ */
 
       #ifdef __orxFREEBASIC__
 
@@ -253,15 +277,15 @@
 
       #define orxCDECL          __attribute__ ((cdecl))
 
-    #endif /* __orxPPC__ || __orxX86_64__ || __orxIOS__ || __orxANDROID__ || __orxANDROID_NATIVE__ */
+    #endif /* __orxARM__ || __orxLLVM__ || __orxPPC__ || __orxPPC64__ || __orxX86_64__ || __orxIOS__ || __orxANDROID__ || __orxANDROID_NATIVE__ || __orxRASPBERRY_PI__ */
 
-    /** The function will be exported (dll compilation) */
+    /** The symbol will be exported (dll compilation) */
     #define orxDLLEXPORT        __attribute__ ((visibility("default")))
 
-    /** The function will be imported (exe compilation) */
+    /** The symbol will be imported (exe compilation) */
     #define orxDLLIMPORT
 
-    /** The function intend to be inlined. */
+    /** The function is intended to be inlined */
     #ifdef __orxFREEBASIC__
 
       #define orxINLINE
@@ -275,14 +299,14 @@
     /** The null address */
     #define orxNULL             (0)
 
-    #if defined(__orxIOS__) || defined(__orxANDROID__) || defined(__orxANDROID_NATIVE__)
+    #if defined(__orxIOS__) || defined(__orxANDROID__) || defined(__orxANDROID_NATIVE__) || defined(__orxRASPBERRY_PI__)
 
       /* iOS versions can only be embedded due to the lack of dlfcn presence */
       #define __orxEMBEDDED__
 
-    #endif /* __orxIOS__ || __orxANDROID__ || __orxANDROID_NATIVE__ */
+    #endif /* __orxIOS__ || __orxANDROID__ || __orxANDROID_NATIVE__ || __orxRASPBERRY_PI__ */
 
-  #endif /* __orxLINUX__ || __orxMAC__ || __orxIOS__ || __orxANDROID__ || __orxANDROID_NATIVE__ */
+  #endif /* __orxLINUX__ || __orxMAC__ || __orxIOS__ || __orxANDROID__ || __orxANDROID_NATIVE__ || __orxRASPBERRY_PI__ */
 
 #endif /* __orxWINDOWS__ */
 

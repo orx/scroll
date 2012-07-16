@@ -98,6 +98,12 @@
     typedef signed    long long   orxS64;
 
   #endif /* __orxGCC__ */
+  #ifdef __orxLLVM__
+
+    typedef unsigned  long long   orxU64;
+    typedef signed    long long   orxS64;
+
+  #endif /* __orxLLVM__ */
   #ifdef __orxMSVC__
 
     typedef unsigned  __int64     orxU64;
@@ -112,7 +118,7 @@
 
     typedef void *                orxHANDLE;
 
-    #ifdef __orxX86_64__
+    #if defined(__orxX86_64__) || defined(__orxPPC64__) 
 
     typedef unsigned  long long   orxU64;
     typedef unsigned  int         orxU32;
@@ -126,7 +132,7 @@
 
     typedef unsigned  int         orxBOOL;
 
-    #else /* __orxX86_64__ */
+    #else /* __orxX86_64__ || __orxPPC64__ */
 
     typedef unsigned  long long   orxU64;
     typedef unsigned  long        orxU32;
@@ -140,7 +146,7 @@
 
     typedef unsigned  long        orxBOOL;
 
-    #endif /* __orxX86_64__ */
+    #endif /* __orxX86_64__ || __orxPPC64__ */
 
     typedef float                 orxFLOAT;
     typedef double                orxDOUBLE;

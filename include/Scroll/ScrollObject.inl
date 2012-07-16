@@ -324,6 +324,18 @@ void ScrollObject::RemoveSound(const orxSTRING _zSoundName)
   orxObject_RemoveSound(mpstObject, _zSoundName);
 }
 
+void ScrollObject::AddTrack(const orxSTRING _zTrackName)
+{
+  // Adds track to object
+  orxObject_AddTimeLineTrack(mpstObject, _zTrackName);
+}
+
+void ScrollObject::RemoveTrack(const orxSTRING _zTrackName)
+{
+  // Removes track from object
+  orxObject_RemoveTimeLineTrack(mpstObject, _zTrackName);
+}
+
 orxFLOAT ScrollObject::GetLifeTime() const
 {
   orxFLOAT fResult;
@@ -460,8 +472,9 @@ void ScrollObject::OnStopGame()
 {
 }
 
-void ScrollObject::OnPauseGame(orxBOOL _bPause)
+orxSTATUS ScrollObject::OnPauseGame(orxBOOL _bPause)
 {
+  return orxSTATUS_SUCCESS;
 }
 
 orxBOOL ScrollObject::OnRender()

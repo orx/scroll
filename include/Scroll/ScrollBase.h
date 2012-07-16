@@ -244,6 +244,7 @@ protected:
   static  const orxSTRING       szConfigScrollObjectAlpha;
   static  const orxSTRING       szConfigScrollObjectSmoothing;
   static  const orxSTRING       szConfigScrollObjectTiling;
+  static  const orxSTRING       szConfigScrollObjectPausable;
 
 
 private:
