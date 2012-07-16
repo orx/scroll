@@ -912,7 +912,7 @@ orxSTATUS ScrollBase::PauseGame(orxBOOL _bPause)
       if(poObject->TestFlags(ScrollObject::FlagPausable))
       {
         // Calls its callback
-        if(poObject->OnPauseGame(_bPause) != orxSTATUS_FAILURE)
+        if(poObject->OnPauseGame(_bPause) != orxFALSE)
         {
           // Updates it
           orxObject_Pause(poObject->GetOrxObject(), _bPause);

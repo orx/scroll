@@ -472,7 +472,7 @@ void ScrollObject::OnStopGame()
 {
 }
 
-orxSTATUS ScrollObject::OnPauseGame(orxBOOL _bPause)
+orxBOOL ScrollObject::OnPauseGame(orxBOOL _bPause)
 {
   return orxSTATUS_SUCCESS;
 }

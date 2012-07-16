@@ -87,7 +87,7 @@ private:
   virtual       void                    Update(const orxCLOCK_INFO &_rstInfo);
   virtual       void                    OnStartGame();
   virtual       void                    OnStopGame();
-  virtual       orxSTATUS               OnPauseGame(orxBOOL _bPause);
+  virtual       orxBOOL                 OnPauseGame(orxBOOL _bPause);
 
   virtual       orxBOOL                 OnRender();
 
