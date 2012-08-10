@@ -79,10 +79,14 @@ ScrollObject *ScrollBase::CreateObject(const orxSTRING _zModelName, ScrollObject
   if(_zModelName && (_zModelName != orxSTRING_EMPTY))
   {
     orxCHAR                 zInstanceName[32];
+    const orxSTRING         zPreviousObject;
     ScrollObjectBinderBase *poBinder;
 
     // Gets binder
     poBinder = ScrollObjectBinderBase::GetBinder(orxFLAG_TEST(_xFlags, ScrollObject::FlagSave | ScrollObject::FlagRunTime) ? _zModelName : orxSTRING_EMPTY);
+
+    // Stores current object
+    zPreviousObject = mzCurrentObject;
 
     // Flags current object creation
     mzCurrentObject = _zModelName;
@@ -90,8 +94,8 @@ ScrollObject *ScrollBase::CreateObject(const orxSTRING _zModelName, ScrollObject
     // Uses it
     poResult = poBinder->CreateObject(_zModelName, _zInstanceName ? _zInstanceName : GetNewObjectName(zInstanceName, (_xFlags & ScrollObject::FlagRunTime) ? orxTRUE : orxFALSE), _xFlags);
 
-    // Removes current object creation flag
-    mzCurrentObject = orxNULL;
+    // Restores previous object
+    mzCurrentObject = zPreviousObject;
 
     // Valid?
     if(poResult)
@@ -193,9 +197,13 @@ void ScrollBase::DeleteObject(ScrollObject *_poObject)
     if(!mbObjectListLocked)
     {
       ScrollObjectBinderBase *poBinder;
+      const orxSTRING         zPreviousObject;
 
       // Gets binder
       poBinder = ScrollObjectBinderBase::GetBinder(_poObject->TestFlags(ScrollObject::FlagSave | ScrollObject::FlagRunTime) ? _poObject->GetModelName() : orxSTRING_EMPTY);
+
+      // Stores current object
+      zPreviousObject = mzCurrentObject;
 
       // Flags current object deletion
       mzCurrentObject = _poObject->GetModelName();
@@ -203,8 +211,8 @@ void ScrollBase::DeleteObject(ScrollObject *_poObject)
       // Deletes it
       poBinder->DeleteObject(_poObject);
 
-      // Removes current object deletion flag
-      mzCurrentObject = orxNULL;
+      // Restores previous object
+      mzCurrentObject = zPreviousObject;
     }
     else
     {
