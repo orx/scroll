@@ -56,31 +56,40 @@
 
 /** Misc defines
  */
-typedef orxU32                      orxRGBA;
+typedef struct __orxRGBA_t
+{
+  union
+  {
+    struct
+    {
+      orxU8 u8R, u8G, u8B, u8A;
+    };
 
-#ifdef __orxBIG_ENDIAN__
+    orxU32  u32RGBA;
+  };
 
-  #define orx2RGBA(R, G, B, A)      ((((R) & 0xFF) << 24) | (((G) & 0xFF) << 16) | (((B) & 0xFF) << 8) | ((A) & 0xFF))
-  #define orxRGBA_R(RGBA)           (orxU8)(((RGBA) >> 24) & 0xFF)
-  #define orxRGBA_G(RGBA)           (orxU8)(((RGBA) >> 16) & 0xFF)
-  #define orxRGBA_B(RGBA)           (orxU8)(((RGBA) >> 8) & 0xFF)
-  #define orxRGBA_A(RGBA)           (orxU8)((RGBA) & 0xFF)
+} orxRGBA;
 
-#else /* __orxBIG_ENDIAN__ */
-
-  #define orx2RGBA(R, G, B, A)      ((((A) & 0xFF) << 24) | (((B) & 0xFF) << 16) | (((G) & 0xFF) << 8) | ((R) & 0xFF))
-  #define orxRGBA_R(RGBA)           (orxU8)((RGBA) & 0xFF)
-  #define orxRGBA_G(RGBA)           (orxU8)(((RGBA) >> 8) & 0xFF)
-  #define orxRGBA_B(RGBA)           (orxU8)(((RGBA) >> 16) & 0xFF)
-  #define orxRGBA_A(RGBA)           (orxU8)(((RGBA) >> 24) & 0xFF)
-
-#endif /* __orxBIG_ENDIAN__ */
+#define orx2RGBA(R, G, B, A)        orxRGBA_Set((orxU8)(R), (orxU8)(G), (orxU8)(B), (orxU8)(A))
+#define orxRGBA_R(RGBA)             RGBA.u8R
+#define orxRGBA_G(RGBA)             RGBA.u8G
+#define orxRGBA_B(RGBA)             RGBA.u8B
+#define orxRGBA_A(RGBA)             RGBA.u8A
 
 #define orxCOLOR_NORMALIZER         (orx2F(1.0f / 255.0f))
 #define orxCOLOR_DENORMALIZER       (orx2F(255.0f))
 
-
 typedef struct __orxBITMAP_t        orxBITMAP;
+
+/** Vertex info structure
+ */
+typedef struct __orxDISPLAY_VERTEX_t
+{
+  orxFLOAT  fX, fY;
+  orxFLOAT  fU, fV;
+  orxRGBA   stRGBA;
+
+} orxDISPLAY_VERTEX;
 
 /** Transform structure
  */
@@ -253,6 +262,10 @@ typedef struct __orxDISPLAY_EVENT_PAYLOAD_t
   BOOL          bShaderSupport, bCompressedTextureSupport;
 }
 
++ (orxView *) GetInstance;
+
+- (void) NotifyAcceleration:(UIAcceleration *)_poAcceleration;
+
 @property (nonatomic, retain) EAGLContext  *poMainContext;
 @property (nonatomic, retain) EAGLContext  *poThreadContext;
 @property                     BOOL          bShaderSupport;
@@ -266,6 +279,28 @@ typedef struct __orxDISPLAY_EVENT_PAYLOAD_t
 /** Display module setup
  */
 extern orxDLLAPI void orxFASTCALL orxDisplay_Setup();
+
+/** Sets all components of an orxRGBA
+ * @param[in]   _u8R            Red value to set
+ * @param[in]   _u8G            Green value to set
+ * @param[in]   _u8B            Blue value to set
+ * @param[in]   _u8A            Alpha value to set
+ * @return      orxRGBA
+ */
+static orxINLINE orxRGBA          orxRGBA_Set(orxU8 _u8R, orxU8 _u8G, orxU8 _u8B, orxU8 _u8A)
+{
+  orxRGBA stResult;
+  
+  // Updates result
+  stResult.u8R = _u8R;
+  stResult.u8G = _u8G;
+  stResult.u8B = _u8B;
+  stResult.u8A = _u8A;
+
+  // Done!
+  return stResult;
+}
+
 
 /** Sets all components from an orxRGBA
  * @param[in]   _pstColor       Concerned color
@@ -956,6 +991,15 @@ extern orxDLLAPI orxSTATUS orxFASTCALL                orxDisplay_DrawCircle(cons
  */
 extern orxDLLAPI orxSTATUS orxFASTCALL                orxDisplay_DrawOBox(const orxOBOX *_pstBox, orxRGBA _stColor, orxBOOL _bFill);
 
+/** Draws a textured mesh
+ * @param[in]   _pstBitmap                            Bitmap to use for texturing, orxNULL to use the current one
+ * @param[in]   _eSmoothing                           Bitmap smoothing type
+ * @param[in]   _eBlendMode                           Blend mode
+ * @param[in]   _u32VertexNumber                      Number of vertices in the mesh
+ * @param[in]   _astVertexList                        List of vertices (XY coordinates are in pixels and UV ones are normalized)
+ * @return orxSTATUS_SUCCESS / orxSTATUS_FAILURE
+ */
+extern orxDLLAPI orxSTATUS orxFASTCALL                orxDisplay_DrawMesh(const orxBITMAP *_pstBitmap, orxDISPLAY_SMOOTHING _eSmoothing, orxDISPLAY_BLEND_MODE _eBlendMode, orxU32 _u32VertexNumber, const orxDISPLAY_VERTEX *_astVertexList);
 
 /** Has shader support?
  * @return orxTRUE / orxFALSE
