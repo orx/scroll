@@ -228,7 +228,7 @@ orxSTATUS ScrollEd::Init()
 
       // Gets current layer
       mu32LayerIndex = orxConfig_GetU32(szConfigLayerIndex);
-      
+
       // Clamps it
       if(mu32LayerIndex >= roGame.GetLayerNumber())
       {

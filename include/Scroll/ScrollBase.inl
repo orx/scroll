@@ -1280,7 +1280,7 @@ void ScrollBase::BaseUpdate(const orxCLOCK_INFO &_rstInfo)
   if(!mbIsPaused)
   {
     ScrollObject *poObject;
-  
+
     // Locks object list
     mbObjectListLocked = orxTRUE;
 

@@ -68,7 +68,7 @@ public:
                 void                    AddTrack(const orxSTRING _zTrackName);
                 void                    RemoveTrack(const orxSTRING _zTrackName);
 
-                orxFLOAT                GetLifeTime() const; 
+                orxFLOAT                GetLifeTime() const;
                 void                    SetLifeTime(orxFLOAT _fLifeTime);
 
                 void                    PushConfigSection(orxBOOL _bPushInstanceSection = orxFALSE) const;

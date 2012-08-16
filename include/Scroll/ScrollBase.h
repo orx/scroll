@@ -188,6 +188,10 @@ public:
                 ScrollObject *  GetPreviousObject(const ScrollObject *_poObject = orxNULL, orxBOOL _bChronological = orxFALSE) const;
           template<class O> O * GetPreviousObject(const O *_poObject = orxNULL) const;
 
+                ScrollObject *  PickObject(const orxVECTOR &_rvPosition) const;
+                ScrollObject *  PickObject(const orxOBOX &_rstBox) const;
+
+
 
 protected:
 
@@ -203,9 +207,6 @@ protected:
                 ScrollObject *  CreateObject(const orxSTRING _zModelName, ScrollObject::Flag _xFlags = ScrollObject::FlagNone, const orxSTRING _zInstanceName = orxNULL);
                 ScrollObject *  CreateObject(orxOBJECT *_pstOrxObject, ScrollObject::Flag _xFlags = ScrollObject::FlagNone, const orxSTRING _zInstanceName = orxNULL);
                 void            DeleteObject(ScrollObject *_poObject);
-
-                ScrollObject *  PickObject(const orxVECTOR &_rvPosition) const;
-                ScrollObject *  PickObject(const orxOBOX &_rstBox) const;
 
                 orxCOLOR *      GetObjectConfigColor(const ScrollObject *_poObject, orxCOLOR &_rstColor);
                 orxSTATUS       SetObjectConfigColor(ScrollObject *_poObject, const orxCOLOR &_rstColor);
