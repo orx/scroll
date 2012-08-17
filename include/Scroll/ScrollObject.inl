@@ -217,6 +217,41 @@ void ScrollObject::SetFlip(orxBOOL _bFlipX, orxBOOL _bFlipY, orxBOOL _bRecursive
   }
 }
 
+orxBOOL ScrollObject::IsAnim(const orxSTRING _zAnim, orxBOOL _bCurrent)
+{
+  orxBOOL bResult;
+
+  // Target anim?
+  if(_bCurrent != orxFALSE)
+  {
+    // Updates result
+    bResult = orxObject_IsTargetAnim(mpstObject, _zAnim);
+  }
+  else
+  {
+    // Updates result
+    bResult = orxObject_IsCurrentAnim(mpstObject, _zAnim);
+  }
+
+  // Done!
+  return bResult;
+}
+
+void ScrollObject::SetAnim(const orxSTRING _zAnim, orxBOOL _bCurrent)
+{
+  // Target anim?
+  if(_bCurrent != orxFALSE)
+  {
+    // Sets it
+    orxObject_SetTargetAnim(mpstObject, _zAnim);
+  }
+  else
+  {
+    // Sets it
+    orxObject_SetCurrentAnim(mpstObject, _zAnim);
+  }
+}
+
 void ScrollObject::AddFX(const orxSTRING _zFXName, orxBOOL _bRecursive)
 {
   // Adds FX to object
