@@ -42,22 +42,8 @@
 
 
 #include "orxInclude.h"
-#include "utils/orxString.h"
+#include "math/orxVector.h"
 
-
-/** Event enum
- */
-typedef enum __orxCOMMAND_EVENT_t
-{
-  orxCOMMAND_EVENT_REGISTER = 0,                      /**< Event sent when a command is registerd */
-  orxCOMMAND_EVENT_UNREGISTER,                        /**< Event sent when a command is unregistered */
-  orxCOMMAND_EVENT_EXECUTE,                           /**< Event sent when a command is executed */
-
-  orxCOMMAND_EVENT_NUMBER,
-
-  orxCOMMAND_EVENT_NONE = orxENUM_NONE
-
-} orxCOMMAND_EVENT;
 
 /** Variable type enum
  */
@@ -169,11 +155,19 @@ extern orxDLLAPI orxSTATUS orxFASTCALL                orxCommand_Unregister(cons
 */
 extern orxDLLAPI orxBOOL orxFASTCALL                  orxCommand_IsRegistered(const orxSTRING _zCommand);
 
+
 /** Gets a command's (text) prototype (beware: result won't persist from one call to the other)
 * @param[in]   _zCommand      Command name
 * @return      Command prototype / orxSTRING_EMPTY
 */
 extern orxDLLAPI const orxSTRING orxFASTCALL          orxCommand_GetPrototype(const orxSTRING _zCommand);
+
+/** Gets next command using an optional base
+* @param[in]   _zBase         Base name, can be set to orxNULL for no base
+* @param[in]   _zPrevious     Previous command, orxNULL to get the first command
+* @return      Next command found, orxNULL if none
+*/
+extern orxDLLAPI const orxSTRING orxFASTCALL          orxCommand_GetNext(const orxSTRING _zBase, const orxSTRING _zPrevious);
 
 
 /** Evaluates a command

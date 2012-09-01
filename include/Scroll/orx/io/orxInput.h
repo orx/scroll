@@ -79,6 +79,7 @@ typedef enum __orxINPUT_EVENT_t
 {
   orxINPUT_EVENT_ON = 0,
   orxINPUT_EVENT_OFF,
+  orxINPUT_EVENT_SELECT_SET,
 
   orxINPUT_EVENT_NUMBER,
 
@@ -244,6 +245,14 @@ extern orxDLLAPI orxSTATUS orxFASTCALL            orxInput_GetBindingList(const 
  * @return orxSTRING (binding's name) if success, orxSTRING_EMPTY otherwise
  */
 extern orxDLLAPI const orxSTRING orxFASTCALL      orxInput_GetBindingName(orxINPUT_TYPE _eType, orxENUM _eID);
+
+/** Gets a binding type and ID from its name
+ * @param[in]   _zName          Concerned input name
+ * @param[in]   _peType         Binding type (mouse/joystick button, keyboard key or joystick axis)
+ * @param[in]   _peID           Binding ID (ID of button/key/axis to bind)
+ * @return orxSTATUS_SUCCESS if input is valid, orxSTATUS_FAILURE otherwise
+ */
+extern orxDLLAPI orxSTATUS orxFASTCALL            orxInput_GetBindingType(const orxSTRING _zName, orxINPUT_TYPE *_peType, orxENUM *_peID);
 
 /** Gets active binding (current pressed key/button/...) so as to allow on-the-fly user rebinding
  * @param[out]  _peType         Active binding type (mouse/joystick button, keyboard key or joystick axis)
