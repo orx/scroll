@@ -257,6 +257,7 @@ protected:
   static  const orxSTRING       szConfigDifferential;
   static  const orxSTRING       szConfigLayerNumber;
   static  const orxSTRING       szConfigNoSave;
+  static  const orxSTRING       szConfigSectionScrollObject;
   static  const orxSTRING       szConfigScrollObjectNumber;
   static  const orxSTRING       szConfigScrollObjectPrefix;
   static  const orxSTRING       szConfigScrollObjectFormat;

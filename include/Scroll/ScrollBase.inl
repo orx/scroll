@@ -48,6 +48,7 @@ const orxSTRING ScrollBase::szConfigCameraZoom                = "CameraZoom";
 const orxSTRING ScrollBase::szConfigDifferential              = "Differential";
 const orxSTRING ScrollBase::szConfigLayerNumber               = "LayerNumber";
 const orxSTRING ScrollBase::szConfigNoSave                    = "NoSave";
+const orxSTRING ScrollBase::szConfigSectionScrollObject       = "ScrollObject";
 const orxSTRING ScrollBase::szConfigScrollObjectNumber        = "ObjectNumber";
 const orxSTRING ScrollBase::szConfigScrollObjectPrefix        = "SObj";
 const orxSTRING ScrollBase::szConfigScrollObjectFormat        = "SObj%04d";
@@ -1185,6 +1186,11 @@ orxSTATUS ScrollBase::BaseInit()
 {
   orxCLOCK *pstCoreClock;
   orxSTATUS eResult;
+
+  // Binds default ScrollObject section
+  orxConfig_PushSection(szConfigSectionScrollObject);
+  orxConfig_PopSection();
+  ScrollBindObject<ScrollObject>(szConfigSectionScrollObject);
 
   // Binds objects
   BindObjects();
