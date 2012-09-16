@@ -156,6 +156,26 @@ extern orxDLLAPI orxSTATUS orxFASTCALL                orxCommand_Unregister(cons
 extern orxDLLAPI orxBOOL orxFASTCALL                  orxCommand_IsRegistered(const orxSTRING _zCommand);
 
 
+/** Adds a command alias
+* @param[in]   _zAlias        Command alias
+* @param[in]   _zCommand      Command name
+* @return      orxSTATUS_SUCCESS / orxSTATUS_FAILURE
+*/
+extern orxDLLAPI orxSTATUS orxFASTCALL                orxCommand_AddAlias(const orxSTRING _zAlias, const orxSTRING _zCommand);
+
+/** Removes a command alias
+* @param[in]   _zAlias        Command alias
+* @return      orxSTATUS_SUCCESS / orxSTATUS_FAILURE
+*/
+extern orxDLLAPI orxSTATUS orxFASTCALL                orxCommand_RemoveAlias(const orxSTRING _zAlias);
+
+/** Is a command alias?
+* @param[in]   _zAlias        Command alias
+* @return      orxTRUE / orxFALSE
+*/
+extern orxDLLAPI orxBOOL orxFASTCALL                  orxCommand_IsAlias(const orxSTRING _zAlias);
+
+
 /** Gets a command's (text) prototype (beware: result won't persist from one call to the other)
 * @param[in]   _zCommand      Command name
 * @return      Command prototype / orxSTRING_EMPTY
@@ -163,11 +183,12 @@ extern orxDLLAPI orxBOOL orxFASTCALL                  orxCommand_IsRegistered(co
 extern orxDLLAPI const orxSTRING orxFASTCALL          orxCommand_GetPrototype(const orxSTRING _zCommand);
 
 /** Gets next command using an optional base
-* @param[in]   _zBase         Base name, can be set to orxNULL for no base
-* @param[in]   _zPrevious     Previous command, orxNULL to get the first command
+* @param[in]   _zBase             Base name, can be set to orxNULL for no base
+* @param[in]   _zPrevious         Previous command, orxNULL to get the first command
+* @param[out]  _pu32CommonLength  Length of the common prefix of all potential results
 * @return      Next command found, orxNULL if none
 */
-extern orxDLLAPI const orxSTRING orxFASTCALL          orxCommand_GetNext(const orxSTRING _zBase, const orxSTRING _zPrevious);
+extern orxDLLAPI const orxSTRING orxFASTCALL          orxCommand_GetNext(const orxSTRING _zBase, const orxSTRING _zPrevious, orxU32 *_pu32CommonLength);
 
 
 /** Evaluates a command

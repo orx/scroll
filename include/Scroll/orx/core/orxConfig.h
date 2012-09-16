@@ -193,6 +193,12 @@ extern orxDLLAPI orxBOOL orxFASTCALL          orxConfig_HasSection(const orxSTRI
  */
 extern orxDLLAPI orxSTATUS orxFASTCALL        orxConfig_ProtectSection(const orxSTRING _zSectionName, orxBOOL _bProtect);
 
+/** Gets section origin (ie. the file where it was defined for the first time or orxSTRING_EMPTY if not defined via a file)
+ * @param[in] _zSectionName     Concerned section name
+ * @return orxSTRING if found, orxSTRING_EMPTY otherwise
+ */
+extern orxDLLAPI const orxSTRING orxFASTCALL  orxConfig_GetSectionOrigin(const orxSTRING _zSectionName);
+
 /** Gets section counter
  * @return Section counter
  */
@@ -415,7 +421,7 @@ extern orxDLLAPI orxVECTOR *orxFASTCALL       orxConfig_GetListVector(const orxS
  * @param[in] _u32Number        Number of values
  * @return orxSTATUS_SUCCESS / orxSTATUS_FAILURE
  */
-extern orxDLLAPI orxSTATUS orxFASTCALL        orxConfig_SetStringList(const orxSTRING _zKey, const orxSTRING _azValue[], orxU32 _u32Number);
+extern orxDLLAPI orxSTATUS orxFASTCALL        orxConfig_SetListString(const orxSTRING _zKey, const orxSTRING _azValue[], orxU32 _u32Number);
 
 /** Gets key counter of the current section
  * @return Key counter of the current section if valid, 0 otherwise
