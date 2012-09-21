@@ -734,7 +734,7 @@ void ScrollBase::SetLayerNumber(orxU32 _u32LayerNumber)
     mu32LayerNumber = _u32LayerNumber + 1;
 
     // Logs message
-    orxLOG("Can't use an even number of layers, adding an extra one => %ld layers will be used.", mu32LayerNumber);
+    orxLOG("Can't use an even number of layers, adding an extra one => %d layers will be used.", mu32LayerNumber);
   }
   else
   {

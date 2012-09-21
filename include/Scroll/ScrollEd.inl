@@ -1308,7 +1308,7 @@ orxSTATUS ScrollEd::SaveMapBackup() const
   zMapName = orxString_Duplicate(roGame.GetMapName());
 
   // Sets backup name
-  orxString_NPrint(acBuffer, 256, "%s-%ld.bak", zMapName, orxSystem_GetRealTime());
+  orxString_NPrint(acBuffer, 256, "%s-%d.bak", zMapName, orxSystem_GetRealTime());
   acBuffer[255] = orxCHAR_NULL;
   roGame.SetMapName(acBuffer);
 
