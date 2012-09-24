@@ -59,6 +59,7 @@ public:
                 const orxSTRING         GetModelName() const                                      {return mzModelName;}
                 orxU64                  GetGUID() const                                           {return orxSTRUCTURE(mpstObject)->u64GUID;}
 
+                orxBOOL                 IsEnabled() const;
                 void                    Enable(orxBOOL _bEnable, orxBOOL _bRecursive = orxTRUE);
 
                 orxVECTOR &             GetPosition(orxVECTOR &_rvPosition, orxBOOL _bWorld = orxFALSE) const;

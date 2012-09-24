@@ -35,6 +35,12 @@ ScrollObject::~ScrollObject()
 }
 
 
+orxBOOL ScrollObject::IsEnabled() const
+{
+  // Done!
+  return orxObject_IsEnabled(mpstObject);
+}
+
 void ScrollObject::Enable(orxBOOL _bEnable, orxBOOL _bRecursive)
 {
   // Updates its status
