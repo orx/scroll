@@ -90,6 +90,10 @@ ScrollBase::~ScrollBase()
 
 void ScrollBase::Execute(int argc, char **argv)
 {
+  // Inits encrypt key
+  orxConfig_SetEncryptionKey(GetEncryptionKey());
+
+  // Executes orx
   orx_Execute(argc, argv, StaticInit, StaticRun, StaticExit);
 }
 
@@ -1217,9 +1221,6 @@ orxSTATUS ScrollBase::BaseInit()
     // Successful?
     if(eResult != orxSTATUS_FAILURE)
     {
-      // Inits encrypt key
-      orxConfig_SetEncryptionKey(GetEncryptionKey());
-
       // Clears object lists
       orxMemory_Zero(&mstObjectList, sizeof(orxLINKLIST));
       orxMemory_Zero(&mstObjectChronoList, sizeof(orxLINKLIST));
