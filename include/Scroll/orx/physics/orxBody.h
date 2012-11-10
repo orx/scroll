@@ -141,6 +141,13 @@ extern orxDLLAPI orxBODY_PART *orxFASTCALL    orxBody_AddPart(orxBODY *_pstBody,
  */
 extern orxDLLAPI orxBODY_PART *orxFASTCALL    orxBody_AddPartFromConfig(orxBODY *_pstBody, const orxSTRING _zConfigID);
 
+/** Removes a part using its config ID
+ * @param[in]   _pstBody        Concerned body
+ * @param[in]   _zConfigID      Config ID of the part to remove
+ * @return      orxSTATUS_SUCCESS / orxSTATUS_FAILURE
+ */
+extern orxDLLAPI orxSTATUS orxFASTCALL        orxBody_RemovePartFromConfig(orxBODY *_pstBody, const orxSTRING _zConfigID);
+
 /** Gets next body part
  * @param[in]   _pstBody        Concerned body
  * @param[in]   _pstBodyPart    Current body part (orxNULL to get the first one)
@@ -323,7 +330,7 @@ extern orxDLLAPI orxSTATUS orxFASTCALL        orxBody_ApplyTorque(orxBODY *_pstB
 /** Applies a force
  * @param[in]   _pstBody        Concerned body
  * @param[in]   _pvForce        Force to apply
- * @param[in]   _pvPoint        Point (object coordinates) where the force will be applied, if orxNULL, center of mass will be used
+ * @param[in]   _pvPoint        Point (world coordinates) where the force will be applied, if orxNULL, center of mass will be used
  * @return      orxSTATUS_SUCCESS / orxSTATUS_FAILURE
  */
 extern orxDLLAPI orxSTATUS orxFASTCALL        orxBody_ApplyForce(orxBODY *_pstBody, const orxVECTOR *_pvForce, const orxVECTOR *_pvPoint);
@@ -377,6 +384,13 @@ extern orxDLLAPI orxBOOL orxFASTCALL          orxBody_IsPartSolid(const orxBODY_
 extern orxDLLAPI orxSTATUS orxFASTCALL        orxBody_SetPartSolid(orxBODY_PART *_pstBodyPart, orxBOOL _bSolid);
 
 
+/** Enables a (revolute) body joint motor
+ * @param[in]   _pstBodyJoint   Concerned body joint
+ * @param[in]   _bEnable        Enable / Disable
+ * @return      orxSTATUS_SUCCESS / orxSTATUS_FAILURE
+ */
+extern orxDLLAPI orxSTATUS orxFASTCALL        orxBody_EnableMotor(orxBODY_JOINT *_pstBodyJoint, orxBOOL _bEnable);
+
 /** Sets a (revolute) body joint motor speed
  * @param[in]   _pstBodyJoint   Concerned body joint
  * @param[in]   _fSpeed         Speed
@@ -386,7 +400,7 @@ extern orxDLLAPI orxSTATUS orxFASTCALL        orxBody_SetJointMotorSpeed(orxBODY
 
 /** Sets a (revolute) body joint maximum motor torque
  * @param[in]   _pstBodyJoint   Concerned body joint
- * @param[in]   _fMaxMotorTorque  Maximum motor torque
+ * @param[in]   _fMaxTorque     Maximum motor torque
  * @return      orxSTATUS_SUCCESS / orxSTATUS_FAILURE
  */
 extern orxDLLAPI orxSTATUS orxFASTCALL        orxBody_SetJointMaxMotorTorque(orxBODY_JOINT *_pstBodyJoint, orxFLOAT _fMaxTorque);

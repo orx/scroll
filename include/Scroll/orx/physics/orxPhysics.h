@@ -549,6 +549,13 @@ extern orxDLLAPI orxBOOL orxFASTCALL                  orxPhysics_IsPartSolid(con
 extern orxDLLAPI orxSTATUS orxFASTCALL                orxPhysics_SetPartSolid(orxPHYSICS_BODY_PART *_pstBodyPart, orxBOOL _bSolid);
 
 
+/** Enables a (revolute) body joint motor
+ * @param[in]   _pstBodyJoint   Concerned body joint
+ * @param[in]   _bEnable        Enable / Disable
+ * @return      orxSTATUS_SUCCESS / orxSTATUS_FAILURE
+ */
+extern orxDLLAPI void orxFASTCALL                     orxPhysics_EnableMotor(orxPHYSICS_BODY_JOINT *_pstBodyJoint, orxBOOL _bEnable);
+
 /** Sets a (revolute) body joint motor speed
  * @param[in]   _pstBodyJoint   Concerned body joint
  * @param[in]   _fSpeed         Speed
@@ -558,7 +565,7 @@ extern orxDLLAPI void orxFASTCALL                     orxPhysics_SetJointMotorSp
 
 /** Sets a (revolute) body joint maximum motor torque
  * @param[in]   _pstBodyJoint   Concerned body joint
- * @param[in]   _fMaxMotorTorque  Maximum motor torque
+ * @param[in]   _fMaxTorque     Maximum motor torque
  * @return      orxSTATUS_SUCCESS / orxSTATUS_FAILURE
  */
 extern orxDLLAPI void orxFASTCALL                     orxPhysics_SetJointMaxMotorTorque(orxPHYSICS_BODY_JOINT *_pstBodyJoint, orxFLOAT _fMaxTorque);
