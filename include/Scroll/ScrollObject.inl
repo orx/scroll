@@ -542,7 +542,7 @@ orxBOOL ScrollObject::OnPauseGame(orxBOOL _bPause)
   return orxSTATUS_SUCCESS;
 }
 
-orxBOOL ScrollObject::OnRender()
+orxBOOL ScrollObject::OnRender(orxRENDER_EVENT_OBJECT_PAYLOAD *_pstPayload)
 {
   return orxTRUE;
 }

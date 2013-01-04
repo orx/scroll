@@ -117,7 +117,7 @@ private:
   virtual       void                    OnStopGame();
   virtual       orxBOOL                 OnPauseGame(orxBOOL _bPause);
 
-  virtual       orxBOOL                 OnRender();
+  virtual       orxBOOL                 OnRender(orxRENDER_EVENT_OBJECT_PAYLOAD *_pstPayload);
 
   virtual       orxBOOL                 OnCollide(ScrollObject *_poCollider, const orxSTRING _zPartName, const orxVECTOR &_rvPosition, const orxVECTOR &_rvNormal);
   virtual       orxBOOL                 OnSeparate(ScrollObject *_poCollider);
