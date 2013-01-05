@@ -1,6 +1,6 @@
 /* Orx - Portable Game Engine
  *
- * Copyright (c) 2008-2012 Orx-Project
+ * Copyright (c) 2008-2013 Orx-Project
  *
  * This software is provided 'as-is', without any express or implied
  * warranty. In no event will the authors be held liable for any damages
@@ -137,9 +137,6 @@ extern orxDLLAPI void orxFASTCALL         orxModule_AddDependency(orxMODULE_ID _
  * @param[in]   _eDependID                Module ID of the optionally needed module
  */
 extern orxDLLAPI void orxFASTCALL         orxModule_AddOptionalDependency(orxMODULE_ID _eModuleID, orxMODULE_ID _eDependID);
-
-/** Updates dependencies for all modules */
-extern orxDLLAPI void orxFASTCALL         orxModule_UpdateDependencies();
 
 /** Calls a module setup callback
  * @param[in]   _eModuleID                Concerned module ID

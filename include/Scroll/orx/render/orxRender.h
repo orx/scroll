@@ -1,6 +1,6 @@
 /* Orx - Portable Game Engine
  *
- * Copyright (c) 2008-2012 Orx-Project
+ * Copyright (c) 2008-2013 Orx-Project
  *
  * This software is provided 'as-is', without any express or implied
  * warranty. In no event will the authors be held liable for any damages
@@ -58,6 +58,7 @@
 #define orxRENDER_KZ_CONFIG_SHOW_FPS      "ShowFPS"
 #define orxRENDER_KZ_CONFIG_SHOW_PROFILER "ShowProfiler"
 #define orxRENDER_KZ_CONFIG_MIN_FREQUENCY "MinFrequency"
+#define orxRENDER_KZ_CONFIG_CONSOLE_COLOR "ConsoleColor"
 
 
 /** Event enum
