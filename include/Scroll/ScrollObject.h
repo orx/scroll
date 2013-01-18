@@ -57,7 +57,7 @@ public:
                 orxOBJECT *             GetOrxObject() const                                      {return mpstObject;}
                 const orxSTRING         GetName() const                                           {return mzName;}
                 const orxSTRING         GetModelName() const                                      {return mzModelName;}
-                orxU64                  GetGUID() const                                           {return orxSTRUCTURE(mpstObject)->u64GUID;}
+                orxU64                  GetGUID() const                                           {return orxStructure_GetGUID(mpstObject);}
 
                 orxBOOL                 IsEnabled() const;
                 void                    Enable(orxBOOL _bEnable, orxBOOL _bRecursive = orxTRUE);
