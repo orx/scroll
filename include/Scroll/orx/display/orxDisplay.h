@@ -81,6 +81,7 @@ typedef struct __orxRGBA_t
 
 typedef struct __orxBITMAP_t        orxBITMAP;
 
+
 /** Vertex info structure
  */
 typedef struct __orxDISPLAY_VERTEX_t
