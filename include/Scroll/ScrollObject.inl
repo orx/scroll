@@ -539,7 +539,7 @@ void ScrollObject::OnStopGame()
 
 orxBOOL ScrollObject::OnPauseGame(orxBOOL _bPause)
 {
-  return orxSTATUS_SUCCESS;
+  return orxTRUE;
 }
 
 orxBOOL ScrollObject::OnRender(orxRENDER_EVENT_OBJECT_PAYLOAD *_pstPayload)
