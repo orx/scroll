@@ -418,7 +418,7 @@ void ScrollEd::Update(const orxCLOCK_INFO &_rstInfo)
       }
 
       // Gets mouse position
-      bIsMouseInScope = orxRender_GetWorldPosition(orxMouse_GetPosition(&vMousePos), &vMousePos) != orxNULL;
+      bIsMouseInScope = orxRender_GetWorldPosition(orxMouse_GetPosition(&vMousePos), orxNULL, &vMousePos) != orxNULL;
       vMousePos.fZ    = roGame.GetLayerDepth(mu32LayerIndex);
 
       // In differential mode?
@@ -2152,7 +2152,7 @@ void ScrollEd::UpdateButtons(const orxCLOCK_INFO &_rstInfo)
   orxVECTOR vMousePos;
 
   // Gets mouse world position
-  if(orxRender_GetWorldPosition(orxMouse_GetPosition(&vMousePos), &vMousePos))
+  if(orxRender_GetWorldPosition(orxMouse_GetPosition(&vMousePos), orxNULL, &vMousePos))
   {
     orxOBJECT  *pstPickedObject;
     orxAABOX    stCameraFrustum;
@@ -2495,7 +2495,7 @@ void ScrollEd::UpdateCursor()
       orxVECTOR vMousePos;
 
       // Gets mouse position
-      if(orxRender_GetWorldPosition(orxMouse_GetPosition(&vMousePos), &vMousePos))
+      if(orxRender_GetWorldPosition(orxMouse_GetPosition(&vMousePos), orxNULL, &vMousePos))
       {
         orxVECTOR vPos;
         orxFLOAT  fSnap;
@@ -2542,7 +2542,7 @@ void ScrollEd::UpdateCursor()
         orxVECTOR vMousePos;
 
         // Gets mouse position
-        if(orxRender_GetWorldPosition(orxMouse_GetPosition(&vMousePos), &vMousePos))
+        if(orxRender_GetWorldPosition(orxMouse_GetPosition(&vMousePos), orxNULL, &vMousePos))
         {
           const ScrollObject *poModel;
 
@@ -2585,7 +2585,7 @@ void ScrollEd::UpdateCursor()
     orxVECTOR vMousePos;
 
     // Gets mouse position
-    if(orxRender_GetWorldPosition(orxMouse_GetPosition(&vMousePos), &vMousePos))
+    if(orxRender_GetWorldPosition(orxMouse_GetPosition(&vMousePos), orxNULL, &vMousePos))
     {
       orxVECTOR vPos, vScale;
       orxFLOAT  fScale;

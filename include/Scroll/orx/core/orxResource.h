@@ -61,7 +61,7 @@ typedef orxS32          (orxFASTCALL *orxRESOURCE_FUNCTION_READ)(orxHANDLE _hRes
  */
 typedef struct __orxRESOURCE_TYPE_INFO_t
 {
-  orxSTRING                     zTag;
+  const orxSTRING               zTag;
   orxRESOURCE_FUNCTION_LOCATE   pfnLocate;
   orxRESOURCE_FUNCTION_OPEN     pfnOpen;
   orxRESOURCE_FUNCTION_CLOSE    pfnClose;
@@ -87,12 +87,13 @@ extern orxDLLAPI orxSTATUS orxFASTCALL                    orxResource_Init();
 extern orxDLLAPI void orxFASTCALL                         orxResource_Exit();
 
 
-/** Adds a storage for a given resource group, this storage will be used when looking for resources prior to any previously added storage
+/** Adds a storage for a given resource group
  * @param[in] _zGroup           Concerned resource group
  * @param[in] _zStorage         Description of the storage, as understood by one of the resource type
+ * @param[in] _bAddFirst        If true this storage will be used *before* any already added ones, otherwise it'll be used *after* all those
  * @return orxSTATUS_SUCCESS / orxSTATUS_FAILURE
  */
-extern orxDLLAPI orxSTATUS orxFASTCALL                    orxResource_AddStorage(const orxSTRING _zGroup, const orxSTRING _zStorage);
+extern orxDLLAPI orxSTATUS orxFASTCALL                    orxResource_AddStorage(const orxSTRING _zGroup, const orxSTRING _zStorage, orxBOOL _bAddFirst);
 
 /** Removes a storage for a given resource group
  * @param[in] _zGroup           Concerned resource group
@@ -100,6 +101,11 @@ extern orxDLLAPI orxSTATUS orxFASTCALL                    orxResource_AddStorage
  * @return orxSTATUS_SUCCESS / orxSTATUS_FAILURE
  */
 extern orxDLLAPI orxSTATUS orxFASTCALL                    orxResource_RemoveStorage(const orxSTRING _zGroup, const orxSTRING _zStorage);
+
+/** Reloads storage from config
+ * @return orxSTATUS_SUCCESS / orxSTATUS_FAILURE
+ */
+extern orxDLLAPI orxSTATUS orxFASTCALL                    orxResource_ReloadStorage();
 
 
 /** Gets number of storages for a given resource group

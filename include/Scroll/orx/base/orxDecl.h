@@ -42,6 +42,12 @@
 #ifndef _orxDECL_H_
 #define _orxDECL_H_
 
+#ifdef __orxDEBUG__
+
+  #define __orxPROFILER__
+
+#endif /* __orxDEBUG__ */
+
 #ifdef __APPLE__
 
   #include "TargetConditionals.h"
@@ -156,6 +162,8 @@
   #elif defined(linux) || defined(__linux__)
 
     #define __orxLINUX__
+
+    #pragma GCC diagnostic ignored "-Wunused-function"
 
   /* Mac? */
   #elif TARGET_OS_MAC
@@ -338,7 +346,7 @@
 
 
 /** Memory alignment macros */
-#define orxALIGN(ADDRESS, BLOCK_SIZE)   (((ADDRESS) + ((BLOCK_SIZE) - 1)) & (~((BLOCK_SIZE) - 1)))
+#define orxALIGN(ADDRESS, BLOCK_SIZE)   (((size_t)(ADDRESS) + ((BLOCK_SIZE) - 1)) & (~((BLOCK_SIZE) - 1)))
 
 #define orxALIGN16(ADDRESS)             orxALIGN(ADDRESS, 16)
 #define orxALIGN32(ADDRESS)             orxALIGN(ADDRESS, 32)

@@ -54,11 +54,23 @@
 
 /** Misc defines
  */
-#define orxRENDER_KZ_CONFIG_SECTION       "Render"
-#define orxRENDER_KZ_CONFIG_SHOW_FPS      "ShowFPS"
-#define orxRENDER_KZ_CONFIG_SHOW_PROFILER "ShowProfiler"
-#define orxRENDER_KZ_CONFIG_MIN_FREQUENCY "MinFrequency"
-#define orxRENDER_KZ_CONFIG_CONSOLE_COLOR "ConsoleColor"
+#define orxRENDER_KZ_CONFIG_SECTION                 "Render"
+#define orxRENDER_KZ_CONFIG_SHOW_FPS                "ShowFPS"
+#define orxRENDER_KZ_CONFIG_SHOW_PROFILER           "ShowProfiler"
+#define orxRENDER_KZ_CONFIG_MIN_FREQUENCY           "MinFrequency"
+#define orxRENDER_KZ_CONFIG_CONSOLE_COLOR           "ConsoleColor"
+
+
+/** Inputs
+ */
+#define orxRENDER_KZ_INPUT_SET                      "-=RenderSet=-"
+
+#define orxRENDER_KZ_INPUT_PROFILER_TOGGLE_HISTORY  "ProfilerToggleHistory"
+#define orxRENDER_KZ_INPUT_PROFILER_PAUSE           "ProfilerPause"
+#define orxRENDER_KZ_INPUT_PROFILER_PREVIOUS_FRAME  "ProfilerPreviousFrame"
+#define orxRENDER_KZ_INPUT_PROFILER_NEXT_FRAME      "ProfilerNextFrame"
+#define orxRENDER_KZ_INPUT_PROFILER_PREVIOUS_DEPTH  "ProfilerPreviousDepth"
+#define orxRENDER_KZ_INPUT_PROFILER_NEXT_DEPTH      "ProfilerNextDepth"
 
 
 /** Event enum
@@ -112,10 +124,11 @@ extern orxDLLAPI void orxFASTCALL             orxRender_Exit();
 
 /** Get a world position given a screen one (absolute picking)
  * @param[in]   _pvScreenPosition                     Concerned screen position
+ * @param[in]   _pstViewport                          Concerned viewport, if orxNULL then the first viewport containing the screen position will be used
  * @param[out]  _pvWorldPosition                      Corresponding world position
  * @return      orxVECTOR if found, orxNULL otherwise
  */
-extern orxDLLAPI orxVECTOR *orxFASTCALL       orxRender_GetWorldPosition(const orxVECTOR *_pvScreenPosition, orxVECTOR *_pvWorldPosition);
+extern orxDLLAPI orxVECTOR *orxFASTCALL       orxRender_GetWorldPosition(const orxVECTOR *_pvScreenPosition, const orxVIEWPORT *_pstViewport, orxVECTOR *_pvWorldPosition);
 
 /** Get a screen position given a world one and a viewport (rendering position)
  * @param[in]   _pvWorldPosition                      Concerned world position

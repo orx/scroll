@@ -32,7 +32,7 @@
 
 /**
  * @addtogroup orxDisplay
- * 
+ *
  * Display plugin module
  * Module that handles display
  *
@@ -109,6 +109,7 @@ typedef struct __orxDISPLAY_TRANSFORM_t
 typedef struct __orxDISPLAY_VIDEO_MODE_t
 {
   orxU32  u32Width, u32Height, u32Depth, u32RefreshRate;
+  orxBOOL bFullScreen;
 
 } orxDISPLAY_VIDEO_MODE;
 
@@ -152,6 +153,7 @@ typedef enum __orxDISPLAY_BLEND_MODE_t
   orxDISPLAY_BLEND_MODE_ALPHA = 0,
   orxDISPLAY_BLEND_MODE_MULTIPLY,
   orxDISPLAY_BLEND_MODE_ADD,
+  orxDISPLAY_BLEND_MODE_PREMUL,
 
   orxDISPLAY_BLEND_MODE_NUMBER,
 
@@ -291,7 +293,7 @@ extern orxDLLAPI void orxFASTCALL orxDisplay_Setup();
 static orxINLINE orxRGBA          orxRGBA_Set(orxU8 _u8R, orxU8 _u8G, orxU8 _u8B, orxU8 _u8A)
 {
   orxRGBA stResult;
-  
+
   // Updates result
   stResult.u8R = _u8R;
   stResult.u8G = _u8G;
@@ -1006,9 +1008,10 @@ extern orxDLLAPI orxBOOL orxFASTCALL                  orxDisplay_HasShaderSuppor
 /** Creates (compiles) a shader
  * @param[in]   _zCode                                Shader code to compile
  * @param[in]   _pstParamList                         Shader parameters (should be a link list of orxSHADER_PARAM)
+ * @param[in]   _bUseCustomParam                      Shader uses custom parameters
  * @return orxHANDLE of the compiled shader is successful, orxHANDLE_UNDEFINED otherwise
  */
-extern orxDLLAPI orxHANDLE orxFASTCALL                orxDisplay_CreateShader(const orxSTRING _zCode, const orxLINKLIST *_pstParamList);
+extern orxDLLAPI orxHANDLE orxFASTCALL                orxDisplay_CreateShader(const orxSTRING _zCode, const orxLINKLIST *_pstParamList, orxBOOL _bUseCustomParam);
 
 /** Deletes a compiled shader
  * @param[in]   _hShader                              Shader to delete
@@ -1091,7 +1094,7 @@ extern orxDLLAPI orxBOOL orxFASTCALL                  orxDisplay_IsFullScreen();
 extern orxDLLAPI orxU32 orxFASTCALL                   orxDisplay_GetVideoModeCounter();
 
 /** Gets an available video mode
- * @param[in]   _u32Index                             Video mode index, must be lesser than orxDisplay_GetVideoModeCounter()
+ * @param[in]   _u32Index                             Video mode index, pass _u32Index < orxDisplay_GetVideoModeCounter() for an available listed mode, orxU32_UNDEFINED for the the default (desktop) mode and any other value for current mode
  * @param[out]  _pstVideoMode                         Storage for the video mode
  * @return orxDISPLAY_VIDEO_MODE / orxNULL if invalid
  */
