@@ -1647,6 +1647,9 @@ orxSTATUS orxFASTCALL ScrollBase::StaticEventHandler(const orxEVENT *_pstEvent)
         {
           orxVECTOR vNormal;
 
+          // Pushes its section
+          poSender->PushConfigSection();
+
           // Gets reverse normal
           orxVector_Neg(&vNormal, &pstPayload->vNormal);
 
@@ -1661,11 +1664,17 @@ orxSTATUS orxFASTCALL ScrollBase::StaticEventHandler(const orxEVENT *_pstEvent)
             // Calls its callback
             bContinue = poSender->OnSeparate(poRecipient);
           }
+
+          // Pops config section
+          poSender->PopConfigSection();
         }
 
         // Is recipient valid?
         if(bContinue && poRecipient)
         {
+          // Pushes its section
+          poRecipient->PushConfigSection();
+
           // New collision?
           if(_pstEvent->eID == orxPHYSICS_EVENT_CONTACT_ADD)
           {
@@ -1677,6 +1686,9 @@ orxSTATUS orxFASTCALL ScrollBase::StaticEventHandler(const orxEVENT *_pstEvent)
             // Calls its callback
             poRecipient->OnSeparate(poSender);
           }
+
+          // Pops config section
+          poRecipient->PopConfigSection();
         }
       }
 
