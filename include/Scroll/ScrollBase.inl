@@ -1307,18 +1307,18 @@ void ScrollBase::BaseExit()
 
 void ScrollBase::BaseUpdate(const orxCLOCK_INFO &_rstInfo)
 {
-  // Not paused?
-  if(!mbIsPaused)
+  ScrollObject *poObject;
+
+  // Locks object list
+  mbObjectListLocked = orxTRUE;
+
+  // For all objects
+  for(poObject = GetNextObject();
+      poObject;
+      poObject = GetNextObject(poObject))
   {
-    ScrollObject *poObject;
-
-    // Locks object list
-    mbObjectListLocked = orxTRUE;
-
-    // For all objects
-    for(poObject = GetNextObject();
-        poObject;
-        poObject = GetNextObject(poObject))
+    // Not paused?
+    if((!mbIsPaused) || (orxObject_IsPaused(poObject->GetOrxObject()) == orxFALSE))
     {
       orxCLOCK *pstClock;
 
@@ -1342,10 +1342,10 @@ void ScrollBase::BaseUpdate(const orxCLOCK_INFO &_rstInfo)
       // Pops section
       poObject->PopConfigSection();
     }
-
-    // Unlocks object list
-    mbObjectListLocked = orxFALSE;
   }
+
+  // Unlocks object list
+  mbObjectListLocked = orxFALSE;
 
   // Calls child update
   Update(_rstInfo);
