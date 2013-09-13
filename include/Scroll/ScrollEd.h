@@ -102,7 +102,7 @@ private:
                 orxSTATUS       AddActionDisplay(const orxSTRING _zAction) const;
 
                 void            SetSelection(ScrollObject *_poObject = orxNULL);
-                orxOBJECT *     PickObject(const orxVECTOR &_rvPos) const;
+                orxOBJECT *     PickObject(const orxVECTOR &_rvPos, orxU32 _u32GroupID = orxU32_UNDEFINED) const;
                 ScrollObject *  AddObject(const ScrollObject *_poModel = orxNULL);
                 void            RemoveObject(ScrollObject *_poObject);
 

@@ -60,6 +60,8 @@
 
 #endif /* TARGET_OS_ANDROID */
 
+#include <stddef.h>
+
 
 /* *** Platform dependent base declarations */
 
@@ -371,6 +373,9 @@
 #define orxALIGN32(ADDRESS)             orxALIGN(ADDRESS, 32)
 #define orxALIGN64(ADDRESS)             orxALIGN(ADDRESS, 64)
 
+
+/** Structure macros */
+#define orxSTRUCT_GET_FROM_FIELD(TYPE, FIELD, POINTER)   ((TYPE *)((orxU8 *)(POINTER) - offsetof(TYPE, FIELD)))
 
 /** Tests all flags
  * @param[in] X Flag container

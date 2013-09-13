@@ -212,8 +212,8 @@ public:
                 ScrollObject *  GetPreviousObject(const ScrollObject *_poObject = orxNULL, orxBOOL _bChronological = orxFALSE) const;
           template<class O> O * GetPreviousObject(const O *_poObject = orxNULL) const;
 
-                ScrollObject *  PickObject(const orxVECTOR &_rvPosition) const;
-                ScrollObject *  PickObject(const orxOBOX &_rstBox) const;
+                ScrollObject *  PickObject(const orxVECTOR &_rvPosition, orxU32 _u32GroupID = orxU32_UNDEFINED) const;
+                ScrollObject *  PickObject(const orxOBOX &_rstBox, orxU32 _u32GroupID = orxU32_UNDEFINED) const;
 
 
 

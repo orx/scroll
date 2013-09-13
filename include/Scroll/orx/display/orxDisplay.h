@@ -791,6 +791,12 @@ static orxCOLOR *orxFASTCALL      orxColor_FromHSVToRGB(orxCOLOR *_pstDst, const
   return pstResult;
 }
 
+/** Gets blend mode from a string
+ * @param[in]    _zBlendMode                          String to evaluate
+ * @return orxDISPLAY_BLEND_MODE
+ */
+extern orxDLLAPI orxDISPLAY_BLEND_MODE orxFASTCALL    orxDisplay_GetBlendModeFromString(const orxSTRING _zBlendMode);
+
 
 /***************************************************************************
  * Functions extended by plugins
@@ -852,11 +858,12 @@ extern orxDLLAPI orxBITMAP *orxFASTCALL               orxDisplay_LoadBitmap(cons
 extern orxDLLAPI orxSTATUS orxFASTCALL                orxDisplay_SaveBitmap(const orxBITMAP *_pstBitmap, const orxSTRING _zFileName);
 
 
-/** Sets destination bitmap
- * @param[in]   _pstDst                               Destination bitmap
+/** Sets destination bitmaps
+ * @param[in]   _apstBitmapList                       Destination bitmap list
+ * @param[in]   _u32Number                            Number of destination bitmaps
  * @return orxSTATUS_SUCCESS / orxSTATUS_FAILURE
  */
-extern orxDLLAPI orxSTATUS orxFASTCALL                orxDisplay_SetDestinationBitmap(orxBITMAP *_pstDst);
+extern orxDLLAPI orxSTATUS orxFASTCALL                orxDisplay_SetDestinationBitmaps(orxBITMAP **_apstBitmapList, orxU32 _u32Number);
 
 /** Clears a bitmap
  * @param[in]   _pstBitmap                            Concerned bitmap
@@ -864,6 +871,12 @@ extern orxDLLAPI orxSTATUS orxFASTCALL                orxDisplay_SetDestinationB
  * @return orxSTATUS_SUCCESS / orxSTATUS_FAILURE
  */
 extern orxDLLAPI orxSTATUS orxFASTCALL                orxDisplay_ClearBitmap(orxBITMAP *_pstBitmap, orxRGBA _stColor);
+
+/** Sets current blend mode
+ * @param[in]   _eBlendMode                           Blend mode to set
+ * @return orxSTATUS_SUCCESS / orxSTATUS_FAILURE
+ */
+extern orxDLLAPI orxSTATUS orxFASTCALL                orxDisplay_SetBlendMode(orxDISPLAY_BLEND_MODE _eBlendMode);
 
 /** Sets a bitmap clipping for blitting (both as source and destination)
  * @param[in]   _pstBitmap                            Concerned bitmap
@@ -897,7 +910,7 @@ extern orxDLLAPI orxSTATUS orxFASTCALL                orxDisplay_SetBitmapData(o
  * @param[in]   _u32ByteNumber                        Number of bytes of the buffer
  * @return orxSTATUS_SUCCESS / orxSTATUS_FAILURE
  */
-extern orxDLLAPI orxSTATUS orxFASTCALL                orxDisplay_GetBitmapData(orxBITMAP *_pstBitmap, orxU8 *_au8Data, orxU32 _u32ByteNumber);
+extern orxDLLAPI orxSTATUS orxFASTCALL                orxDisplay_GetBitmapData(const orxBITMAP *_pstBitmap, orxU8 *_au8Data, orxU32 _u32ByteNumber);
 
 /** Sets a bitmap color (lighting/hue)
  * @param[in]   _pstBitmap                            Concerned bitmap

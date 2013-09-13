@@ -161,6 +161,18 @@ extern orxDLLAPI orxBODY_PART *orxFASTCALL    orxBody_GetNextPart(const orxBODY 
  */
 extern orxDLLAPI const orxSTRING orxFASTCALL  orxBody_GetPartName(const orxBODY_PART *_pstBodyPart);
 
+/** Gets a body part definition (matching current part status)
+ * @param[in]   _pstBodyPart    Concerned body part
+ * @return      orxBODY_PART_DEF / orxNULL
+ */
+extern orxDLLAPI const orxBODY_PART_DEF *orxFASTCALL orxBody_GetPartDef(const orxBODY_PART *_pstBodyPart);
+
+/** Gets a body part body (ie. owner)
+ * @param[in]   _pstBodyPart    Concerned body part
+ * @return      orxBODY / orxNULL
+ */
+extern orxDLLAPI orxBODY *orxFASTCALL         orxBody_GetPartBody(const orxBODY_PART *_pstBodyPart);
+
 /** Removes a body part
  * @param[in]   _pstBodyPart    Concerned body part
  * @return      orxSTATUS_SUCCESS / orxSTATUS_FAILURE
@@ -246,6 +258,13 @@ extern orxDLLAPI orxSTATUS orxFASTCALL        orxBody_SetAngularVelocity(orxBODY
  */
 extern orxDLLAPI orxSTATUS orxFASTCALL        orxBody_SetCustomGravity(orxBODY *_pstBody, const orxVECTOR *_pvCustomGravity);
 
+/** Sets a body fixed rotation
+ * @param[in]   _pstBody        Concerned body
+ * @param[in]   _bFixed         Fixed / not fixed
+ * @return      orxSTATUS_SUCCESS / orxSTATUS_FAILURE
+ */
+extern orxDLLAPI orxSTATUS orxFASTCALL        orxBody_SetFixedRotation(orxBODY *_pstBody, orxBOOL _bFixed);
+
 /** Gets a body position
  * @param[in]   _pstBody        Concerned body
  * @param[out]  _pvPosition     Position to get
@@ -261,10 +280,18 @@ extern orxDLLAPI orxFLOAT orxFASTCALL         orxBody_GetRotation(const orxBODY 
 
 /** Gets a body speed
  * @param[in]   _pstBody        Concerned body
- * @param[out]   _pvSpeed       Speed to get
+ * @param[out]  _pvSpeed        Speed to get
  * @return      Body speed / orxNULL
  */
 extern orxDLLAPI orxVECTOR *orxFASTCALL       orxBody_GetSpeed(const orxBODY *_pstBody, orxVECTOR *_pvSpeed);
+
+/** Gets a body speed at a specified world position
+ * @param[in]   _pstBody        Concerned body
+ * @param[in]   _pvPosition     Concerned world position
+ * @param[out]  _pvSpeed        Speed to get
+ * @return      Body speed / orxNULL
+ */
+extern orxDLLAPI orxVECTOR *orxFASTCALL       orxBody_GetSpeedAtWorldPosition(const orxBODY *_pstBody, const orxVECTOR *_pvPosition, orxVECTOR *_pvSpeed);
 
 /** Gets a body angular velocity
  * @param[in]   _pstBody        Concerned body
@@ -278,6 +305,12 @@ extern orxDLLAPI orxFLOAT orxFASTCALL         orxBody_GetAngularVelocity(const o
  * @return      Body custom gravity / orxNULL is object doesn't have any
  */
 extern orxDLLAPI orxVECTOR *orxFASTCALL       orxBody_GetCustomGravity(const orxBODY *_pstBody, orxVECTOR *_pvCustomGravity);
+
+/** Is a body using a fixed rotation
+ * @param[in]   _pstBody        Concerned body
+ * @return      orxTRUE if fixed rotation, orxFALSE otherwise
+ */
+extern orxDLLAPI orxBOOL orxFASTCALL          orxBody_IsFixedRotation(const orxBODY *_pstBody);
 
 /** Gets a body mass
  * @param[in]   _pstBody        Concerned body
