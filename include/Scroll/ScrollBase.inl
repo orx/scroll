@@ -2049,10 +2049,14 @@ ScrollObject *ScrollObjectBinder<O>::CreateObject(orxOBJECT *_pstOrxObject, cons
       xFlags &= ~ScrollObject::FlagSmoothed;
     }
 
-    // Creates and protects its section
-    orxConfig_PushSection(_zInstanceName);
-    orxConfig_ProtectSection(_zInstanceName, orxTRUE);
-    orxConfig_PopSection();
+    // Not runtime?
+    if(!(_xFlags & ScrollObject::FlagRunTime))
+    {
+      // Creates and protects its intance section
+      orxConfig_PushSection(_zInstanceName);
+      orxConfig_ProtectSection(_zInstanceName, orxTRUE);
+      orxConfig_PopSection();
+    }
 
     // Pushes its section
     poResult->PushConfigSection();
@@ -2156,8 +2160,14 @@ void ScrollObjectBinder<O>::DeleteObject(ScrollObject *_poObject, const orxSTRIN
   // Valid?
   if(zName && (zName != orxSTRING_EMPTY))
   {
-    // Clears its section
-    orxConfig_ProtectSection(zName, orxFALSE);
+    // Not runtime?
+    if(!_poObject->TestFlags(ScrollObject::FlagRunTime))
+    {
+      // Unprotects instance section
+      orxConfig_ProtectSection(zName, orxFALSE);
+    }
+
+    // Clears it
     orxConfig_ClearSection(zName);
     orxASSERT(!orxConfig_HasSection(zName));
 
