@@ -2025,7 +2025,8 @@ ScrollObject *ScrollObjectBinder<O>::CreateObject(orxOBJECT *_pstOrxObject, cons
     xFlags = _xFlags;
 
     // Is tiled?
-    if((orxObject_GetRepeat(_pstOrxObject, &fRepeatX, &fRepeatY) != orxSTATUS_FAILURE)
+    if((orxOBJECT_GET_STRUCTURE(_pstOrxObject, GRAPHIC) != orxNULL)
+    && (orxObject_GetRepeat(_pstOrxObject, &fRepeatX, &fRepeatY) != orxSTATUS_FAILURE)
     && ((fRepeatX != orxFLOAT_1)
      || (fRepeatY != orxFLOAT_1)))
     {
