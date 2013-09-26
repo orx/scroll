@@ -2166,7 +2166,7 @@ void ScrollEd::UpdateButtons(const orxCLOCK_INFO &_rstInfo)
     vMousePos.fZ = stCameraFrustum.vTL.fZ + orxCamera_GetPosition(roGame.GetMainCamera(), &vCameraPos)->fZ + orx2F(0.0002f);
 
     // Picks object
-    pstPickedObject = orxObject_Pick(&vMousePos);
+    pstPickedObject = orxObject_Pick(&vMousePos, orxU32_UNDEFINED);
 
     // Found?
     if(pstPickedObject)
@@ -3060,7 +3060,7 @@ void ScrollEd::SetSelection(ScrollObject *_poObject)
   }
 }
 
-orxOBJECT *ScrollEd::PickObject(const orxVECTOR &_rvPos) const
+orxOBJECT *ScrollEd::PickObject(const orxVECTOR &_rvPos, orxU32 _u32GroupID) const
 {
   orxOBJECT  *pstResult;
   orxVECTOR   vPick;
@@ -3076,7 +3076,7 @@ orxOBJECT *ScrollEd::PickObject(const orxVECTOR &_rvPos) const
   vPick.fZ -= orx2F(0.001f);
 
   // Updates result
-  pstResult = orxObject_Pick(&vPick);
+  pstResult = orxObject_Pick(&vPick, _u32GroupID);
 
   // Has result?
   if(pstResult)
