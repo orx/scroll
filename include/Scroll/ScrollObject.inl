@@ -46,11 +46,11 @@ void ScrollObject::SetGroupID(orxU32 _u32GroupID, orxBOOL _bRecursive)
   orxObject_SetGroupID(mpstObject, _u32GroupID);
 
   // Recursive?
-  if(_bRecursive != orxFALSE)
+  if(_bRecursive)
   {
     // For all children
     for(orxOBJECT *pstChild = orxObject_GetOwnedChild(mpstObject);
-        pstChild != orxNULL;
+        pstChild;
         pstChild = orxObject_GetOwnedSibling(pstChild))
     {
       ScrollObject *poChild;
@@ -58,8 +58,12 @@ void ScrollObject::SetGroupID(orxU32 _u32GroupID, orxBOOL _bRecursive)
       // Gets its scroll object
       poChild = (ScrollObject *)orxObject_GetUserData(pstChild);
 
-      // Updates its group ID
-      poChild->SetGroupID(_u32GroupID, _bRecursive);
+      // Valid?
+      if(poChild)
+      {
+        // Updates its group ID
+        poChild->SetGroupID(_u32GroupID, _bRecursive);
+      }
     }
   }
 }
@@ -76,11 +80,11 @@ void ScrollObject::Enable(orxBOOL _bEnable, orxBOOL _bRecursive)
   orxObject_Enable(mpstObject, _bEnable);
 
   // Recursive?
-  if(_bRecursive != orxFALSE)
+  if(_bRecursive)
   {
     // For all children
     for(orxOBJECT *pstChild = orxObject_GetOwnedChild(mpstObject);
-        pstChild != orxNULL;
+        pstChild;
         pstChild = orxObject_GetOwnedSibling(pstChild))
     {
       ScrollObject *poChild;
@@ -88,8 +92,12 @@ void ScrollObject::Enable(orxBOOL _bEnable, orxBOOL _bRecursive)
       // Gets its scroll object
       poChild = (ScrollObject *)orxObject_GetUserData(pstChild);
 
-      // Updates its status
-      poChild->Enable(_bEnable, _bRecursive);
+      // Valid?
+      if(poChild)
+      {
+        // Updates its status
+        poChild->Enable(_bEnable, _bRecursive);
+      }
     }
   }
 }
@@ -97,7 +105,7 @@ void ScrollObject::Enable(orxBOOL _bEnable, orxBOOL _bRecursive)
 orxVECTOR &ScrollObject::GetPosition(orxVECTOR &_rvPosition, orxBOOL _bWorld) const
 {
   // Local?
-  if(_bWorld == orxFALSE)
+  if(!_bWorld)
   {
     // Updates result
     orxObject_GetPosition(mpstObject, &_rvPosition);
@@ -115,7 +123,7 @@ orxVECTOR &ScrollObject::GetPosition(orxVECTOR &_rvPosition, orxBOOL _bWorld) co
 void ScrollObject::SetPosition(const orxVECTOR &_rvPosition, orxBOOL _bWorld)
 {
   // Local?
-  if(_bWorld == orxFALSE)
+  if(!_bWorld)
   {
     // Updates its position
     orxObject_SetPosition(mpstObject, &_rvPosition);
@@ -130,7 +138,7 @@ void ScrollObject::SetPosition(const orxVECTOR &_rvPosition, orxBOOL _bWorld)
 orxVECTOR &ScrollObject::GetScale(orxVECTOR &_rvScale, orxBOOL _bWorld) const
 {
   // Local?
-  if(_bWorld == orxFALSE)
+  if(!_bWorld)
   {
     // Updates result
     orxObject_GetScale(mpstObject, &_rvScale);
@@ -148,7 +156,7 @@ orxVECTOR &ScrollObject::GetScale(orxVECTOR &_rvScale, orxBOOL _bWorld) const
 void ScrollObject::SetScale(const orxVECTOR &_rvScale, orxBOOL _bWorld)
 {
   // Local?
-  if(_bWorld == orxFALSE)
+  if(!_bWorld)
   {
     // Updates its scale
     orxObject_SetScale(mpstObject, &_rvScale);
@@ -165,7 +173,7 @@ orxFLOAT ScrollObject::GetRotation(orxBOOL _bWorld) const
   orxFLOAT fResult;
 
   // Local?
-  if(_bWorld == orxFALSE)
+  if(!_bWorld)
   {
     // Updates result
     fResult = orxObject_GetRotation(mpstObject);
@@ -183,7 +191,7 @@ orxFLOAT ScrollObject::GetRotation(orxBOOL _bWorld) const
 void ScrollObject::SetRotation(orxFLOAT _fRotation, orxBOOL _bWorld)
 {
   // Local?
-  if(_bWorld == orxFALSE)
+  if(!_bWorld)
   {
     // Updates its rotation
     orxObject_SetRotation(mpstObject, _fRotation);
@@ -198,7 +206,7 @@ void ScrollObject::SetRotation(orxFLOAT _fRotation, orxBOOL _bWorld)
 orxVECTOR &ScrollObject::GetSpeed(orxVECTOR &_rvSpeed, orxBOOL _bRelative) const
 {
   // Relative?
-  if(_bRelative != orxFALSE)
+  if(_bRelative)
   {
     // Updates result
     orxObject_GetRelativeSpeed(mpstObject, &_rvSpeed);
@@ -216,7 +224,7 @@ orxVECTOR &ScrollObject::GetSpeed(orxVECTOR &_rvSpeed, orxBOOL _bRelative) const
 void ScrollObject::SetSpeed(const orxVECTOR &_rvSpeed, orxBOOL _bRelative)
 {
   // Relative?
-  if(_bRelative != orxFALSE)
+  if(_bRelative)
   {
     // Updates its speed
     orxObject_SetRelativeSpeed(mpstObject, &_rvSpeed);
@@ -243,11 +251,11 @@ void ScrollObject::SetColor(const orxCOLOR &_rstColor, orxBOOL _bRecursive)
   orxObject_SetColor(mpstObject, &_rstColor);
 
   // Recursive?
-  if(_bRecursive != orxFALSE)
+  if(_bRecursive)
   {
     // For all children
     for(orxOBJECT *pstChild = orxObject_GetOwnedChild(mpstObject);
-        pstChild != orxNULL;
+        pstChild;
         pstChild = orxObject_GetOwnedSibling(pstChild))
     {
       ScrollObject *poChild;
@@ -255,8 +263,12 @@ void ScrollObject::SetColor(const orxCOLOR &_rstColor, orxBOOL _bRecursive)
       // Gets its scroll object
       poChild = (ScrollObject *)orxObject_GetUserData(pstChild);
 
-      // Updates its color
-      poChild->SetColor(_rstColor, _bRecursive);
+      // Valid?
+      if(poChild)
+      {
+        // Updates its color
+        poChild->SetColor(_rstColor, _bRecursive);
+      }
     }
   }
 }
@@ -273,11 +285,11 @@ void ScrollObject::SetFlip(orxBOOL _bFlipX, orxBOOL _bFlipY, orxBOOL _bRecursive
   orxObject_SetFlip(mpstObject, _bFlipX, _bFlipY);
 
   // Recursive?
-  if(_bRecursive != orxFALSE)
+  if(_bRecursive)
   {
     // For all children
     for(orxOBJECT *pstChild = orxObject_GetOwnedChild(mpstObject);
-        pstChild != orxNULL;
+        pstChild;
         pstChild = orxObject_GetOwnedSibling(pstChild))
     {
       ScrollObject *poChild;
@@ -285,8 +297,12 @@ void ScrollObject::SetFlip(orxBOOL _bFlipX, orxBOOL _bFlipY, orxBOOL _bRecursive
       // Gets its scroll object
       poChild = (ScrollObject *)orxObject_GetUserData(pstChild);
 
-      // Updates its flip
-      poChild->SetFlip(_bFlipX, _bFlipY, _bRecursive);
+      // Valid?
+      if(poChild)
+      {
+        // Updates its flip
+        poChild->SetFlip(_bFlipX, _bFlipY, _bRecursive);
+      }
     }
   }
 }
@@ -296,7 +312,7 @@ orxBOOL ScrollObject::IsAnim(const orxSTRING _zAnim, orxBOOL _bCurrent)
   orxBOOL bResult;
 
   // Target anim?
-  if(_bCurrent != orxFALSE)
+  if(!_bCurrent)
   {
     // Updates result
     bResult = orxObject_IsTargetAnim(mpstObject, _zAnim);
@@ -314,7 +330,7 @@ orxBOOL ScrollObject::IsAnim(const orxSTRING _zAnim, orxBOOL _bCurrent)
 void ScrollObject::SetAnim(const orxSTRING _zAnim, orxBOOL _bCurrent)
 {
   // Target anim?
-  if(_bCurrent != orxFALSE)
+  if(!_bCurrent)
   {
     // Sets it
     orxObject_SetTargetAnim(mpstObject, _zAnim);
@@ -332,11 +348,11 @@ void ScrollObject::AddFX(const orxSTRING _zFXName, orxBOOL _bRecursive)
   orxObject_AddFX(mpstObject, _zFXName);
 
   // Recursive?
-  if(_bRecursive != orxFALSE)
+  if(_bRecursive)
   {
     // For all children
     for(orxOBJECT *pstChild = orxObject_GetOwnedChild(mpstObject);
-        pstChild != orxNULL;
+        pstChild;
         pstChild = orxObject_GetOwnedSibling(pstChild))
     {
       ScrollObject *poChild;
@@ -344,8 +360,12 @@ void ScrollObject::AddFX(const orxSTRING _zFXName, orxBOOL _bRecursive)
       // Gets its scroll object
       poChild = (ScrollObject *)orxObject_GetUserData(pstChild);
 
-      // Adds FX to it
-      poChild->AddFX(_zFXName, _bRecursive);
+      // Valid?
+      if(poChild)
+      {
+        // Adds FX to it
+        poChild->AddFX(_zFXName, _bRecursive);
+      }
     }
   }
 }
@@ -356,11 +376,11 @@ void ScrollObject::AddFX(const orxSTRING _zFXName, orxFLOAT _fDelay, orxBOOL _bR
   orxObject_AddDelayedFX(mpstObject, _zFXName, _fDelay);
 
   // Recursive?
-  if(_bRecursive != orxFALSE)
+  if(_bRecursive)
   {
     // For all children
     for(orxOBJECT *pstChild = orxObject_GetOwnedChild(mpstObject);
-        pstChild != orxNULL;
+        pstChild;
         pstChild = orxObject_GetOwnedSibling(pstChild))
     {
       ScrollObject *poChild;
@@ -368,8 +388,12 @@ void ScrollObject::AddFX(const orxSTRING _zFXName, orxFLOAT _fDelay, orxBOOL _bR
       // Gets its scroll object
       poChild = (ScrollObject *)orxObject_GetUserData(pstChild);
 
-      // Adds FX to it
-      poChild->AddFX(_zFXName, _fDelay, _bRecursive);
+      // Valid?
+      if(poChild)
+      {
+        // Adds FX to it
+        poChild->AddFX(_zFXName, _fDelay, _bRecursive);
+      }
     }
   }
 }
@@ -380,11 +404,11 @@ void ScrollObject::RemoveFX(const orxSTRING _zFXName, orxBOOL _bRecursive)
   orxObject_RemoveFX(mpstObject, _zFXName);
 
   // Recursive?
-  if(_bRecursive != orxFALSE)
+  if(_bRecursive)
   {
     // For all children
     for(orxOBJECT *pstChild = orxObject_GetOwnedChild(mpstObject);
-        pstChild != orxNULL;
+        pstChild;
         pstChild = orxObject_GetOwnedSibling(pstChild))
     {
       ScrollObject *poChild;
@@ -392,8 +416,12 @@ void ScrollObject::RemoveFX(const orxSTRING _zFXName, orxBOOL _bRecursive)
       // Gets its scroll object
       poChild = (ScrollObject *)orxObject_GetUserData(pstChild);
 
-      // Removes FX from it
-      poChild->RemoveFX(_zFXName, _bRecursive);
+      // Valid?
+      if(poChild)
+      {
+        // Removes FX from it
+        poChild->RemoveFX(_zFXName, _bRecursive);
+      }
     }
   }
 }
@@ -404,11 +432,11 @@ void ScrollObject::AddShader(const orxSTRING _zShaderName, orxBOOL _bRecursive)
   orxObject_AddShader(mpstObject, _zShaderName);
 
   // Recursive?
-  if(_bRecursive != orxFALSE)
+  if(_bRecursive)
   {
     // For all children
     for(orxOBJECT *pstChild = orxObject_GetOwnedChild(mpstObject);
-        pstChild != orxNULL;
+        pstChild;
         pstChild = orxObject_GetOwnedSibling(pstChild))
     {
       ScrollObject *poChild;
@@ -416,8 +444,12 @@ void ScrollObject::AddShader(const orxSTRING _zShaderName, orxBOOL _bRecursive)
       // Gets its scroll object
       poChild = (ScrollObject *)orxObject_GetUserData(pstChild);
 
-      // Adds shader to it
-      poChild->AddShader(_zShaderName, _bRecursive);
+      // Valid?
+      if(poChild)
+      {
+        // Adds shader to it
+        poChild->AddShader(_zShaderName, _bRecursive);
+      }
     }
   }
 }
@@ -428,11 +460,11 @@ void ScrollObject::RemoveShader(const orxSTRING _zShaderName, orxBOOL _bRecursiv
   orxObject_RemoveShader(mpstObject, _zShaderName);
 
   // Recursive?
-  if(_bRecursive != orxFALSE)
+  if(_bRecursive)
   {
     // For all children
     for(orxOBJECT *pstChild = orxObject_GetOwnedChild(mpstObject);
-        pstChild != orxNULL;
+        pstChild;
         pstChild = orxObject_GetOwnedSibling(pstChild))
     {
       ScrollObject *poChild;
@@ -440,8 +472,12 @@ void ScrollObject::RemoveShader(const orxSTRING _zShaderName, orxBOOL _bRecursiv
       // Gets its scroll object
       poChild = (ScrollObject *)orxObject_GetUserData(pstChild);
 
-      // Removes shader from it
-      poChild->RemoveShader(_zShaderName, _bRecursive);
+      // Valid?
+      if(poChild)
+      {
+        // Removes shader from it
+        poChild->RemoveShader(_zShaderName, _bRecursive);
+      }
     }
   }
 }
@@ -509,7 +545,7 @@ void ScrollObject::SetDifferentialMode(orxBOOL _bDifferential)
 
     // For all children
     for(orxOBJECT *pstChild = orxObject_GetOwnedChild(mpstObject);
-        pstChild != orxNULL;
+        pstChild;
         pstChild = orxObject_GetOwnedSibling(pstChild))
     {
       // Enforces its differential flags
@@ -523,7 +559,7 @@ void ScrollObject::SetDifferentialMode(orxBOOL _bDifferential)
 
     // For all children
     for(orxOBJECT *pstChild = orxObject_GetOwnedChild(mpstObject);
-        pstChild != orxNULL;
+        pstChild;
         pstChild = orxObject_GetOwnedSibling(pstChild))
     {
       // Removes its differential flags

@@ -949,7 +949,7 @@ orxSTATUS ScrollBase::PauseGame(orxBOOL _bPause)
       if(poObject->TestFlags(ScrollObject::FlagPausable))
       {
         // Calls its callback
-        if(poObject->OnPauseGame(_bPause) != orxFALSE)
+        if(poObject->OnPauseGame(_bPause))
         {
           // Updates it
           orxObject_Pause(poObject->GetOrxObject(), _bPause);
@@ -1006,7 +1006,7 @@ ScrollObject *ScrollBase::GetObject(orxU64 _u64GUID) const
   pstObject = orxOBJECT(orxStructure_Get(_u64GUID));
 
   // Valid?
-  if(pstObject != orxNULL)
+  if(pstObject)
   {
     // Updates result
     poResult = (ScrollObject *)orxObject_GetUserData(pstObject);
@@ -1318,7 +1318,7 @@ void ScrollBase::BaseUpdate(const orxCLOCK_INFO &_rstInfo)
       poObject = GetNextObject(poObject))
   {
     // Not paused?
-    if((!mbIsPaused) || (orxObject_IsPaused(poObject->GetOrxObject()) == orxFALSE))
+    if((!mbIsPaused) || (!orxObject_IsPaused(poObject->GetOrxObject())))
     {
       orxCLOCK *pstClock;
 
@@ -1412,7 +1412,7 @@ orxSTRING ScrollBase::GetNewObjectName(orxCHAR _zInstanceName[32], orxBOOL _bRun
   orxSTRING zResult = _zInstanceName;
 
   // Checks
-  orxASSERT(_zInstanceName != orxNULL);
+  orxASSERT(_zInstanceName);
 
   // Runtime?
   if(_bRunTime)
@@ -1771,7 +1771,7 @@ orxSTATUS orxFASTCALL ScrollBase::StaticEventHandler(const orxEVENT *_pstEvent)
         if(poSender)
         {
           // Calls object callback
-          eResult = (poSender->OnRender((orxRENDER_EVENT_OBJECT_PAYLOAD *)(_pstEvent->pstPayload)) != orxFALSE) ? orxSTATUS_SUCCESS : orxSTATUS_FAILURE;
+          eResult = (poSender->OnRender((orxRENDER_EVENT_OBJECT_PAYLOAD *)(_pstEvent->pstPayload))) ? orxSTATUS_SUCCESS : orxSTATUS_FAILURE;
         }
       }
 
@@ -1876,7 +1876,7 @@ inline ScrollObjectBinderBase *ScrollObjectBinderBase::GetBinder(const orxSTRING
 
     // Gets associated binder, using config hierarchy
     for(zSection = _zName, poResult = (ScrollObjectBinderBase *)orxHashTable_Get(GetTable(), orxString_ToCRC(zSection));
-        (poResult == orxNULL) && ((zSection = orxConfig_GetParent(zSection)) != orxNULL);
+        (!poResult) && ((zSection = orxConfig_GetParent(zSection)));
         poResult = (ScrollObjectBinderBase *)orxHashTable_Get(GetTable(), orxString_ToCRC(zSection)));
   }
 
@@ -1991,7 +1991,7 @@ ScrollObject *ScrollObjectBinder<O>::CreateObject(orxOBJECT *_pstOrxObject, cons
     if(_xFlags & (ScrollObject::FlagSave | ScrollObject::FlagRunTime))
     {
       // First one?
-      if(mpoFirstObject == orxNULL)
+      if(!mpoFirstObject)
       {
         // Stores it
         mpoFirstObject = mpoLastObject = poResult;
@@ -2025,7 +2025,7 @@ ScrollObject *ScrollObjectBinder<O>::CreateObject(orxOBJECT *_pstOrxObject, cons
     xFlags = _xFlags;
 
     // Is tiled?
-    if((orxOBJECT_GET_STRUCTURE(_pstOrxObject, GRAPHIC) != orxNULL)
+    if((orxOBJECT_GET_STRUCTURE(_pstOrxObject, GRAPHIC))
     && (orxObject_GetRepeat(_pstOrxObject, &fRepeatX, &fRepeatY) != orxSTATUS_FAILURE)
     && ((fRepeatX != orxFLOAT_1)
      || (fRepeatY != orxFLOAT_1)))
@@ -2063,8 +2063,8 @@ ScrollObject *ScrollObjectBinder<O>::CreateObject(orxOBJECT *_pstOrxObject, cons
     poResult->PushConfigSection();
 
     // Is pausable?
-    if((orxConfig_HasValue(ScrollBase::szConfigScrollObjectPausable) == orxFALSE)
-    || (orxConfig_GetBool(ScrollBase::szConfigScrollObjectPausable) != orxFALSE))
+    if((!orxConfig_HasValue(ScrollBase::szConfigScrollObjectPausable))
+    || (orxConfig_GetBool(ScrollBase::szConfigScrollObjectPausable)))
     {
       // Updates flags
       xFlags |= ScrollObject::FlagPausable;
