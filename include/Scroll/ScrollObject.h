@@ -97,6 +97,7 @@ public:
                 void                    RemoveSound(const orxSTRING _zSoundName);
 
                 void                    AddTrack(const orxSTRING _zTrackName);
+                orxSTATUS               AddConditionalTrack(const orxSTRING _zTrackKey);
                 void                    RemoveTrack(const orxSTRING _zTrackName);
 
                 orxFLOAT                GetLifeTime() const;

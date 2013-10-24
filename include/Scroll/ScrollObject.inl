@@ -500,6 +500,27 @@ void ScrollObject::AddTrack(const orxSTRING _zTrackName)
   orxObject_AddTimeLineTrack(mpstObject, _zTrackName);
 }
 
+orxSTATUS ScrollObject::AddConditionalTrack(const orxSTRING _zTrackKey)
+{
+  orxSTATUS eResult = orxSTATUS_FAILURE;
+
+  // Pushes config section
+  PushConfigSection();
+
+  // Has Track key?
+  if(orxConfig_HasValue(_zTrackKey))
+  {
+    // Adds track
+    eResult = orxObject_AddTimeLineTrack(mpstObject, orxConfig_GetString(_zTrackKey));
+  }
+
+  // Pops config section
+  PopConfigSection();
+
+  // Done!
+  return eResult;
+}
+
 void ScrollObject::RemoveTrack(const orxSTRING _zTrackName)
 {
   // Removes track from object
