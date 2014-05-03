@@ -50,9 +50,9 @@ const orxSTRING ScrollBase::szConfigLayerNumber               = "LayerNumber";
 const orxSTRING ScrollBase::szConfigNoSave                    = "NoSave";
 const orxSTRING ScrollBase::szConfigSectionScrollObject       = "ScrollObject";
 const orxSTRING ScrollBase::szConfigScrollObjectNumber        = "ObjectNumber";
-const orxSTRING ScrollBase::szConfigScrollObjectPrefix        = "SObj";
-const orxSTRING ScrollBase::szConfigScrollObjectFormat        = "SObj%04d";
-const orxSTRING ScrollBase::szConfigScrollObjectRuntimeFormat = "RT%04d";
+const orxSTRING ScrollBase::szConfigScrollObjectPrefix        = "SO:";
+const orxSTRING ScrollBase::szConfigScrollObjectFormat        = "SO:%08d";
+const orxSTRING ScrollBase::szConfigScrollObjectRuntimeFormat = "RT:%08d";
 const orxSTRING ScrollBase::szConfigScrollObjectName          = "Name";
 const orxSTRING ScrollBase::szConfigScrollObjectPosition      = "Position";
 const orxSTRING ScrollBase::szConfigScrollObjectRotation      = "Rotation";
@@ -1366,7 +1366,7 @@ orxBOOL ScrollBase::BaseMapSaveFilter(const orxSTRING _zSectionName, const orxST
   orxBOOL bResult;
 
   // Map section or game object?
-  if((!orxString_Compare(_zSectionName, szConfigSectionMap)) || (orxString_SearchString(_zSectionName, szConfigScrollObjectPrefix)))
+  if((!orxString_Compare(_zSectionName, szConfigSectionMap)) || (orxString_SearchString(_zSectionName, szConfigScrollObjectPrefix) == _zSectionName))
   {
     // Full section?
     if(!_zKeyName)
@@ -1419,22 +1419,13 @@ orxSTRING ScrollBase::GetNewObjectName(orxCHAR _zInstanceName[32], orxBOOL _bRun
   {
     // Creates name
     orxString_NPrint(zResult, 32, szConfigScrollObjectRuntimeFormat, ms32RuntimeObjectID++);
-    zResult[31] = orxCHAR_NULL;
   }
   else
   {
-    // Finds the next empty slot
-    for(orxString_NPrint(zResult, 32, szConfigScrollObjectFormat, ms32NextObjectID), zResult[31] = orxCHAR_NULL;
-        orxConfig_HasSection(zResult);
-        ms32NextObjectID++, orxString_NPrint(zResult, 32, szConfigScrollObjectFormat, ms32NextObjectID), zResult[31] = orxCHAR_NULL);
-
     // Creates name
-    orxString_NPrint(zResult, 32, szConfigScrollObjectFormat, ms32NextObjectID);
-    zResult[31] = orxCHAR_NULL;
+    orxString_NPrint(zResult, 32, szConfigScrollObjectFormat, ms32NextObjectID++);
   }
-
-  // Updates next object ID
-  ms32NextObjectID++;
+  zResult[31] = orxCHAR_NULL;
 
   // Done
   return zResult;
@@ -2019,7 +2010,7 @@ ScrollObject *ScrollObjectBinder<O>::CreateObject(orxOBJECT *_pstOrxObject, cons
     orxObject_SetUserData(_pstOrxObject, poResult);
 
     // Stores its name
-    poResult->mzName = orxString_Duplicate(_zInstanceName);
+    poResult->macName[orxString_NPrint(poResult->macName, sizeof(poResult->macName) - 1, "%s", _zInstanceName)] = orxCHAR_NULL;
 
     // Inits flags
     xFlags = _xFlags;
@@ -2159,7 +2150,7 @@ void ScrollObjectBinder<O>::DeleteObject(ScrollObject *_poObject, const orxSTRIN
   zName = _poObject->GetName();
 
   // Valid?
-  if(zName && (zName != orxSTRING_EMPTY))
+  if(zName && (zName[0] != orxCHAR_NULL))
   {
     // Not runtime?
     if(!_poObject->TestFlags(ScrollObject::FlagRunTime))
@@ -2171,9 +2162,6 @@ void ScrollObjectBinder<O>::DeleteObject(ScrollObject *_poObject, const orxSTRIN
     // Clears it
     orxConfig_ClearSection(zName);
     orxASSERT(!orxConfig_HasSection(zName));
-
-    // Deletes its name
-    orxString_Delete(const_cast<orxSTRING>(zName));
 
     // Clears next object ID
     roGame.ms32NextObjectID = 0;

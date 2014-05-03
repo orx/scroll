@@ -23,11 +23,12 @@
  */
 
 //! Code
-ScrollObject::ScrollObject() : mpstObject(orxNULL), mzName(orxNULL), mzModelName(orxNULL), mxFlags(FlagNone)
+ScrollObject::ScrollObject() : mpstObject(orxNULL), mzModelName(orxNULL), mxFlags(FlagNone)
 {
   // Clears nodes
   orxMemory_Zero(&mstNode, sizeof(orxLINKLIST_NODE));
   orxMemory_Zero(&mstChronoNode, sizeof(orxLINKLIST_NODE));
+  orxMemory_Zero(macName, sizeof(macName));
 }
 
 ScrollObject::~ScrollObject()
@@ -547,7 +548,7 @@ void ScrollObject::SetLifeTime(orxFLOAT _fLifeTime)
 void ScrollObject::PushConfigSection(orxBOOL _bPushInstanceSection) const
 {
   // Pushes its model section
-  orxConfig_PushSection(_bPushInstanceSection ? mzName : mzModelName);
+  orxConfig_PushSection(_bPushInstanceSection ? macName : mzModelName);
 }
 
 void ScrollObject::PopConfigSection() const

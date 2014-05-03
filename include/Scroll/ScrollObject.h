@@ -55,7 +55,7 @@ public:
                 orxBOOL                 TestAllFlags(Flag _xTestFlags) const                      {return ((mxFlags & _xTestFlags) == _xTestFlags) ? orxTRUE : orxFALSE;}
                 Flag                    GetFlags(Flag _xMask = MaskAll) const                     {return (Flag)(mxFlags & _xMask);}
                 orxOBJECT *             GetOrxObject() const                                      {return mpstObject;}
-                const orxSTRING         GetName() const                                           {return mzName;}
+                const orxSTRING         GetName() const                                           {return macName;}
                 const orxSTRING         GetModelName() const                                      {return mzModelName;}
                 orxU64                  GetGUID() const                                           {return orxStructure_GetGUID(mpstObject);}
 
@@ -138,11 +138,11 @@ private:
 private:
 
                 orxOBJECT *             mpstObject;
-                const orxSTRING         mzName;
                 const orxSTRING         mzModelName;
                 Flag                    mxFlags;
                 orxLINKLIST_NODE        mstNode;
                 orxLINKLIST_NODE        mstChronoNode;
+                orxCHAR                 macName[16];
 };
 
 
