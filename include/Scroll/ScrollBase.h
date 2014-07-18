@@ -203,6 +203,8 @@ public:
                 orxSTATUS       PauseGame(orxBOOL _bPause);
                 orxBOOL         IsGamePaused() const;
 
+                orxU32          GetFrameCounter() const;
+
                 orxVIEWPORT *   GetMainViewport() const;
                 orxCAMERA *     GetMainCamera() const;
                 ScrollObject *  GetObject(orxU64 _u64GUID) const;
@@ -337,6 +339,7 @@ private:
                 orxS32          ms32NextObjectID;
                 orxS32          ms32RuntimeObjectID;
                 orxU32          mu32LayerNumber;
+                orxU32          mu32FrameCounter;
                 orxCONFIG_SAVE_FUNCTION mpfnCustomMapSaveFilter;
 };
 

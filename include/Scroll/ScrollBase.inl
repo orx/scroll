@@ -78,9 +78,9 @@ ScrollBase &ScrollBase::GetInstance()
 }
 
 ScrollBase::ScrollBase() : mzMapName(orxNULL), mpstMainViewport(orxNULL), mpstMainCamera(orxNULL),
-                           ms32NextObjectID(0), ms32RuntimeObjectID(0), mu32LayerNumber(1), mzCurrentObject(orxNULL),
-                           mpfnCustomMapSaveFilter(orxNULL), mbEditorMode(orxFALSE), mbDifferentialMode(orxFALSE),
-                           mbObjectListLocked(orxFALSE), mbIsRunning(orxFALSE), mbIsPaused(orxFALSE)
+                           ms32NextObjectID(0), ms32RuntimeObjectID(0), mu32LayerNumber(1), mu32FrameCounter(0),
+                           mzCurrentObject(orxNULL), mpfnCustomMapSaveFilter(orxNULL),
+                           mbEditorMode(orxFALSE), mbDifferentialMode(orxFALSE), mbObjectListLocked(orxFALSE), mbIsRunning(orxFALSE), mbIsPaused(orxFALSE)
 {
 }
 
@@ -985,6 +985,12 @@ orxBOOL ScrollBase::IsGamePaused() const
   return mbIsPaused;
 }
 
+orxU32 ScrollBase::GetFrameCounter() const
+{
+  // Done!
+  return mu32FrameCounter;
+}
+
 orxVIEWPORT *ScrollBase::GetMainViewport() const
 {
   // Done!
@@ -1213,7 +1219,8 @@ orxSTATUS ScrollBase::BaseInit()
   if(eResult != orxSTATUS_FAILURE)
   {
     // Adds event handler
-    eResult = ((orxEvent_AddHandler(orxEVENT_TYPE_OBJECT, StaticEventHandler) != orxSTATUS_FAILURE)
+    eResult = ((orxEvent_AddHandler(orxEVENT_TYPE_SYSTEM, StaticEventHandler) != orxSTATUS_FAILURE)
+            && (orxEvent_AddHandler(orxEVENT_TYPE_OBJECT, StaticEventHandler) != orxSTATUS_FAILURE)
             && (orxEvent_AddHandler(orxEVENT_TYPE_ANIM, StaticEventHandler) != orxSTATUS_FAILURE)
             && (orxEvent_AddHandler(orxEVENT_TYPE_RENDER, StaticEventHandler) != orxSTATUS_FAILURE)
             && (orxEvent_AddHandler(orxEVENT_TYPE_PHYSICS, StaticEventHandler) != orxSTATUS_FAILURE)) ? orxSTATUS_SUCCESS : orxSTATUS_FAILURE;
@@ -1296,6 +1303,7 @@ void ScrollBase::BaseExit()
   }
 
   // Removes event handler
+  orxEvent_RemoveHandler(orxEVENT_TYPE_SYSTEM, StaticEventHandler);
   orxEvent_RemoveHandler(orxEVENT_TYPE_OBJECT, StaticEventHandler);
   orxEvent_RemoveHandler(orxEVENT_TYPE_ANIM, StaticEventHandler);
   orxEvent_RemoveHandler(orxEVENT_TYPE_RENDER, StaticEventHandler);
@@ -1512,6 +1520,26 @@ orxSTATUS orxFASTCALL ScrollBase::StaticEventHandler(const orxEVENT *_pstEvent)
   // Depending on event type
   switch(_pstEvent->eType)
   {
+    // System event
+    case orxEVENT_TYPE_SYSTEM:
+    {
+      case orxSYSTEM_EVENT_GAME_LOOP_START:
+      {
+        orxSYSTEM_EVENT_PAYLOAD *pstPayload;
+
+        // Gets game instance
+        ScrollBase &roGame = ScrollBase::GetInstance();
+
+        // Gets payload
+        pstPayload = (orxSYSTEM_EVENT_PAYLOAD *)_pstEvent->pstPayload;
+
+        // Stores frame counter
+        roGame.mu32FrameCounter = pstPayload->u32FrameCounter;
+      }
+
+      break;
+    }
+
     // Object event
     case orxEVENT_TYPE_OBJECT:
     {
