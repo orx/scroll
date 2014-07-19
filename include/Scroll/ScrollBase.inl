@@ -1523,7 +1523,8 @@ orxSTATUS orxFASTCALL ScrollBase::StaticEventHandler(const orxEVENT *_pstEvent)
     // System event
     case orxEVENT_TYPE_SYSTEM:
     {
-      case orxSYSTEM_EVENT_GAME_LOOP_START:
+      // Game loop start?
+      if(_pstEvent->eID == orxSYSTEM_EVENT_GAME_LOOP_START)
       {
         orxSYSTEM_EVENT_PAYLOAD *pstPayload;
 
