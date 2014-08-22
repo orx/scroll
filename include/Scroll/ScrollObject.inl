@@ -501,7 +501,7 @@ void ScrollObject::AddTrack(const orxSTRING _zTrackName)
   orxObject_AddTimeLineTrack(mpstObject, _zTrackName);
 }
 
-orxSTATUS ScrollObject::AddConditionalTrack(const orxSTRING _zTrackKey)
+orxSTATUS ScrollObject::AddConditionalTrack(const orxSTRING _zTrackKey, orxS32 _s32Index)
 {
   orxSTATUS eResult = orxSTATUS_FAILURE;
 
@@ -512,7 +512,7 @@ orxSTATUS ScrollObject::AddConditionalTrack(const orxSTRING _zTrackKey)
   if(orxConfig_HasValue(_zTrackKey))
   {
     // Adds track
-    eResult = orxObject_AddTimeLineTrack(mpstObject, orxConfig_GetString(_zTrackKey));
+    eResult = orxObject_AddTimeLineTrack(mpstObject, orxConfig_GetListString(_zTrackKey, _s32Index));
   }
 
   // Pops config section
