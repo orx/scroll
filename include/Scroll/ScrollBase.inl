@@ -270,6 +270,29 @@ ScrollObject *ScrollBase::PickObject(const orxVECTOR &_rvPosition, orxU32 _u32Gr
   return poResult;
 }
 
+ScrollObject *ScrollBase::PickObject(const orxVECTOR &_rvPosition, const orxVECTOR *_avOffsetList, orxU32 _u32ListSize, orxU32 _u32GroupID) const
+{
+  ScrollObject *poResult = orxNULL;
+
+  // Picks initial position
+  poResult = PickObject(_rvPosition, _u32GroupID);
+
+  // For all offsets, till found
+  for(orxU32 i = 0; (poResult == orxNULL) && (i < _u32ListSize); i++)
+  {
+    orxVECTOR vPickPosition;
+
+    // Inits pick position
+    orxVector_Add(&vPickPosition, &_rvPosition, &_avOffsetList[i]);
+
+    // Updates result
+    poResult = PickObject(vPickPosition, _u32GroupID);
+  }
+
+  // Done!
+  return poResult;
+}
+
 ScrollObject *ScrollBase::PickObject(const orxVECTOR &_rvPosition, const orxVECTOR &_rvExtent, orxU32 _u32GroupID) const
 {
   orxOBOX       stBox;
