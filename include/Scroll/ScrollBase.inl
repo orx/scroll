@@ -270,6 +270,25 @@ ScrollObject *ScrollBase::PickObject(const orxVECTOR &_rvPosition, orxU32 _u32Gr
   return poResult;
 }
 
+ScrollObject *ScrollBase::PickObject(const orxVECTOR &_rvPosition, const orxVECTOR &_rvExtent, orxU32 _u32GroupID) const
+{
+  orxOBOX       stBox;
+  ScrollObject *poResult;
+
+  // Inits Box
+  orxVector_Copy(&stBox.vPosition, &_rvPosition);
+  orxVector_Copy(&stBox.vPivot, &_rvExtent);
+  orxVector_Set(&stBox.vX, orx2F(2.0f) * _rvExtent.fX, orxFLOAT_0, orxFLOAT_0);
+  orxVector_Set(&stBox.vY, orxFLOAT_0, orx2F(2.0f) * _rvExtent.fY, orxFLOAT_0);
+  orxVector_Set(&stBox.vZ, orxFLOAT_0, orxFLOAT_0, orx2F(2.0f) * _rvExtent.fZ);
+
+  // Updates result
+  poResult = PickObject(stBox, _u32GroupID);
+
+  // Done!
+  return poResult;
+}
+
 ScrollObject *ScrollBase::PickObject(const orxOBOX &_rstBox, orxU32 _u32GroupID) const
 {
   orxOBJECT    *pstObject;

@@ -215,6 +215,7 @@ public:
           template<class O> O * GetPreviousObject(const O *_poObject = orxNULL) const;
 
                 ScrollObject *  PickObject(const orxVECTOR &_rvPosition, orxU32 _u32GroupID = orxU32_UNDEFINED) const;
+                ScrollObject *  PickObject(const orxVECTOR &_rvPosition, const orxVECTOR &_rvExtent, orxU32 _u32GroupID = orxU32_UNDEFINED) const;
                 ScrollObject *  PickObject(const orxOBOX &_rstBox, orxU32 _u32GroupID = orxU32_UNDEFINED) const;
 
 
