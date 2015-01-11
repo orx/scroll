@@ -1811,7 +1811,7 @@ orxSTATUS orxFASTCALL ScrollBase::StaticEventHandler(const orxEVENT *_pstEvent)
           pstPayload = (orxANIM_EVENT_PAYLOAD *)_pstEvent->pstPayload;
 
           // Calls object callback
-          poSender->OnAnimEvent(pstPayload->zAnimName, pstPayload->zCustomEventName, pstPayload->fCustomEventTime, pstPayload->fCustomEventValue);
+          poSender->OnAnimEvent(pstPayload->zAnimName, pstPayload->stCustom.zName, pstPayload->stCustom.fTime, pstPayload->stCustom.fValue);
         }
       }
 

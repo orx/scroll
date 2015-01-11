@@ -1,6 +1,6 @@
 /* Orx - Portable Game Engine
  *
- * Copyright (c) 2008-2013 Orx-Project
+ * Copyright (c) 2008-2014 Orx-Project
  *
  * This software is provided 'as-is', without any express or implied
  * warranty. In no event will the authors be held liable for any damages
@@ -32,7 +32,7 @@
 
 /**
  * @addtogroup orxConfig
- * 
+ *
  * Config module
  * Module that handles configuration files
  *
@@ -49,7 +49,12 @@
 #include "math/orxVector.h"
 
 
-/** Event enum
+/** Defines
+ */
+#define orxCONFIG_KZ_RESOURCE_GROUP           "Config"  /**< Config resource group */
+
+
+ /** Event enum
  */
 typedef enum __orxCONFIG_EVENT_t
 {
@@ -145,6 +150,18 @@ extern orxDLLAPI orxSTATUS orxFASTCALL        orxConfig_SelectSection(const orxS
  */
 extern orxDLLAPI orxSTATUS orxFASTCALL        orxConfig_RenameSection(const orxSTRING _zSectionName, const orxSTRING _zNewSectionName);
 
+/** Gets section origin (ie. the file where it was defined for the first time or orxSTRING_EMPTY if not defined via a file)
+ * @param[in] _zSectionName     Concerned section name
+ * @return orxSTRING if found, orxSTRING_EMPTY otherwise
+ */
+extern orxDLLAPI const orxSTRING orxFASTCALL  orxConfig_GetOrigin(const orxSTRING _zSectionName);
+
+/** Gets section origin ID (ie. the file where it was defined for the first time or orxSTRING_EMPTY if not defined via a file)
+ * @param[in] _zSectionName     Concerned section name
+ * @return String ID if found, 0 otherwise
+ */
+extern orxDLLAPI orxU32 orxFASTCALL           orxConfig_GetOriginID(const orxSTRING _zSectionName);
+
 /** Sets a section's parent
  * @param[in] _zSectionName     Concerned section, if the section doesn't exist, it will be created
  * @param[in] _zParentName      Parent section's name, if the section doesn't exist, it will be created, if orxNULL is provided, the former parent will be erased, if orxSTRING_EMPTY is provided, "no default parent" will be enforced
@@ -193,12 +210,6 @@ extern orxDLLAPI orxBOOL orxFASTCALL          orxConfig_HasSection(const orxSTRI
  */
 extern orxDLLAPI orxSTATUS orxFASTCALL        orxConfig_ProtectSection(const orxSTRING _zSectionName, orxBOOL _bProtect);
 
-/** Gets section origin (ie. the file where it was defined for the first time or orxSTRING_EMPTY if not defined via a file)
- * @param[in] _zSectionName     Concerned section name
- * @return orxSTRING if found, orxSTRING_EMPTY otherwise
- */
-extern orxDLLAPI const orxSTRING orxFASTCALL  orxConfig_GetSectionOrigin(const orxSTRING _zSectionName);
-
 /** Gets section counter
  * @return Section counter
  */
@@ -234,11 +245,23 @@ extern orxDLLAPI orxSTATUS orxFASTCALL        orxConfig_ClearValue(const orxSTRI
  */
 extern orxDLLAPI orxBOOL orxFASTCALL          orxConfig_IsInheritedValue(const orxSTRING _zKey);
 
+/** Is this value random? (ie. using '~' character, within or without a list)
+ * @param[in] _zKey             Key name
+ * @return orxTRUE / orxFALSE
+ */
+extern orxDLLAPI orxBOOL orxFASTCALL          orxConfig_IsRandomValue(const orxSTRING _zKey);
+
 /** Has specified value for the given key?
  * @param[in] _zKey             Key name
  * @return orxTRUE / orxFALSE
  */
 extern orxDLLAPI orxBOOL orxFASTCALL          orxConfig_HasValue(const orxSTRING _zKey);
+
+/** Gets a value's source section (ie. the section where the value is explicitly defined), only considering section inheritance, not local one
+ * @param[in] _zKey             Key name
+ * @return Name of the section that explicitly contains the value, orxSTRING_EMPTY if not found
+ */
+extern orxDLLAPI const orxSTRING orxFASTCALL  orxConfig_GetValueSource(const orxSTRING _zKey);
 
 /** Reads a signed integer value from config (will take a random value if a list is provided for this key)
  * @param[in] _zKey             Key name

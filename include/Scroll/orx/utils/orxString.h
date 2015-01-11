@@ -1,6 +1,6 @@
 /* Orx - Portable Game Engine
  *
- * Copyright (c) 2008-2013 Orx-Project
+ * Copyright (c) 2008-2014 Orx-Project
  *
  * This software is provided 'as-is', without any express or implied
  * warranty. In no event will the authors be held liable for any damages
@@ -228,7 +228,20 @@ static orxINLINE orxU32                                   orxString_GetLength(co
  */
 static orxINLINE orxBOOL                                  orxString_IsCharacterASCII(orxU32 _u32CharacterCodePoint)
 {
+  /* Done! */
   return((_u32CharacterCodePoint < 0x80) ? orxTRUE : orxFALSE);
+}
+
+/** Tells if a character is alpha-numeric from its ID
+ * @param[in] _u32CharacterCodePoint    Concerned character code
+ * @return                              orxTRUE is it's a non-extended ASCII alpha-numerical character, orxFALSE otherwise
+ */
+static orxINLINE orxBOOL                                  orxString_IsCharacterAlphaNumeric(orxU32 _u32CharacterCodePoint)
+{
+  /* Done! */
+  return (((_u32CharacterCodePoint >= 'a') && (_u32CharacterCodePoint <= 'z'))
+       || ((_u32CharacterCodePoint >= 'A') && (_u32CharacterCodePoint <= 'Z'))
+       || ((_u32CharacterCodePoint >= '0') && (_u32CharacterCodePoint <= '9'))) ? orxTRUE : orxFALSE;
 }
 
 /** Gets the UTF-8 encoding length of given character
@@ -726,6 +739,62 @@ static orxINLINE orxS32                                   orxString_NICompare(co
 #endif /* __orxWINDOWS__ */
 }
 
+/** Extracts the base (2, 8, 10 or 16) from a literal number
+ * @param[in]   _zString        String from which to extract the base
+ * @param[out]  _pzRemaining    If non null, will contain the remaining literal number, right after the base prefix (0x, 0b or 0)
+ * @return  Base or the numerical value, defaults to 10 (decimal) when no prefix is found or the literal value couldn't be identified
+ */
+static orxINLINE orxU32                                   orxString_ExtractBase(const orxSTRING _zString, const orxSTRING *_pzRemaining)
+{
+  orxU32 u32Result, u32Offset;
+
+  /* Checks */
+  orxASSERT(_zString != orxNULL);
+
+  /* Hexadecimal? */
+  if((_zString[0] == '0')
+  && ((_zString[1] | 0x20) == 'x'))
+  {
+    /* Updates result and offset */
+    u32Result = 16;
+    u32Offset = 2;
+  }
+  /* Binary? */
+  else if((_zString[0] == '0')
+       && ((_zString[1] | 0x20) == 'b'))
+  {
+    /* Updates result and offset */
+    u32Result = 2;
+    u32Offset = 2;
+  }
+  /* Octal? */
+  else if((_zString[0] == '0')
+       && ((_zString[1]) >= '0')
+       && ((_zString[1]) <= '9'))
+  {
+    /* Updates result and offset */
+    u32Result = 8;
+    u32Offset = 1;
+  }
+  /* Decimal */
+  else
+  {
+    /* Updates result and offset */
+    u32Result = 10;
+    u32Offset = 0;
+  }
+
+  /* Asks for remaining string? */
+  if(_pzRemaining != orxNULL)
+  {
+    /* Stores it */
+    *_pzRemaining = _zString + u32Offset;
+  }
+
+  /* Done! */
+  return u32Result;
+}
+
 /** Converts a String to a signed int value using the given base
  * @param[in]   _zString        String To convert
  * @param[in]   _u32Base        Base of the read value (generally 10, but can be 16 to read hexa)
@@ -776,45 +845,19 @@ static orxINLINE orxSTATUS                                orxString_ToS32Base(co
  */
 static orxINLINE orxSTATUS                                orxString_ToS32(const orxSTRING _zString, orxS32 *_ps32OutValue, const orxSTRING *_pzRemaining)
 {
-  orxSTATUS eResult;
+  const orxSTRING zValue;
+  orxU32          u32Base;
+  orxSTATUS       eResult;
 
   /* Checks */
   orxASSERT(_ps32OutValue != orxNULL);
   orxASSERT(_zString != orxNULL);
 
-  /* Hexadecimal? */
-  if((_zString[0] != orxCHAR_EOL)
-  && (_zString[0] == '0')
-  && (_zString[1] != orxCHAR_EOL)
-  && ((_zString[1] | 0x20) == 'x'))
-  {
-    /* Gets hexa value */
-    eResult = orxString_ToS32Base(_zString + 2, 16, _ps32OutValue, _pzRemaining);
-  }
-  /* Binary? */
-  else if((_zString[0] != orxCHAR_EOL)
-       && (_zString[0] == '0')
-       && (_zString[1] != orxCHAR_EOL)
-       && ((_zString[1] | 0x20) == 'b'))
-  {
-    /* Gets binary value */
-    eResult = orxString_ToS32Base(_zString + 2, 2, _ps32OutValue, _pzRemaining);
-  }
-  /* Octal? */
-  else if((_zString[0] != orxCHAR_EOL)
-       && (_zString[0] == '0')
-       && ((_zString[1]) >= '0')
-       && ((_zString[1]) <= '9'))
-  {
-    /* Gets octal value */
-    eResult = orxString_ToS32Base(_zString + 1, 8, _ps32OutValue, _pzRemaining);
-  }
-  /* Decimal */
-  else
-  {
-    /* Gets decimal value */
-    eResult = orxString_ToS32Base(_zString, 10, _ps32OutValue, _pzRemaining);
-  }
+  /* Extracts base */
+  u32Base = orxString_ExtractBase(_zString, &zValue);
+
+  /* Gets value */
+  eResult = orxString_ToS32Base(zValue, u32Base, _ps32OutValue, _pzRemaining);
 
   /* Done! */
   return eResult;
@@ -870,45 +913,19 @@ static orxINLINE orxSTATUS                                orxString_ToU32Base(co
  */
 static orxINLINE orxSTATUS                                orxString_ToU32(const orxSTRING _zString, orxU32 *_pu32OutValue, const orxSTRING *_pzRemaining)
 {
-  orxSTATUS eResult;
+  const orxSTRING zValue;
+  orxU32          u32Base;
+  orxSTATUS       eResult;
 
   /* Checks */
   orxASSERT(_pu32OutValue != orxNULL);
   orxASSERT(_zString != orxNULL);
 
-  /* Hexadecimal? */
-  if((_zString[0] != orxCHAR_EOL)
-  && (_zString[0] == '0')
-  && (_zString[1] != orxCHAR_EOL)
-  && ((_zString[1] | 0x20) == 'x'))
-  {
-    /* Gets hexa value */
-    eResult = orxString_ToU32Base(_zString + 2, 16, _pu32OutValue, _pzRemaining);
-  }
-  /* Binary? */
-  else if((_zString[0] != orxCHAR_EOL)
-       && (_zString[0] == '0')
-       && (_zString[1] != orxCHAR_EOL)
-       && ((_zString[1] | 0x20) == 'b'))
-  {
-    /* Gets binary value */
-    eResult = orxString_ToU32Base(_zString + 2, 2, _pu32OutValue, _pzRemaining);
-  }
-  /* Octal? */
-  else if((_zString[0] != orxCHAR_EOL)
-       && (_zString[0] == '0')
-       && ((_zString[1]) >= '0')
-       && ((_zString[1]) <= '9'))
-  {
-    /* Gets octal value */
-    eResult = orxString_ToU32Base(_zString + 1, 8, _pu32OutValue, _pzRemaining);
-  }
-  /* Decimal */
-  else
-  {
-    /* Gets decimal value */
-    eResult = orxString_ToU32Base(_zString, 10, _pu32OutValue, _pzRemaining);
-  }
+  /* Extracts base */
+  u32Base = orxString_ExtractBase(_zString, &zValue);
+
+  /* Gets value */
+  eResult = orxString_ToU32Base(zValue, u32Base, _pu32OutValue, _pzRemaining);
 
   /* Done! */
   return eResult;
@@ -964,45 +981,19 @@ static orxINLINE orxSTATUS                                orxString_ToS64Base(co
  */
 static orxINLINE orxSTATUS                                orxString_ToS64(const orxSTRING _zString, orxS64 *_ps64OutValue, const orxSTRING *_pzRemaining)
 {
-  orxSTATUS eResult;
+  const orxSTRING zValue;
+  orxU32          u32Base;
+  orxSTATUS       eResult;
 
   /* Checks */
   orxASSERT(_ps64OutValue != orxNULL);
   orxASSERT(_zString != orxNULL);
 
-  /* Hexadecimal? */
-  if((_zString[0] != orxCHAR_EOL)
-  && (_zString[0] == '0')
-  && (_zString[1] != orxCHAR_EOL)
-  && ((_zString[1] | 0x20) == 'x'))
-  {
-    /* Gets hexa value */
-    eResult = orxString_ToS64Base(_zString + 2, 16, _ps64OutValue, _pzRemaining);
-  }
-  /* Binary? */
-  else if((_zString[0] != orxCHAR_EOL)
-       && (_zString[0] == '0')
-       && (_zString[1] != orxCHAR_EOL)
-       && ((_zString[1] | 0x20) == 'b'))
-  {
-    /* Gets binary value */
-    eResult = orxString_ToS64Base(_zString + 2, 2, _ps64OutValue, _pzRemaining);
-  }
-  /* Octal? */
-  else if((_zString[0] != orxCHAR_EOL)
-       && (_zString[0] == '0')
-       && ((_zString[1]) >= '0')
-       && ((_zString[1]) <= '9'))
-  {
-    /* Gets octal value */
-    eResult = orxString_ToS64Base(_zString + 1, 8, _ps64OutValue, _pzRemaining);
-  }
-  /* Decimal */
-  else
-  {
-    /* Gets decimal value */
-    eResult = orxString_ToS64Base(_zString, 10, _ps64OutValue, _pzRemaining);
-  }
+  /* Extracts base */
+  u32Base = orxString_ExtractBase(_zString, &zValue);
+
+  /* Gets signed value */
+  eResult = orxString_ToS64Base(zValue, u32Base, _ps64OutValue, _pzRemaining);
 
   /* Done! */
   return eResult;
@@ -1058,45 +1049,19 @@ static orxINLINE orxSTATUS                                orxString_ToU64Base(co
  */
 static orxINLINE orxSTATUS                                orxString_ToU64(const orxSTRING _zString, orxU64 *_pu64OutValue, const orxSTRING *_pzRemaining)
 {
-  orxSTATUS eResult;
+  const orxSTRING zValue;
+  orxU32          u32Base;
+  orxSTATUS       eResult;
 
   /* Checks */
   orxASSERT(_pu64OutValue != orxNULL);
   orxASSERT(_zString != orxNULL);
 
-  /* Hexadecimal? */
-  if((_zString[0] != orxCHAR_EOL)
-  && (_zString[0] == '0')
-  && (_zString[1] != orxCHAR_EOL)
-  && ((_zString[1] | 0x20) == 'x'))
-  {
-    /* Gets hexa value */
-    eResult = orxString_ToU64Base(_zString + 2, 16, _pu64OutValue, _pzRemaining);
-  }
-  /* Binary? */
-  else if((_zString[0] != orxCHAR_EOL)
-       && (_zString[0] == '0')
-       && (_zString[1] != orxCHAR_EOL)
-       && ((_zString[1] | 0x20) == 'b'))
-  {
-    /* Gets binary value */
-    eResult = orxString_ToU64Base(_zString + 2, 2, _pu64OutValue, _pzRemaining);
-  }
-  /* Octal? */
-  else if((_zString[0] != orxCHAR_EOL)
-       && (_zString[0] == '0')
-       && ((_zString[1]) >= '0')
-       && ((_zString[1]) <= '9'))
-  {
-    /* Gets octal value */
-    eResult = orxString_ToU64Base(_zString + 1, 8, _pu64OutValue, _pzRemaining);
-  }
-  /* Decimal */
-  else
-  {
-    /* Gets decimal value */
-    eResult = orxString_ToU64Base(_zString, 10, _pu64OutValue, _pzRemaining);
-  }
+  /* Extracts base */
+  u32Base = orxString_ExtractBase(_zString, &zValue);
+
+  /* Gets signed value */
+  eResult = orxString_ToU64Base(zValue, u32Base, _pu64OutValue, _pzRemaining);
 
   /* Done! */
   return eResult;
@@ -1402,10 +1367,10 @@ static orxINLINE orxU32                                   orxString_NToCRC(const
   return(orxString_NContinueCRC(_zString, 0, _u32CharNumber));
 }
 
-/** Returns the first occurence of _zString2 in _zString1
+/** Returns the first occurrence of _zString2 in _zString1
  * @param[in] _zString1 String to analyze
  * @param[in] _zString2 String that must be inside _zString1
- * @return The pointer of the first occurence of _zString2, or orxNULL if not found
+ * @return The pointer of the first occurrence of _zString2, or orxNULL if not found
  */
 static orxINLINE const orxSTRING                          orxString_SearchString(const orxSTRING _zString1, const orxSTRING _zString2)
 {
@@ -1417,10 +1382,10 @@ static orxINLINE const orxSTRING                          orxString_SearchString
   return(strstr(_zString1, _zString2));
 }
 
-/** Returns the first occurence of _cChar in _zString
+/** Returns the first occurrence of _cChar in _zString
  * @param[in] _zString String to analyze
  * @param[in] _cChar   The character to find
- * @return The pointer of the first occurence of _cChar, or orxNULL if not found
+ * @return The pointer of the first occurrence of _cChar, or orxNULL if not found
  */
 static orxINLINE const orxSTRING                          orxString_SearchChar(const orxSTRING _zString, orxCHAR _cChar)
 {
@@ -1431,11 +1396,11 @@ static orxINLINE const orxSTRING                          orxString_SearchChar(c
   return(strchr(_zString, _cChar));
 }
 
-/** Returns the first occurence of _cChar in _zString
+/** Returns the first occurrence of _cChar in _zString
  * @param[in] _zString      String to analyze
  * @param[in] _cChar        The character to find
  * @param[in] _u32Position  Search begin position
- * @return The index of the next occurence of requested character, starting at given position / -1 if not found
+ * @return The index of the next occurrence of requested character, starting at given position / -1 if not found
  */
 static orxINLINE orxS32                                   orxString_SearchCharIndex(const orxSTRING _zString, orxCHAR _cChar, orxU32 _u32Position)
 {
@@ -1478,10 +1443,13 @@ static orxINLINE orxS32 orxCDECL                          orxString_Print(orxSTR
   orxASSERT(_zDstString != orxNULL);
   orxASSERT(_zSrcString != orxNULL);
 
-  /* Gets variable arguments & print the string */
+  /* Gets variable arguments & prints the string */
   va_start(stArgs, _zSrcString);
   s32Result = vsprintf(_zDstString, _zSrcString, stArgs);
   va_end(stArgs);
+
+  /* Clamps result */
+  s32Result = orxMAX(s32Result, 0);
 
   /* Done! */
   return s32Result;
@@ -1502,10 +1470,75 @@ static orxINLINE orxS32 orxCDECL                          orxString_NPrint(orxST
   orxASSERT(_zDstString != orxNULL);
   orxASSERT(_zSrcString != orxNULL);
 
-  /* Gets variable arguments & print the string */
+  /* Gets variable arguments & prints the string */
   va_start(stArgs, _zSrcString);
   s32Result = vsnprintf(_zDstString, (size_t)_u32CharNumber, _zSrcString, stArgs);
   va_end(stArgs);
+
+#ifdef __orxMSVC__
+  /* Overflow? */
+  if(s32Result <= 0)
+  {
+    /* Updates result */
+    s32Result = _u32CharNumber;
+  }
+#endif /* __orxWINDOWS__ */
+
+  /* Clamps result */
+  s32Result = orxCLAMP(s32Result, 0, (orxS32)_u32CharNumber);
+
+  /* Done! */
+  return s32Result;
+}
+
+/** Scans a formated string from a memory buffer
+ * @param[in]  _zString  String to scan
+ * @param[in]  _zFormat  Format string
+ * @return The number of scanned items
+ */
+static orxINLINE orxS32 orxCDECL                          orxString_Scan(const orxSTRING _zString, const orxSTRING _zFormat, ...)
+{
+  va_list stArgs;
+  orxS32  s32Result;
+
+  /* Checks */
+  orxASSERT(_zString != orxNULL);
+
+#ifdef __orxMSVC__
+
+  /* Ugly workaround the missing vsscanf in MSVC up to version 2013 */
+  {
+    void   *p[16];
+    orxS32  i;
+
+    /* Starts variable list */
+    va_start(stArgs, _zFormat);
+
+    /* For all potential parameters */
+    for(i = 0; i < orxARRAY_GET_ITEM_COUNT(p); i++)
+    {
+      /* Gets its address */
+      p[i] = va_arg(stArgs, void *);
+    }
+
+    /* Scans the string */
+    s32Result = sscanf(_zString, _zFormat, p[0], p[1], p[2], p[3], p[4], p[5], p[6], p[7], p[8], p[9], p[10], p[11], p[12], p[13], p[14], p[15]);
+
+    /* Ends variable list */
+    va_end(stArgs);
+  }
+
+#else /* __orxMSVC__ */
+
+  /* Gets variable arguments & scans the string */
+  va_start(stArgs, _zFormat);
+  s32Result = vsscanf(_zString, _zFormat, stArgs);
+  va_end(stArgs);
+
+#endif /* __orxMSVC__ */
+
+  /* Clamps result */
+  s32Result = orxMAX(s32Result, 0);
 
   /* Done! */
   return s32Result;
@@ -1562,6 +1595,13 @@ extern orxDLLAPI orxU32 orxFASTCALL                       orxString_GetID(const 
  * @return      orxSTRING if ID's found, orxSTRING_EMPTY otherwise
  */
 extern orxDLLAPI const orxSTRING orxFASTCALL              orxString_GetFromID(orxU32 _u32ID);
+
+/** Stores a string internally: equivalent to an optimized call to orxString_GetFromID(orxString_GetID(_zString))
+ * @param[in]   _zString        Concerned string
+ * @return      Stored orxSTRING
+ */
+extern orxDLLAPI const orxSTRING orxFASTCALL              orxString_Store(const orxSTRING _zString);
+
 
 #ifdef __orxMSVC__
 

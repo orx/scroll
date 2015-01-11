@@ -1,6 +1,6 @@
 /* Orx - Portable Game Engine
  *
- * Copyright (c) 2008-2013 Orx-Project
+ * Copyright (c) 2008-2014 Orx-Project
  *
  * This software is provided 'as-is', without any express or implied
  * warranty. In no event will the authors be held liable for any damages
@@ -32,7 +32,7 @@
 
 /**
  * @addtogroup orxEvent
- * 
+ *
  * Event module
  * Module that handles internal events
  * @{
@@ -80,18 +80,20 @@ typedef enum __orxEVENT_TYPE_t
   orxEVENT_TYPE_OBJECT,
   orxEVENT_TYPE_RENDER,
   orxEVENT_TYPE_PHYSICS,
+  orxEVENT_TYPE_RESOURCE,
   orxEVENT_TYPE_SHADER,
   orxEVENT_TYPE_SOUND,
   orxEVENT_TYPE_SPAWNER,
   orxEVENT_TYPE_SYSTEM,
   orxEVENT_TYPE_TEXTURE,
   orxEVENT_TYPE_TIMELINE,
+  orxEVENT_TYPE_VIEWPORT,
 
   orxEVENT_TYPE_CORE_NUMBER,
 
   orxEVENT_TYPE_FIRST_RESERVED = orxEVENT_TYPE_CORE_NUMBER,
 
-  orxEVENT_TYPE_LAST_RESERVED = 127,
+  orxEVENT_TYPE_LAST_RESERVED = 255,
 
   orxEVENT_TYPE_USER_DEFINED,
 
@@ -108,6 +110,7 @@ typedef struct __orxEVENT_t
   orxHANDLE         hSender;                          /**< Sender handle : 12 */
   orxHANDLE         hRecipient;                       /**< Recipient handle : 16 */
   void             *pstPayload;                       /**< Event payload : 20 */
+  void             *pContext;                         /**< Optional user-provided context : 24 */
 
 } orxEVENT;
 
@@ -138,6 +141,14 @@ extern orxDLLAPI void orxFASTCALL       orxEvent_Exit();
  */
 extern orxDLLAPI orxSTATUS orxFASTCALL  orxEvent_AddHandler(orxEVENT_TYPE _eEventType, orxEVENT_HANDLER _pfnEventHandler);
 
+/** Adds an event handler with user-defined context
+ * @param[in] _eEventType           Concerned type of event
+ * @param[in] _pfnHandler           Event handler to add
+ * @param[in] _pContext             Context that will be stored in events sent to this handler
+ * return orxSTATUS_SUCCESS / orxSTATUS_FAILURE
+ */
+extern orxDLLAPI orxSTATUS orxFASTCALL  orxEvent_AddHandlerWithContext(orxEVENT_TYPE _eEventType, orxEVENT_HANDLER _pfnEventHandler, void *_pContext);
+
 /** Removes an event handler
  * @param[in] _eEventType           Concerned type of event
  * @param[in] _pfnEventHandler      Event handler to remove
@@ -145,11 +156,19 @@ extern orxDLLAPI orxSTATUS orxFASTCALL  orxEvent_AddHandler(orxEVENT_TYPE _eEven
  */
 extern orxDLLAPI orxSTATUS orxFASTCALL  orxEvent_RemoveHandler(orxEVENT_TYPE _eEventType, orxEVENT_HANDLER _pfnEventHandler);
 
+/** Removes an event handler which matches given context
+ * @param[in] _eEventType           Concerned type of event
+ * @param[in] _pfnEventHandler      Event handler to remove
+ * @param[in] _pContext             Context of the handler to remove, orxNULL for removing all occurrences regardless of their context
+ * return orxSTATUS_SUCCESS / orxSTATUS_FAILURE
+ */
+extern orxDLLAPI orxSTATUS orxFASTCALL  orxEvent_RemoveHandlerWithContext(orxEVENT_TYPE _eEventType, orxEVENT_HANDLER _pfnEventHandler, void *_pContext);
+
 /** Sends an event
  * @param[in] _pstEvent             Event to send
  * @return orxSTATUS_SUCCESS / orxSTATUS_FAILURE
  */
-extern orxDLLAPI orxSTATUS orxFASTCALL  orxEvent_Send(const orxEVENT *_pstEvent);
+extern orxDLLAPI orxSTATUS orxFASTCALL  orxEvent_Send(orxEVENT *_pstEvent);
 
 /** Sends a simple event
  * @param[in] _eEventType           Event type

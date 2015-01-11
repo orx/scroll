@@ -1,6 +1,6 @@
 /* Orx - Portable Game Engine
  *
- * Copyright (c) 2008-2013 Orx-Project
+ * Copyright (c) 2008-2014 Orx-Project
  *
  * This software is provided 'as-is', without any express or implied
  * warranty. In no event will the authors be held liable for any damages
@@ -57,8 +57,8 @@
  */
 #define orxANIMSET_KU32_FLAG_NONE                   0x00000000  /**< No flags. */
 
-#define orxANIMSET_KU32_FLAG_REFERENCE_LOCK         0x00010000  /**< If there's already a reference on it, the AnimSet is locked for changes. */
-#define orxANIMSET_KU32_FLAG_LINK_STATIC            0x00020000  /**< If not static, animpointer should duplicate the link table upon linking/creation. */
+#define orxANIMSET_KU32_FLAG_REFERENCE_LOCK         0x00100000  /**< If there's already a reference on it, the AnimSet is locked for changes. */
+#define orxANIMSET_KU32_FLAG_LINK_STATIC            0x00200000  /**< If not static, animpointer should duplicate the link table upon linking/creation. */
 
 /** AnimSet Link Flags
  */
@@ -208,6 +208,14 @@ extern orxDLLAPI orxU32 orxFASTCALL                 orxAnimSet_GetLinkProperty(c
  * @return Current Anim ID. If it's not the source one, _pu32Time will contain the new timestamp, relative to the new Anim
 */
 extern orxDLLAPI orxU32 orxFASTCALL                 orxAnimSet_ComputeAnim(orxANIMSET *_pstAnimSet, orxU32 _u32SrcAnim, orxU32 _u32DstAnim, orxFLOAT *_pfTime, orxANIMSET_LINK_TABLE *_pstLinkTable, orxBOOL *_pbCut, orxBOOL *_pbClearTarget);
+
+/** Finds next Anim given current and destination Anim IDs
+ * @param[in]   _pstAnimSet                         Concerned AnimSet
+ * @param[in]   _u32SrcAnim                         Source (current) Anim ID
+ * @param[in]   _u32DstAnim                         Destination Anim ID, if none (auto mode) set it to orxU32_UNDEFINED
+ * @return Next Anim ID if found, orxU32_UNDEFINED otherwise
+*/
+extern orxDLLAPI orxU32 orxFASTCALL                 orxAnimSet_FindNextAnim(orxANIMSET *_pstAnimSet, orxU32 _u32SrcAnim, orxU32 _u32DstAnim);
 
 /** AnimSet Anim get accessor
  * @param[in]		_pstAnimSet													Concerned AnimSet

@@ -1,6 +1,6 @@
 /* Orx - Portable Game Engine
  *
- * Copyright (c) 2008-2013 Orx-Project
+ * Copyright (c) 2008-2014 Orx-Project
  *
  * This software is provided 'as-is', without any express or implied
  * warranty. In no event will the authors be held liable for any damages
@@ -32,7 +32,7 @@
 
 /**
  * @addtogroup orxFile
- * 
+ *
  * File / file system module
  * Module that handles file / file system access
  *
@@ -42,27 +42,27 @@
 
 #ifndef _orxFILE_H_
 #define _orxFILE_H_
- 
+
 #include "orxInclude.h"
 
 
 #define orxFILE_KU32_FLAG_INFO_NORMAL       0x00000001  /**< normal file */
-#define orxFILE_KU32_FLAG_INFO_RDONLY       0x00000002  /**< read-only file */
+#define orxFILE_KU32_FLAG_INFO_READONLY     0x00000002  /**< read-only file */
 #define orxFILE_KU32_FLAG_INFO_HIDDEN       0x00000004  /**< hidden file */
-#define orxFILE_KU32_FLAG_INFO_DIR          0x00000008  /**< directory */
+#define orxFILE_KU32_FLAG_INFO_DIRECTORY    0x00000008  /**< directory */
 
-#define orxFILE_KU32_FLAG_OPEN_READ         0x00000001  /**< opened for read */
-#define orxFILE_KU32_FLAG_OPEN_WRITE        0x00000002  /**< opened for write */
-#define orxFILE_KU32_FLAG_OPEN_APPEND       0x00000004  /**< descriptor positioned at the end of file */
-#define orxFILE_KU32_FLAG_OPEN_BINARY       0x00000008  /**< binary file accessing */
+#define orxFILE_KU32_FLAG_OPEN_READ         0x10000000  /**< opened for read */
+#define orxFILE_KU32_FLAG_OPEN_WRITE        0x20000000  /**< opened for write */
+#define orxFILE_KU32_FLAG_OPEN_APPEND       0x40000000  /**< descriptor positioned at the end of file */
+#define orxFILE_KU32_FLAG_OPEN_BINARY       0x80000000  /**< binary file accessing */
 
 
-/** Store datas about the current file. */
+/** File info structure */
 typedef struct __orxFILE_INFO_t
 {
-  orxU32    u32Flags;                                   /**< File attributes (see list of availables flags) */
-  orxU32    u32TimeStamp;                               /**< Timestamp of the last modification */
-  orxU32    u32Size;                                    /**< File's size (in bytes) */
+  orxS64    s64Size;                                    /**< File's size (in bytes) */
+  orxS64    s64TimeStamp;                               /**< Timestamp of the last modification */
+  orxU32    u32Flags;                                   /**< File attributes (cf. list of available flags) */
   orxHANDLE hInternal;                                  /**< Internal use handle */
   orxCHAR   zName[256];                                 /**< File's name */
   orxCHAR   zPattern[256];                              /**< Search pattern */
@@ -88,81 +88,111 @@ extern orxDLLAPI orxSTATUS orxFASTCALL      orxFile_Init();
  */
 extern orxDLLAPI void orxFASTCALL           orxFile_Exit();
 
-/** Returns orxTRUE if a file exists, else orxFALSE.
- * @param[in] _zFileName           Full File's name to test
- * @return orxFALSE if _zFileName doesn't exist, else orxTRUE
+/** Gets current user's home directory (without trailing separator)
+ * @param[in] _zSubPath                     Sub-path to append to the home directory, orxNULL for none
+ * @return Current user's home directory, use it immediately or copy it as will be modified by the next call to orxFile_GetHomeDirectory() or orxFile_GetApplicationSaveDirectory()
+ */
+extern orxDLLAPI const orxSTRING orxFASTCALL orxFile_GetHomeDirectory(const orxSTRING _zSubPath);
+
+/** Gets current user's application save directory (without trailing separator)
+ * @param[in] _zSubPath                     Sub-path to append to the application save directory, orxNULL for none
+ * @return Current user's application save directory, use it immediately or copy it as it will be modified by the next call to orxFile_GetHomeDirectory() or orxFile_GetApplicationSaveDirectory()
+ */
+extern orxDLLAPI const orxSTRING orxFASTCALL orxFile_GetApplicationSaveDirectory(const orxSTRING _zSubPath);
+
+/** Checks if a file/directory exists
+ * @param[in] _zFileName           Concerned file/directory
+ * @return orxFALSE if _zFileName doesn't exist, orxTRUE otherwise
  */
 extern orxDLLAPI orxBOOL orxFASTCALL        orxFile_Exists(const orxSTRING _zFileName);
 
-/** Starts a new search. Find the first file that will match to the given pattern (e.g : /bin/toto* or c:\*.*)
- * @param[in] _zSearchPattern      Pattern to find
- * @param[out] _pstFileInfo        Informations about the first file found
- * @return orxTRUE if a file has been found, else orxFALSE
+/** Starts a new file search: finds the first file/directory that will match to the given pattern (ex: /bin/foo*)
+ * @param[in] _zSearchPattern      Pattern used for file/directory search
+ * @param[out] _pstFileInfo        Information about the first file found
+ * @return orxSTATUS_SUCCESS / orxSTATUS_FAILURE
  */
-extern orxDLLAPI orxBOOL orxFASTCALL        orxFile_FindFirst(const orxSTRING _zSearchPattern, orxFILE_INFO *_pstFileInfo);
+extern orxDLLAPI orxSTATUS orxFASTCALL      orxFile_FindFirst(const orxSTRING _zSearchPattern, orxFILE_INFO *_pstFileInfo);
 
-/** Continues a search. Find the next occurence of a pattern. The search has to be started with orxFile_FindFirst
- * @param[in,out] _pstFileInfo    (IN/OUT) Informations about the found file
- * @return orxTRUE, if the next file has been found, else returns orxFALSE
+/** Continues a file search: finds the next occurrence of a pattern, the search has to be started with orxFile_FindFirst
+ * @param[in,out] _pstFileInfo      Information about the last found file/directory
+ * @return orxSTATUS_SUCCESS / orxSTATUS_FAILURE
  */
-extern orxDLLAPI orxBOOL orxFASTCALL        orxFile_FindNext(orxFILE_INFO *_pstFileInfo);
+extern orxDLLAPI orxSTATUS orxFASTCALL      orxFile_FindNext(orxFILE_INFO *_pstFileInfo);
 
-/** Closes a search (free the memory allocated for this search).
- * @param[in] _pstFileInfo         Informations returned during search
+/** Closes a search (frees the memory allocated for this search)
+ * @param[in] _pstFileInfo         Information returned during search
  */
 extern orxDLLAPI void orxFASTCALL           orxFile_FindClose(orxFILE_INFO *_pstFileInfo);
 
-/** Retrieves information about a file
- * @param[in] _zFileName            Files used to get information
- * @param[out] _pstFileInfo         Returned file's information
- * @return Returns the status of the operation
+/** Retrieves a file/directory information
+ * @param[in] _zFileName            Concerned file/directory name
+ * @param[out] _pstFileInfo         Information of the file/directory
+ * @return orxSTATUS_SUCCESS / orxSTATUS_FAILURE
  */
 extern orxDLLAPI orxSTATUS orxFASTCALL      orxFile_GetInfo(const orxSTRING _zFileName, orxFILE_INFO *_pstFileInfo);
+
+/** Removes a file or an empty directory
+ * @param[in] _zFileName            Concerned file / directory
+ * @return orxSTATUS_SUCCESS / orxSTATUS_FAILURE
+ */
+extern orxDLLAPI orxSTATUS orxFASTCALL      orxFile_Remove(const orxSTRING _zFileName);
+
+/** Makes a directory, works recursively if needed
+ * @param[in] _zName                Name of the directory to make
+ * @return orxSTATUS_SUCCESS / orxSTATUS_FAILURE
+ */
+extern orxDLLAPI orxSTATUS orxFASTCALL      orxFile_MakeDirectory(const orxSTRING _zName);
 
 /** Opens a file for later read or write operation
  * @param[in] _zFileName           Full file's path to open
  * @param[in] _u32OpenFlags        List of used flags when opened
- * @return a File pointer (or orxNULL if an error has occured)
+ * @return a File pointer (or orxNULL if an error has occurred)
  */
 extern orxDLLAPI orxFILE *orxFASTCALL       orxFile_Open(const orxSTRING _zFileName, orxU32 _u32OpenFlags);
 
 /** Reads data from a file
- * @param[out] _pReadData          Pointer where will be stored datas
- * @param[in] _u32ElemSize         Size of 1 element
- * @param[in] _u32NbElem           Number of elements
+ * @param[out] _pReadData          Buffer that will contain read data
+ * @param[in] _s64ElemSize         Size of 1 element
+ * @param[in] _s64NbElem           Number of elements
  * @param[in] _pstFile             Pointer on the file descriptor
  * @return Returns the number of read elements (not bytes)
  */
-extern orxDLLAPI orxU32 orxFASTCALL         orxFile_Read(void *_pReadData, orxU32 _u32ElemSize, orxU32 _u32NbElem, orxFILE *_pstFile);
+extern orxDLLAPI orxS64 orxFASTCALL         orxFile_Read(void *_pReadData, orxS64 _s64ElemSize, orxS64 _s64NbElem, orxFILE *_pstFile);
 
-/** writes data to a file
- * @param[in] _pDataToWrite        Pointer where will be stored datas
- * @param[in] _u32ElemSize         Size of 1 element
- * @param[in] _u32NbElem           Number of elements
+/** Writes data to a file
+ * @param[in] _pDataToWrite        Buffer that contains the data to write
+ * @param[in] _s64ElemSize         Size of 1 element
+ * @param[in] _s64NbElem           Number of elements
  * @param[in] _pstFile             Pointer on the file descriptor
  * @return Returns the number of written elements (not bytes)
  */
-extern orxDLLAPI orxU32 orxFASTCALL         orxFile_Write(const void *_pDataToWrite, orxU32 _u32ElemSize, orxU32 _u32NbElem, orxFILE *_pstFile);
+extern orxDLLAPI orxS64 orxFASTCALL         orxFile_Write(const void *_pDataToWrite, orxS64 _s64ElemSize, orxS64 _s64NbElem, orxFILE *_pstFile);
 
 /** Seeks to a position in the given file
  * @param[in] _pstFile              Concerned file
- * @param[in] _s32Position          Position (from start) where to set the indicator
+ * @param[in] _s64Position          Position (from start) where to set the indicator
  * @param[in] _eWhence              Starting point for the offset computation (start, current position or end)
- * @return Absolute cursor positionif succesful, -1 otherwise
+ * @return Absolute cursor position if successful, -1 otherwise
  */
-extern orxDLLAPI orxS32 orxFASTCALL         orxFile_Seek(orxFILE *_pstFile, orxS32 _s32Position, orxSEEK_OFFSET_WHENCE _eWhence);
+extern orxDLLAPI orxS64 orxFASTCALL         orxFile_Seek(orxFILE *_pstFile, orxS64 _s64Position, orxSEEK_OFFSET_WHENCE _eWhence);
 
 /** Tells the current position of the indicator in a file
  * @param[in] _pstFile              Concerned file
  * @return Returns the current position of the file indicator, -1 is invalid
  */
-extern orxDLLAPI orxS32 orxFASTCALL         orxFile_Tell(const orxFILE *_pstFile);
+extern orxDLLAPI orxS64 orxFASTCALL         orxFile_Tell(const orxFILE *_pstFile);
 
 /** Retrieves a file's size
  * @param[in] _pstFile              Concerned file
  * @return Returns the length of the file, <= 0 if invalid
  */
-extern orxDLLAPI orxS32 orxFASTCALL         orxFile_GetSize(const orxFILE *_pstFile);
+extern orxDLLAPI orxS64 orxFASTCALL         orxFile_GetSize(const orxFILE *_pstFile);
+
+/** Retrieves a file's time of last modification
+ * @param[in] _pstFile              Concerned file
+ * @return Returns the time of the last modification, in seconds, since epoch
+ */
+extern orxDLLAPI orxS64 orxFASTCALL         orxFile_GetTime(const orxFILE *_pstFile);
 
 /** Prints a formatted string to a file
  * @param[in] _pstFile             Pointer on the file descriptor

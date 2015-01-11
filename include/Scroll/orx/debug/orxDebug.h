@@ -1,6 +1,6 @@
 /* Orx - Portable Game Engine
  *
- * Copyright (c) 2008-2013 Orx-Project
+ * Copyright (c) 2008-2014 Orx-Project
  *
  * This software is provided 'as-is', without any express or implied
  * warranty. In no event will the authors be held liable for any damages
@@ -34,7 +34,7 @@
 
 /**
  * @addtogroup orxDebug
- * 
+ *
  * Debug module
  * Module used to output debug info and assert code
  *
@@ -384,6 +384,6 @@ extern orxDLLAPI void orxFASTCALL             _orxDebug_SetDebugFile(const orxST
  */
 extern orxDLLAPI void orxFASTCALL             _orxDebug_SetLogFile(const orxSTRING _zFileName);
 
-#endif /* __orxDEBUG__ */
+#endif /* __orxDEBUG_H_ */
 
 /** @} */
