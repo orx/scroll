@@ -1833,7 +1833,7 @@ orxSTATUS orxFASTCALL ScrollBase::StaticEventHandler(const orxEVENT *_pstEvent)
         if(poSender)
         {
           // Calls object callback
-          eResult = (poSender->OnRender((orxRENDER_EVENT_OBJECT_PAYLOAD *)(_pstEvent->pstPayload))) ? orxSTATUS_SUCCESS : orxSTATUS_FAILURE;
+          eResult = (poSender->OnRender((orxRENDER_EVENT_PAYLOAD *)(_pstEvent->pstPayload))) ? orxSTATUS_SUCCESS : orxSTATUS_FAILURE;
         }
       }
 
