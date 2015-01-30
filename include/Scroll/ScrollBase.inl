@@ -31,11 +31,11 @@
 #endif // __orxGCC__
 
 // 64bit Helpers
-#ifdef __orxX86_64__
+#if defined (__orxX86_64__) || defined (__orxARM64__)
   #define SCROLL_CAST_HELPER   (orxU64)
-#else /* __orxX86_64__ */
+#else /* __orxX86_64__ || __orxARM64__ */
   #define SCROLL_CAST_HELPER
-#endif /* __orxX86_64__ */
+#endif /* __orxX86_64__ || __orxARM64__*/
 
 
 //! Constants
