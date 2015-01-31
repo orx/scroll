@@ -35,7 +35,7 @@
   #define SCROLL_CAST_HELPER   (orxU64)
 #else /* __orxX86_64__ || __orxARM64__ */
   #define SCROLL_CAST_HELPER
-#endif /* __orxX86_64__ || __orxARM64__*/
+#endif /* __orxX86_64__ || __orxARM64__ */
 
 
 //! Constants
