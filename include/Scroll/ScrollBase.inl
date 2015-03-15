@@ -51,8 +51,8 @@ const orxSTRING ScrollBase::szConfigNoSave                    = "NoSave";
 const orxSTRING ScrollBase::szConfigSectionScrollObject       = "ScrollObject";
 const orxSTRING ScrollBase::szConfigScrollObjectNumber        = "ObjectNumber";
 const orxSTRING ScrollBase::szConfigScrollObjectPrefix        = "SO:";
-const orxSTRING ScrollBase::szConfigScrollObjectFormat        = "SO:%08d";
-const orxSTRING ScrollBase::szConfigScrollObjectRuntimeFormat = "RT:%08d";
+const orxSTRING ScrollBase::szConfigScrollObjectFormat        = "SO:%08u";
+const orxSTRING ScrollBase::szConfigScrollObjectRuntimeFormat = "RT:%08u";
 const orxSTRING ScrollBase::szConfigScrollObjectName          = "Name";
 const orxSTRING ScrollBase::szConfigScrollObjectPosition      = "Position";
 const orxSTRING ScrollBase::szConfigScrollObjectRotation      = "Rotation";
@@ -78,7 +78,7 @@ ScrollBase &ScrollBase::GetInstance()
 }
 
 ScrollBase::ScrollBase() : mzMapName(orxNULL), mpstMainViewport(orxNULL), mpstMainCamera(orxNULL),
-                           ms32NextObjectID(0), ms32RuntimeObjectID(0), mu32LayerNumber(1), mu32FrameCounter(0),
+                           mu32NextObjectID(0), mu32RuntimeObjectID(0), mu32LayerNumber(1), mu32FrameCounter(0),
                            mzCurrentObject(orxNULL), mpfnCustomMapSaveFilter(orxNULL),
                            mbEditorMode(orxFALSE), mbDifferentialMode(orxFALSE), mbObjectListLocked(orxFALSE), mbIsRunning(orxFALSE), mbIsPaused(orxFALSE)
 {
@@ -500,9 +500,9 @@ orxSTATUS ScrollBase::LoadMap()
       s32ScrollObjectNumber = orxConfig_GetS32(szConfigScrollObjectNumber);
 
       // For all objects to load
-      for(s32ScrollObjectCounter = 0, i = 0, orxString_NPrint(acBuffer, 32, szConfigScrollObjectFormat, i), acBuffer[31] = orxCHAR_NULL;
+      for(s32ScrollObjectCounter = 0, i = 0, orxString_NPrint(acBuffer, sizeof(acBuffer) - 1, szConfigScrollObjectFormat, i), acBuffer[31] = orxCHAR_NULL;
           s32ScrollObjectCounter < s32ScrollObjectNumber;
-          i++, orxString_NPrint(acBuffer, 32, szConfigScrollObjectFormat, i), acBuffer[31] = orxCHAR_NULL)
+          i++, orxString_NPrint(acBuffer, 32, szConfigScrollObjectFormat, i), acBuffer[sizeof(acBuffer) - 1] = orxCHAR_NULL)
       {
         // Has section?
         if(orxConfig_HasSection(acBuffer))
@@ -604,6 +604,9 @@ orxSTATUS ScrollBase::LoadMap()
           s32ScrollObjectCounter++;
         }
       }
+
+      // Updates next object ID
+      mu32NextObjectID = orxMAX(mu32NextObjectID, i);
 
       // Selects map section
       orxConfig_SelectSection(szConfigSectionMap);
@@ -1468,14 +1471,14 @@ orxSTRING ScrollBase::GetNewObjectName(orxCHAR _zInstanceName[32], orxBOOL _bRun
   if(_bRunTime)
   {
     // Creates name
-    orxString_NPrint(zResult, 32, szConfigScrollObjectRuntimeFormat, ms32RuntimeObjectID++);
+    orxString_NPrint(zResult, sizeof(_zInstanceName) - 1, szConfigScrollObjectRuntimeFormat, mu32RuntimeObjectID++);
   }
   else
   {
     // Creates name
-    orxString_NPrint(zResult, 32, szConfigScrollObjectFormat, ms32NextObjectID++);
+    orxString_NPrint(zResult, sizeof(_zInstanceName) - 1, szConfigScrollObjectFormat, mu32NextObjectID++);
   }
-  zResult[31] = orxCHAR_NULL;
+  zResult[sizeof(_zInstanceName) - 1] = orxCHAR_NULL;
 
   // Done
   return zResult;
@@ -2233,9 +2236,6 @@ void ScrollObjectBinder<O>::DeleteObject(ScrollObject *_poObject, const orxSTRIN
     // Clears it
     orxConfig_ClearSection(zName);
     orxASSERT(!orxConfig_HasSection(zName));
-
-    // Clears next object ID
-    roGame.ms32NextObjectID = 0;
   }
 
   // Saveable or runtime?

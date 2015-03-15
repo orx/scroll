@@ -338,8 +338,8 @@ private:
                 const orxSTRING mzCurrentObject;
                 orxVIEWPORT *   mpstMainViewport;
                 orxCAMERA *     mpstMainCamera;
-                orxS32          ms32NextObjectID;
-                orxS32          ms32RuntimeObjectID;
+                orxU32          mu32NextObjectID;
+                orxU32          mu32RuntimeObjectID;
                 orxU32          mu32LayerNumber;
                 orxU32          mu32FrameCounter;
                 orxCONFIG_SAVE_FUNCTION mpfnCustomMapSaveFilter;
