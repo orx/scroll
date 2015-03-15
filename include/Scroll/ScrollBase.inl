@@ -1471,14 +1471,14 @@ orxSTRING ScrollBase::GetNewObjectName(orxCHAR _zInstanceName[32], orxBOOL _bRun
   if(_bRunTime)
   {
     // Creates name
-    orxString_NPrint(zResult, sizeof(_zInstanceName) - 1, szConfigScrollObjectRuntimeFormat, mu32RuntimeObjectID++);
+    orxString_NPrint(zResult, 31, szConfigScrollObjectRuntimeFormat, mu32RuntimeObjectID++);
   }
   else
   {
     // Creates name
-    orxString_NPrint(zResult, sizeof(_zInstanceName) - 1, szConfigScrollObjectFormat, mu32NextObjectID++);
+    orxString_NPrint(zResult, 31, szConfigScrollObjectFormat, mu32NextObjectID++);
   }
-  zResult[sizeof(_zInstanceName) - 1] = orxCHAR_NULL;
+  zResult[31] = orxCHAR_NULL;
 
   // Done
   return zResult;
