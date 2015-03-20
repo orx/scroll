@@ -124,8 +124,8 @@ void Scroll<G>::Execute(int argc, char **argv)
   // For all params
   for(int i = 0; !bEditor && (i < argc); i++)
   {
-    char  acParam[1024], *pc1, *pc2;
-    int   iLength, j;
+    char    acParam[1024], *pc1, *pc2;
+    size_t  iLength, j;
 
     // Gets a local lower case copy
     iLength = strlen(argv[i]);
