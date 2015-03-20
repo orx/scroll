@@ -67,7 +67,7 @@ const orxSTRING ScrollEd::szInputReloadHistory      = "ReloadHistory";
 const orxSTRING ScrollEd::szInputSetEditor          = "ScrollEdInput";
 
 // Config
-const orxSTRING ScrollEd::szConfigFile              = "ScrollEd.ini";
+const orxSTRING ScrollEd::szConfigFile              = "scrolled/scrolled.ini";
 const orxSTRING ScrollEd::szConfigSectionEditor     = "ScrollEd";
 const orxSTRING ScrollEd::szConfigScrollEdSet       = "ScrollEdSet";
 const orxSTRING ScrollEd::szConfigSetContainer      = "SetContainer";
@@ -283,6 +283,9 @@ orxSTATUS ScrollEd::Init()
         // Is map defined?
         if(GetMapName())
         {
+          // Adds group to camera
+          orxCamera_AddGroupID(roGame.GetMainCamera(), orxString_GetID(orxOBJECT_KZ_DEFAULT_GROUP), orxFALSE);
+
           // Registers update
           eResult = orxClock_Register(orxClock_FindFirst(orx2F(-1.0f), orxCLOCK_TYPE_CORE), StaticUpdate, orxNULL, orxMODULE_ID_MAIN, orxCLOCK_PRIORITY_NORMAL);
 
@@ -1529,11 +1532,10 @@ orxSTATUS orxFASTCALL ScrollEd::StaticEventHandler(const orxEVENT *_pstEvent)
   return eResult;
 }
 
-template<class G>
 void ScrollEd::Execute(int argc, char **argv)
 {
-  // Makes sure the correct game instance has been created
-  G::GetInstance();
+  // Makes sure the game instance has been created
+  ScrollBase::GetInstance();
 
   // Executes orx
   orx_Execute(argc, argv, StaticInit, StaticRun, StaticExit);

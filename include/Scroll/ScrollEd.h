@@ -37,7 +37,7 @@ public:
 
   static        ScrollEd &      GetInstance();
 
-  template <class G> void       Execute(int argc, char **argv);
+                void            Execute(int argc, char **argv);
 
                 orxSTATUS       SetMapName(const orxSTRING _zMapName);
           const orxSTRING       GetMapName() const;

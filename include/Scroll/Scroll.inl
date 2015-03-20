@@ -124,19 +124,8 @@ void Scroll<G>::Execute(int argc, char **argv)
   // For all params
   for(int i = 0; !bEditor && (i < argc); i++)
   {
-    char    acParam[1024], *pc1, *pc2;
-    size_t  iLength, j;
-
-    // Gets a local lower case copy
-    iLength = strlen(argv[i]);
-    for(j = 0, pc1 = acParam, pc2 = argv[i]; (j < iLength) && (j < 1024); pc1++, pc2++, j++)
-    {
-      *pc1 = ((*pc2 >= 'A') && (*pc2 <= 'Z')) ? *pc2 | 0x20 : *pc2;
-    }
-    *pc1 = '\0';
-
     // Is editor switch?
-    if(!strcmp(acParam, szParamEditor))
+    if(!orxString_ICompare(argv[i], szParamEditor))
     {
       // Updates editor status
       bEditor = true;
@@ -147,7 +136,7 @@ void Scroll<G>::Execute(int argc, char **argv)
   if(bEditor)
   {
     // Executes editor
-    ScrollEd::GetInstance().Execute<G>(argc, argv);
+    ScrollEd::GetInstance().Execute(argc, argv);
   }
   else
   {
