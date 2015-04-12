@@ -92,6 +92,7 @@ private:
   virtual       void            OnPauseGame(orxBOOL _bPause)                {}
 
   virtual const orxSTRING       GetEncryptionKey() const;
+  virtual       orxSTATUS       Bootstrap() const;
 
 
 //! Variables

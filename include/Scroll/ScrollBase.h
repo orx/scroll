@@ -296,6 +296,7 @@ private:
   virtual       void            OnPauseGame(orxBOOL _bPause) = 0;
 
   virtual const orxSTRING       GetEncryptionKey() const = 0;
+  virtual       orxSTATUS       Bootstrap() const = 0;
 
 
                 orxSTATUS       BaseInit();
@@ -318,6 +319,7 @@ private:
   static  void      orxFASTCALL StaticCameraUpdate(const orxCLOCK_INFO *_pstInfo, void *_pstContext);
   static  orxBOOL   orxFASTCALL StaticMapSaveFilter(const orxSTRING _zSectionName, const orxSTRING _zKeyName, const orxSTRING _zFileName, orxBOOL _bUseEncryption);
   static  orxSTATUS orxFASTCALL StaticEventHandler(const orxEVENT *_pstEvent);
+  static  orxSTATUS orxFASTCALL StaticBootstrap();
 
 
 //! Variables

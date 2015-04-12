@@ -116,6 +116,12 @@ const orxSTRING Scroll<G>::GetEncryptionKey() const
 }
 
 template<class G>
+orxSTATUS Scroll<G>::Bootstrap() const
+{
+  return orxSTATUS_SUCCESS;
+}
+
+template<class G>
 void Scroll<G>::Execute(int argc, char **argv)
 {
 #ifndef __NO_SCROLLED__

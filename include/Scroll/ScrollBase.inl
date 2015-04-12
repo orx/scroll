@@ -30,13 +30,6 @@
   #pragma GCC system_header
 #endif // __orxGCC__
 
-// 64bit Helpers
-#if defined (__orxX86_64__) || defined (__orxARM64__)
-  #define SCROLL_CAST_HELPER   (orxU64)
-#else /* __orxX86_64__ || __orxARM64__ */
-  #define SCROLL_CAST_HELPER
-#endif /* __orxX86_64__ || __orxARM64__ */
-
 
 //! Constants
 const orxSTRING ScrollBase::szInputSetGame                    = "ScrollInput";
@@ -90,6 +83,9 @@ ScrollBase::~ScrollBase()
 
 void ScrollBase::Execute(int argc, char **argv)
 {
+  // Sets bootstrap
+  orxConfig_SetBootstrap(&ScrollBase::StaticBootstrap);
+
   // Inits encrypt key
   orxConfig_SetEncryptionKey(GetEncryptionKey());
 
@@ -1853,6 +1849,14 @@ orxSTATUS orxFASTCALL ScrollBase::StaticEventHandler(const orxEVENT *_pstEvent)
   return eResult;
 }
 
+orxSTATUS orxFASTCALL ScrollBase::StaticBootstrap()
+{
+  const ScrollBase &roGame = GetInstance();
+
+  // Calls game bootstrap
+  return roGame.Bootstrap();
+}
+
 
 //! Binder classes
 
@@ -1906,10 +1910,10 @@ inline void ScrollObjectBinderBase::DeleteTable()
       h = orxHashTable_GetNext(spstTable, h, orxNULL, (void **)&poBinder))
   {
     // Not already deleted?
-    if(!orxHashTable_Get(pstDeleteTable, (orxU32) SCROLL_CAST_HELPER poBinder))
+    if(!orxHashTable_Get(pstDeleteTable, (orxU64)poBinder))
     {
       // Adds it to delete table
-      orxHashTable_Add(pstDeleteTable, (orxU32) SCROLL_CAST_HELPER poBinder, (void *)poBinder);
+      orxHashTable_Add(pstDeleteTable, (orxU64)poBinder, (void *)poBinder);
 
       // Deletes it
       delete poBinder;
