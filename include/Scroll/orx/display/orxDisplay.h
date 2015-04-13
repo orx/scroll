@@ -1,6 +1,6 @@
 /* Orx - Portable Game Engine
  *
- * Copyright (c) 2008-2014 Orx-Project
+ * Copyright (c) 2008-2015 Orx-Project
  *
  * This software is provided 'as-is', without any express or implied
  * warranty. In no event will the authors be held liable for any damages
@@ -238,7 +238,8 @@ typedef struct __orxDISPLAY_EVENT_PAYLOAD_t
     struct
     {
       const orxSTRING zLocation;                            /**< File location : 40 */
-      orxU32          u32ID;                                /**< Bitmap ID : 44 */
+      orxU32          u32FilenameID;                        /**< File name ID : 44 */
+      orxU32          u32ID;                                /**< Bitmap (hardware texture) ID : 48 */
 
     } stBitmap;
   };

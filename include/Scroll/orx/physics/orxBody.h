@@ -1,6 +1,6 @@
 /* Orx - Portable Game Engine
  *
- * Copyright (c) 2008-2014 Orx-Project
+ * Copyright (c) 2008-2015 Orx-Project
  *
  * This software is provided 'as-is', without any express or implied
  * warranty. In no event will the authors be held liable for any damages
@@ -98,6 +98,12 @@ extern orxDLLAPI orxBODY *orxFASTCALL         orxBody_CreateFromConfig(const orx
  */
 extern orxDLLAPI orxSTATUS orxFASTCALL        orxBody_Delete(orxBODY *_pstBody);
 
+/** Gets body config name
+ * @param[in]   _pstBody        Concerned body
+ * @return      orxSTRING / orxSTRING_EMPTY
+ */
+extern orxDLLAPI const orxSTRING orxFASTCALL  orxBody_GetName(const orxBODY *_pstBody);
+
 
 /** Tests flags against body definition ones
  * @param[in]   _pstBody        Concerned body
@@ -120,12 +126,6 @@ extern orxDLLAPI orxBOOL orxFASTCALL          orxBody_TestAllDefFlags(const orxB
  */
 extern orxDLLAPI orxU32 orxFASTCALL           orxBody_GetDefFlags(const orxBODY *_pstBody, orxU32 _u32Mask);
 
-
-/** Gets a body owner
- * @param[in]   _pstBody        Concerned body
- * @return      orxSTRUCTURE / orxNULL
- */
-extern orxDLLAPI orxSTRUCTURE *orxFASTCALL    orxBody_GetOwner(const orxBODY *_pstBody);
 
 /** Adds a part to body
  * @param[in]   _pstBody        Concerned body

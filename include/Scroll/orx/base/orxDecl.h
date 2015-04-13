@@ -1,6 +1,6 @@
 /* Orx - Portable Game Engine
  *
- * Copyright (c) 2008-2014 Orx-Project
+ * Copyright (c) 2008-2015 Orx-Project
  *
  * This software is provided 'as-is', without any express or implied
  * warranty. In no event will the authors be held liable for any damages
@@ -72,12 +72,17 @@
 /* *** Platform dependent base declarations */
 
 /* No processor defines? */
-#if !defined(__orxARM__) && !defined(__orxPPC__) && !defined(__orxPPC64__) && !defined(__orxX86_64__) && !defined(__orxX86__)
+#if !defined(__orxARM__) && !defined(__orxPPC__) && !defined(__orxPPC64__) && !defined(__orxX86_64__) && !defined(__orxX86__) && !defined(__orxARM64__)
 
   /* ARM? */
   #if defined(__arm__) || defined(__ARMEL__) || defined(__ARM_EABI__)
 
     #define __orxARM__
+
+  /* ARM64? */
+  #elif defined(__arm64)
+
+    #define __orxARM64__
 
   /* PowerPC? */
   #elif defined(__ppc__) || defined(PPC) || defined(__PPC) || defined(__POWERPC__) || defined(__powerpc__)
@@ -101,7 +106,7 @@
 
   #endif
 
-#endif /* !__orxARM__ && !__orxPPC__ && !__orxPPC64__ && !__orxX86_64__ && !__orxX86__ */
+#endif /* !__orxARM__ && !__orxPPC__ && !__orxPPC64__ && !__orxX86_64__ && !__orxX86__ && !__orxARM64__ */
 
 /* Has byte order? */
 #if defined(__BYTE_ORDER__) && defined(__ORDER_BIG_ENDIAN__)
@@ -288,7 +293,7 @@
   /* Linux / Mac / iOS / Android */
   #if defined(__orxLINUX__) || defined(__orxMAC__) || defined(__orxIOS__) || defined(__orxANDROID__) || defined(__orxANDROID_NATIVE__)
 
-    #if defined(__orxARM__) || defined(__orxLLVM__) || defined(__orxPPC__) || defined(__orxPPC64__) || defined(__orxX86_64__) || defined(__orxIOS__) || defined(__orxANDROID__) || defined(__orxANDROID_NATIVE__) || defined(__orxRASPBERRY_PI__)
+    #if defined(__orxARM__) || defined(__orxLLVM__) || defined(__orxPPC__) || defined(__orxPPC64__) || defined(__orxX86_64__) || defined(__orxIOS__) || defined(__orxANDROID__) || defined(__orxANDROID_NATIVE__) || defined(__orxRASPBERRY_PI__) || defined(__orxARM64__)
 
       #define orxFASTCALL
 
@@ -296,7 +301,7 @@
 
       #define orxCDECL
 
-    #else /* __orxARM__ || __orxLLVM__ || __orxPPC__ || __orxPPC64__ || __orxX86_64__ || __orxIOS__ || __orxANDROID__ || __orxANDROID_NATIVE__ || __orxRASPBERRY_PI__ */
+    #else /* __orxARM__ || __orxLLVM__ || __orxPPC__ || __orxPPC64__ || __orxX86_64__ || __orxIOS__ || __orxANDROID__ || __orxANDROID_NATIVE__ || __orxRASPBERRY_PI__ || __orxARM64__ */
 
       #ifdef __orxFREEBASIC__
 
@@ -312,7 +317,7 @@
 
       #define orxCDECL          __attribute__ ((cdecl))
 
-    #endif /* __orxARM__ || __orxLLVM__ || __orxPPC__ || __orxPPC64__ || __orxX86_64__ || __orxIOS__ || __orxANDROID__ || __orxANDROID_NATIVE__ || __orxRASPBERRY_PI__ */
+    #endif /* __orxARM__ || __orxLLVM__ || __orxPPC__ || __orxPPC64__ || __orxX86_64__ || __orxIOS__ || __orxANDROID__ || __orxANDROID_NATIVE__ || __orxRASPBERRY_PI__ || __orxARM64__ */
 
     /** The symbol will be exported (dll compilation) */
     #define orxDLLEXPORT        __attribute__ ((visibility("default")))

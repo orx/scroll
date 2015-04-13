@@ -1,6 +1,6 @@
 /* Orx - Portable Game Engine
  *
- * Copyright (c) 2008-2014 Orx-Project
+ * Copyright (c) 2008-2015 Orx-Project
  *
  * This software is provided 'as-is', without any express or implied
  * warranty. In no event will the authors be held liable for any damages
@@ -71,6 +71,7 @@ typedef enum __orxCONFIG_EVENT_t
 
 /** Config callback function type to use with save function */
 typedef orxBOOL (orxFASTCALL *orxCONFIG_SAVE_FUNCTION)(const orxSTRING _zSectionName, const orxSTRING _zKeyName, const orxSTRING _zFileName, orxBOOL _bUseEncryption);
+typedef orxSTATUS (orxFASTCALL *orxCONFIG_BOOTSTRAP_FUNCTION)();
 
 
 /** Config module setup
@@ -97,6 +98,14 @@ extern orxDLLAPI orxSTATUS orxFASTCALL        orxConfig_SetEncryptionKey(const o
  * @return Current encryption key / orxSTRING_EMPTY
  */
 extern orxDLLAPI const orxSTRING orxFASTCALL  orxConfig_GetEncryptionKey();
+
+/** Sets config bootstrap function: this function will get called when the config menu is initialized, before any config file is loaded.
+ *  The only available APIs within the bootstrap function are those of orxConfig and its dependencies (orxMemory, orxString, orxFile, orxEvent, orxResource, ...)
+ * @param[in] _pfnBootstrap     Bootstrap function that will get called at module init, before loading any config file.
+                                If this function returns orxSTATUS_FAILURE, the default config file will be skipped, otherwise the regular load sequence will happen
+ * @return orxSTATUS_SUCCESS / orxSTATUS_FAILURE
+ */
+extern orxDLLAPI orxSTATUS orxFASTCALL        orxConfig_SetBootstrap(const orxCONFIG_BOOTSTRAP_FUNCTION _pfnBootstrap);
 
 /** Sets config base name
  * @param[in] _zBaseName        Base name used for default config file

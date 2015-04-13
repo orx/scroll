@@ -1,6 +1,6 @@
 /* Orx - Portable Game Engine
  *
- * Copyright (c) 2008-2014 Orx-Project
+ * Copyright (c) 2008-2015 Orx-Project
  *
  * This software is provided 'as-is', without any express or implied
  * warranty. In no event will the authors be held liable for any damages
@@ -45,6 +45,13 @@
 #include <jni.h>
 #include <pthread.h>
 #include <stdlib.h>
+
+#define KZ_CONFIG_ANDROID                        "Android"
+#define KZ_CONFIG_MAX_SURFACE_WIDTH              "MaxSurfaceWidth"
+#define KZ_CONFIG_MAX_SURFACE_HEIGHT             "MaxSurfaceHeight"
+#define KZ_CONFIG_SURFACE_SCALE                  "SurfaceScale"
+#define KZ_CONFIG_ACCELEROMETER_FREQUENCY        "AccelerometerFrequency"
+#define KZ_CONFIG_USE_JOYSTICK                   "UseJoystick"
 
 #include <android/native_window.h>
 
@@ -111,10 +118,10 @@ typedef struct __orxANDROID_AXIS_DATA_t
       orxFLOAT fY;
       orxFLOAT fZ;
       orxFLOAT fRZ;
-      orxFLOAT fU;
-      orxFLOAT fV;
       orxFLOAT fHAT_X;
       orxFLOAT fHAT_Y;
+      orxFLOAT fRTRIGGER;
+      orxFLOAT fLTRIGGER;
     };
 
     orxFLOAT afValues[8];

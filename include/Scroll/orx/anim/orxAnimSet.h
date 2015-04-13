@@ -1,6 +1,6 @@
 /* Orx - Portable Game Engine
  *
- * Copyright (c) 2008-2014 Orx-Project
+ * Copyright (c) 2008-2015 Orx-Project
  *
  * This software is provided 'as-is', without any express or implied
  * warranty. In no event will the authors be held liable for any damages
@@ -242,6 +242,12 @@ extern orxDLLAPI orxU32 orxFASTCALL                 orxAnimSet_GetAnimCounter(co
  * @return Anim ID / orxU32_UNDEFINED
  */
 extern orxDLLAPI orxU32 orxFASTCALL                 orxAnimSet_GetAnimIDFromName(const orxANIMSET *_pstAnimSet, const orxSTRING _zAnimName);
+
+/** AnimSet name get accessor
+ * @param[in]   _pstAnimSet                         Concerned AnimSet
+ * @return      orxSTRING / orxSTRING_EMPTY
+ */
+extern orxDLLAPI const orxSTRING orxFASTCALL        orxAnimSet_GetName(const orxANIMSET *_pstAnimSet);
 
 #endif /* _orxANIMSET_H_ */
 
