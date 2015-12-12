@@ -1866,9 +1866,6 @@ const orxU32            ScrollObjectBinderBase::su32TableSize     = 64;
 //! Static variables
 orxHASHTABLE *          ScrollObjectBinderBase::spstTable         = orxNULL;
 
-template<class O>
-ScrollObjectBinder<O>  *ScrollObjectBinder<O>::spoInstance        = orxNULL;
-
 
 //! Code
 inline void *operator new(size_t _Size, orxBANK *_pstBank)
@@ -1957,58 +1954,23 @@ inline ScrollObjectBinderBase *ScrollObjectBinderBase::GetBinder(const orxSTRING
   return poResult;
 }
 
-template<class O>
-ScrollObjectBinder<O> *ScrollObjectBinder<O>::GetInstance(orxS32 _s32SegmentSize)
-{
-  // First call?
-  if(!spoInstance)
-  {
-    // Valid segment size?
-    if(_s32SegmentSize > 0)
-    {
-      // Creates instance
-      spoInstance = new ScrollObjectBinder<O>(_s32SegmentSize);
-    }
-  }
-
-  // Done!
-  return spoInstance;
-}
-
-template<class O>
-void ScrollObjectBinder<O>::Register(const orxSTRING _zName, orxS32 _s32SegmentSize)
-{
-  // Checks
-  orxASSERT(!orxHashTable_Get(ScrollObjectBinderBase::GetTable(), orxString_ToCRC(_zName)));
-  orxASSERT(_s32SegmentSize > 0);
-
-  // Adds binder to table
-  orxHashTable_Add(GetTable(), orxString_ToCRC(_zName ? _zName : orxSTRING_EMPTY), GetInstance(_s32SegmentSize));
-}
-
-template<class O>
-ScrollObjectBinder<O>::ScrollObjectBinder(orxS32 _s32SegmentSize)
+ScrollObjectBinderBase::ScrollObjectBinderBase(orxS32 _s32SegmentSize, orxU32 _u32ElementSize)
 {
   // Creates bank
-  mpstBank = orxBank_Create((orxU16)_s32SegmentSize, sizeof(O), orxBANK_KU32_FLAG_NONE, orxMEMORY_TYPE_MAIN);
+  mpstBank = orxBank_Create((orxU16)_s32SegmentSize, _u32ElementSize, orxBANK_KU32_FLAG_NONE, orxMEMORY_TYPE_MAIN);
 
   // Clears variables
   mpoFirstObject = mpoLastObject = orxNULL;
 }
 
-template<class O>
-ScrollObjectBinder<O>::~ScrollObjectBinder()
+ScrollObjectBinderBase::~ScrollObjectBinderBase()
 {
   // Deletes bank
   orxBank_Delete(mpstBank);
   mpstBank = orxNULL;
-
-  // Removes instance
-  spoInstance = orxNULL;
 }
 
-template<class O>
-ScrollObject *ScrollObjectBinder<O>::CreateObject(const orxSTRING _zModelName, const orxSTRING _zInstanceName, ScrollObject::Flag _xFlags)
+ScrollObject *ScrollObjectBinderBase::CreateObject(const orxSTRING _zModelName, const orxSTRING _zInstanceName, ScrollObject::Flag _xFlags)
 {
   orxOBJECT    *pstOrxObject;
   ScrollObject *poResult;
@@ -2032,8 +1994,7 @@ ScrollObject *ScrollObjectBinder<O>::CreateObject(const orxSTRING _zModelName, c
   return poResult;
 }
 
-template<class O>
-ScrollObject *ScrollObjectBinder<O>::CreateObject(orxOBJECT *_pstOrxObject, const orxSTRING _zInstanceName, ScrollObject::Flag _xFlags)
+ScrollObject *ScrollObjectBinderBase::CreateObject(orxOBJECT *_pstOrxObject, const orxSTRING _zInstanceName, ScrollObject::Flag _xFlags)
 {
   ScrollObject *poResult;
 
@@ -2051,7 +2012,7 @@ ScrollObject *ScrollObjectBinder<O>::CreateObject(orxOBJECT *_pstOrxObject, cons
     orxASSERT(!orxObject_GetUserData(_pstOrxObject));
 
     // Creates scroll object
-    poResult = new(mpstBank) O();
+    poResult = ConstructObject(orxBank_Allocate(mpstBank));
 
     // Saveable or runtime object?
     if(_xFlags & (ScrollObject::FlagSave | ScrollObject::FlagRunTime))
@@ -2071,7 +2032,7 @@ ScrollObject *ScrollObjectBinder<O>::CreateObject(orxOBJECT *_pstOrxObject, cons
         orxLinkList_AddAfter(&mpoLastObject->mstNode, &poResult->mstNode);
 
         // Stores it
-        mpoLastObject = ScrollCast<O *>(poResult);
+        mpoLastObject = poResult;
       }
     }
 
@@ -2166,8 +2127,7 @@ ScrollObject *ScrollObjectBinder<O>::CreateObject(orxOBJECT *_pstOrxObject, cons
   return poResult;
 }
 
-template<class O>
-void ScrollObjectBinder<O>::DeleteObject(ScrollObject *_poObject)
+void ScrollObjectBinderBase::DeleteObject(ScrollObject *_poObject)
 {
   // Deletes orx object
   if(_poObject)
@@ -2188,8 +2148,7 @@ void ScrollObjectBinder<O>::DeleteObject(ScrollObject *_poObject)
   }
 }
 
-template<class O>
-void ScrollObjectBinder<O>::DeleteObject(ScrollObject *_poObject, const orxSTRING _zModelName)
+void ScrollObjectBinderBase::DeleteObject(ScrollObject *_poObject, const orxSTRING _zModelName)
 {
   const orxSTRING zName;
 
@@ -2245,16 +2204,16 @@ void ScrollObjectBinder<O>::DeleteObject(ScrollObject *_poObject, const orxSTRIN
     // First object?
     if(_poObject == mpoFirstObject)
     {
-      O *poNewFirstObject;
+      ScrollObject *poNewFirstObject;
 
       // Gets new first object
-      poNewFirstObject = roGame.GetNextObject<O>(ScrollCast<O *>(_poObject));
+      poNewFirstObject = GetNextObject(_poObject);
 
       // Last object?
       if(_poObject == mpoLastObject)
       {
         // Updates last object
-        mpoLastObject = roGame.GetPreviousObject<O>(ScrollCast<O *>(_poObject));
+        mpoLastObject = GetPreviousObject(_poObject);
       }
 
       // Updates first object
@@ -2264,7 +2223,7 @@ void ScrollObjectBinder<O>::DeleteObject(ScrollObject *_poObject, const orxSTRIN
     else if(_poObject == mpoLastObject)
     {
       // Updates last object
-      mpoLastObject = roGame.GetPreviousObject<O>(ScrollCast<O *>(_poObject));
+      mpoLastObject = GetPreviousObject(_poObject);
     }
 
     // Checks
@@ -2285,22 +2244,21 @@ void ScrollObjectBinder<O>::DeleteObject(ScrollObject *_poObject, const orxSTRIN
   operator delete(_poObject, mpstBank);
 }
 
-template<class O>
-O *ScrollObjectBinder<O>::GetNextObject(const O *_poObject) const
+ScrollObject *ScrollObjectBinderBase::GetNextObject(const ScrollObject *_poObject) const
 {
-  O *poResult;
+    ScrollObject *poResult;
 
   // None specified?
   if(!_poObject)
   {
     // Updates result
-    poResult = ScrollCast<O *>(mpoFirstObject);
+    poResult = mpoFirstObject;
   }
   // Not last one?
   else if(_poObject != mpoLastObject)
   {
     // Updates result
-    poResult = ScrollCast<O *>(ScrollBase::GetInstance().GetNextObject((ScrollObject *)_poObject));
+    poResult = ScrollBase::GetInstance().GetNextObject(_poObject);
   }
   else
   {
@@ -2312,22 +2270,21 @@ O *ScrollObjectBinder<O>::GetNextObject(const O *_poObject) const
   return poResult;
 }
 
-template<class O>
-O *ScrollObjectBinder<O>::GetPreviousObject(const O *_poObject) const
+ScrollObject *ScrollObjectBinderBase::GetPreviousObject(const ScrollObject *_poObject) const
 {
-  O *poResult;
+  ScrollObject *poResult;
 
   // None specified?
   if(!_poObject)
   {
     // Updates result
-    poResult = ScrollCast<O *>(mpoLastObject);
+    poResult = mpoLastObject;
   }
   // Not first one?
   else if(_poObject != mpoFirstObject)
   {
     // Updates result
-    poResult = ScrollCast<O *>(ScrollBase::GetInstance().GetPreviousObject((ScrollObject *)_poObject));
+    poResult = ScrollBase::GetInstance().GetPreviousObject(_poObject);
   }
   else
   {
