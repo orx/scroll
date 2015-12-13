@@ -58,7 +58,7 @@ const orxSTRING ScrollBase::szConfigScrollObjectPausable      = "Pausable";
 
 
 //! Static variables
-ScrollBase *ScrollBase::spoInstance = orxNULL;
+ScrollBase *ScrollBase::spoInstance                           = orxNULL;
 
 
 //! Code
@@ -1160,7 +1160,7 @@ ScrollObject *ScrollBase::GetPreviousObject(const ScrollObject *_poObject, orxBO
 }
 
 template<class O>
-O * ScrollBase::GetNextObject(const O *_poObject) const
+O *ScrollBase::GetNextObject(const O *_poObject) const
 {
   const ScrollObjectBinder<O> *poBinder;
   O                           *poResult = orxNULL;
@@ -1172,7 +1172,7 @@ O * ScrollBase::GetNextObject(const O *_poObject) const
   if(poBinder)
   {
     // Updates result
-    poResult = poBinder->GetNextObject(_poObject);
+    poResult = ScrollCast<O *>(poBinder->GetNextObject(_poObject));
   }
 #ifdef __SCROLL_DEBUG__
   else
@@ -1187,7 +1187,7 @@ O * ScrollBase::GetNextObject(const O *_poObject) const
 }
 
 template<class O>
-O * ScrollBase::GetPreviousObject(const O *_poObject) const
+O *ScrollBase::GetPreviousObject(const O *_poObject) const
 {
   const ScrollObjectBinder<O> *poBinder;
   O                           *poResult = orxNULL;
@@ -1199,7 +1199,7 @@ O * ScrollBase::GetPreviousObject(const O *_poObject) const
   if(poBinder)
   {
     // Updates result
-    poResult = poBinder->GetPreviousObject(_poObject);
+    poResult = ScrollCast<O *>(poBinder->GetPreviousObject(_poObject));
   }
 #ifdef __SCROLL_DEBUG__
   else
@@ -2012,7 +2012,7 @@ ScrollObject *ScrollObjectBinderBase::CreateObject(orxOBJECT *_pstOrxObject, con
     orxASSERT(!orxObject_GetUserData(_pstOrxObject));
 
     // Creates scroll object
-    poResult = ConstructObject(orxBank_Allocate(mpstBank));
+    poResult = ConstructObject(mpstBank);
 
     // Saveable or runtime object?
     if(_xFlags & (ScrollObject::FlagSave | ScrollObject::FlagRunTime))
@@ -2240,6 +2240,12 @@ void ScrollObjectBinderBase::DeleteObject(ScrollObject *_poObject, const orxSTRI
   orxLinkList_Remove(&_poObject->mstChronoNode);
 
   // Deletes it
+  DestructObject(_poObject);
+}
+
+void ScrollObjectBinderBase::DestructObject(ScrollObject *_poObject) const
+{
+  // Deletes object
   _poObject->~ScrollObject();
   operator delete(_poObject, mpstBank);
 }
