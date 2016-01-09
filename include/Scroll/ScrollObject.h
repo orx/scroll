@@ -31,6 +31,7 @@ class ScrollObject
 {
   friend class ScrollBase;
   friend class ScrollEd;
+  friend class ScrollObjectBinderBase;
   template <class O> friend class ScrollObjectBinder;
 
 public:

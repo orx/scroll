@@ -110,25 +110,35 @@ protected:
   static        void                    DeleteTable();
   static        ScrollObjectBinderBase *GetBinder(const orxSTRING _zName, orxBOOL _bAllowDefault = orxTRUE);
 
-                                        ScrollObjectBinderBase() {}
-  virtual                              ~ScrollObjectBinderBase() {}
+                                        ScrollObjectBinderBase(orxS32 _s32SegmentSize, orxU32 _u32ElementSize);
+  virtual                              ~ScrollObjectBinderBase();
 
 
 private:
 
   static        ScrollObjectBinderBase *GetDefaultBinder();
 
-  virtual       ScrollObject *          CreateObject(const orxSTRING _zModelName, const orxSTRING _zInstanceName, ScrollObject::Flag _xFlags) = 0;
-  virtual       ScrollObject *          CreateObject(orxOBJECT *_pstOrxObject, const orxSTRING _zInstanceName, ScrollObject::Flag _xFlags) = 0;
-  virtual       void                    DeleteObject(class ScrollObject *_poObject) = 0;
-  virtual       void                    DeleteObject(class ScrollObject *_poObject, const orxSTRING _zModelName) = 0;
+                ScrollObject *          CreateObject(const orxSTRING _zModelName, const orxSTRING _zInstanceName, ScrollObject::Flag _xFlags);
+                ScrollObject *          CreateObject(orxOBJECT *_pstOrxObject, const orxSTRING _zInstanceName, ScrollObject::Flag _xFlags);
+                void                    DeleteObject(ScrollObject *_poObject);
+                void                    DeleteObject(ScrollObject *_poObject, const orxSTRING _zModelName);
+  virtual       ScrollObject *          ConstructObject(orxBANK * _pstBank) const = 0;
+                void                    DestructObject(ScrollObject *_poObject) const;
 
-  static  const orxU32                  su32TableSize;
+                ScrollObject *          GetNextObject(const ScrollObject *_poObject = orxNULL) const;
+                ScrollObject *          GetPreviousObject(const ScrollObject *_poObject = orxNULL) const;
+
 
 //! Variables
 private:
 
+  static  const orxU32                  su32TableSize;
+
+                orxBANK *               mpstBank;
+                ScrollObject *          mpoFirstObject;
+                ScrollObject *          mpoLastObject;
   static        orxHASHTABLE *          spstTable;
+
 };
 
 
@@ -149,25 +159,68 @@ protected:
                                         ScrollObjectBinder(orxS32 _s32SegmentSize);
   virtual                              ~ScrollObjectBinder();
 
-private:
-
-                ScrollObject *          CreateObject(const orxSTRING _zModelName, const orxSTRING _zInstanceName, ScrollObject::Flag _xFlags);
-                ScrollObject *          CreateObject(orxOBJECT *_pstOrxObject, const orxSTRING _zInstanceName, ScrollObject::Flag _xFlags);
-
-                void                    DeleteObject(class ScrollObject *_poObject);
-                void                    DeleteObject(class ScrollObject *_poObject, const orxSTRING _zModelName);
-
-                O *                     GetNextObject(const O *_poObject = orxNULL) const;
-                O *                     GetPreviousObject(const O *_poObject = orxNULL) const;
-
 
 private:
 
-                orxBANK *               mpstBank;
-                ScrollObject *          mpoFirstObject;
-                ScrollObject *          mpoLastObject;
+  virtual       ScrollObject *          ConstructObject(orxBANK *_pstBank) const;
+
+
+//! Variables
+private:
+
   static        ScrollObjectBinder<O> * spoInstance;
 };
+
+template<class O>
+ScrollObjectBinder<O> *ScrollObjectBinder<O>::GetInstance(orxS32 _s32SegmentSize)
+{
+  // First call?
+  if(!spoInstance)
+  {
+    // Valid segment size?
+    if(_s32SegmentSize > 0)
+    {
+      // Creates instance
+      spoInstance = new ScrollObjectBinder<O>(_s32SegmentSize);
+    }
+  }
+
+  // Done!
+  return spoInstance;
+}
+
+template<class O>
+void ScrollObjectBinder<O>::Register(const orxSTRING _zName, orxS32 _s32SegmentSize)
+{
+  // Checks
+  orxASSERT(!orxHashTable_Get(ScrollObjectBinderBase::GetTable(), orxString_ToCRC(_zName)));
+  orxASSERT(_s32SegmentSize > 0);
+
+  // Adds binder to table
+  orxHashTable_Add(GetTable(), orxString_ToCRC(_zName ? _zName : orxSTRING_EMPTY), GetInstance(_s32SegmentSize));
+}
+
+template<class O>
+ScrollObjectBinder<O>::ScrollObjectBinder(orxS32 _s32SegmentSize) : ScrollObjectBinderBase(_s32SegmentSize, sizeof(O))
+{
+}
+
+template<class O>
+ScrollObjectBinder<O>::~ScrollObjectBinder()
+{
+  // Removes instance
+  spoInstance = orxNULL;
+}
+
+template<class O>
+ScrollObject *ScrollObjectBinder<O>::ConstructObject(orxBANK *_pstBank) const
+{
+  // Done!
+  return new(_pstBank) O();
+}
+
+template<class O>
+ScrollObjectBinder<O> *ScrollObjectBinder<O>::spoInstance = orxNULL;
 
 
 //! Scroll object bind helper
@@ -190,7 +243,7 @@ inline static void ScrollBindObject(const orxSTRING _zName, orxS32 _s32SegmentSi
 class ScrollBase
 {
   friend class ScrollEd;
-  template <class O> friend class ScrollObjectBinder;
+  friend class ScrollObjectBinderBase;
 
 public:
 
