@@ -66,6 +66,9 @@ public:
                 orxBOOL                 IsEnabled() const;
                 void                    Enable(orxBOOL _bEnable, orxBOOL _bRecursive = orxTRUE);
 
+                orxBOOL                 IsPaused() const;
+                void                    Pause(orxBOOL _bPause, orxBOOL _bRecursive = orxTRUE);
+
                 orxVECTOR &             GetPosition(orxVECTOR &_rvPosition, orxBOOL _bWorld = orxFALSE) const;
                 void                    SetPosition(const orxVECTOR &_rvPosition, orxBOOL _bWorld = orxFALSE);
 
