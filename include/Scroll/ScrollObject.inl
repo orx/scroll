@@ -247,12 +247,12 @@ void ScrollObject::SetColor(const orxCOLOR &_rstColor, orxBOOL _bRecursive)
   if(_bRecursive)
   {
     // Updates object's color
-    orxObject_SetColor(mpstObject, &_rstColor);
+    orxObject_SetColorRecursive(mpstObject, &_rstColor);
   }
   else
   {
     // Updates object's color
-    orxObject_SetColorRecursive(mpstObject, &_rstColor);
+    orxObject_SetColor(mpstObject, &_rstColor);
   }
 }
 
