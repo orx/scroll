@@ -29,17 +29,6 @@ static const orxSTRING szParamEditor = "-editor";
 
 //! Code
 template<class G>
-G &Scroll<G>::GetInstance()
-{
-  if(!spoInstance)
-  {
-    spoInstance = new G();
-  }
-
-  return *ScrollCast<G *>(spoInstance);
-}
-
-template<class G>
 ScrollObject *Scroll<G>::CreateObject(const orxSTRING _zModelName)
 {
   // Calls base method

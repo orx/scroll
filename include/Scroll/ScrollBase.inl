@@ -883,14 +883,8 @@ orxSTATUS ScrollBase::StartGame()
         poObject;
         poObject = GetNextObject(poObject))
     {
-      // Pushes its section
-      poObject->PushConfigSection();
-
       // Calls its callback
       poObject->OnStartGame();
-
-      // Pops section
-      poObject->PopConfigSection();
     }
 
     // Unlocks object list
@@ -933,14 +927,8 @@ orxSTATUS ScrollBase::StopGame()
         poObject;
         poObject = GetNextObject(poObject))
     {
-      // Pushes its section
-      poObject->PushConfigSection();
-
       // Calls its callback
       poObject->OnStopGame();
-
-      // Pops section
-      poObject->PopConfigSection();
     }
 
     // Unlocks object list
@@ -1378,14 +1366,8 @@ void ScrollBase::BaseUpdate(const orxCLOCK_INFO &_rstInfo)
         // Gets its clock
         pstClock = orxObject_GetClock(poObject->GetOrxObject());
 
-        // Pushes its config section
-        poObject->PushConfigSection();
-
         // Updates object
         poObject->Update(pstClock ? *orxClock_GetInfo(pstClock) : _rstInfo);
-
-        // Pops config section
-        poObject->PopConfigSection();
       }
     }
 
@@ -1705,9 +1687,6 @@ orxSTATUS orxFASTCALL ScrollBase::StaticEventHandler(const orxEVENT *_pstEvent)
         {
           orxVECTOR vNormal;
 
-          // Pushes its section
-          poSender->PushConfigSection();
-
           // Gets reverse normal
           orxVector_Neg(&vNormal, &pstPayload->vNormal);
 
@@ -1722,17 +1701,11 @@ orxSTATUS orxFASTCALL ScrollBase::StaticEventHandler(const orxEVENT *_pstEvent)
             // Calls its callback
             bContinue = poSender->OnSeparate(poRecipient);
           }
-
-          // Pops config section
-          poSender->PopConfigSection();
         }
 
         // Is recipient valid?
         if(bContinue && poRecipient)
         {
-          // Pushes its section
-          poRecipient->PushConfigSection();
-
           // New collision?
           if(_pstEvent->eID == orxPHYSICS_EVENT_CONTACT_ADD)
           {
@@ -1744,9 +1717,6 @@ orxSTATUS orxFASTCALL ScrollBase::StaticEventHandler(const orxEVENT *_pstEvent)
             // Calls its callback
             poRecipient->OnSeparate(poSender);
           }
-
-          // Pops config section
-          poRecipient->PopConfigSection();
         }
       }
 
@@ -1769,9 +1739,9 @@ orxSTATUS orxFASTCALL ScrollBase::StaticEventHandler(const orxEVENT *_pstEvent)
         {
           orxANIM_EVENT_PAYLOAD  *pstPayload;
           orxANIMPOINTER         *pstAnimPointer;
-          orxANIM                *pstAnim;
           const orxSTRING         zOldAnim;
-          const orxSTRING         zNewAnim;
+          const orxSTRING         zNewAnim = orxSTRING_EMPTY;
+          orxU32                  u32AnimID;
 
           // Gets payload
           pstPayload = (orxANIM_EVENT_PAYLOAD *)_pstEvent->pstPayload;
@@ -1782,9 +1752,24 @@ orxSTATUS orxFASTCALL ScrollBase::StaticEventHandler(const orxEVENT *_pstEvent)
           // Gets its anim pointer
           pstAnimPointer = orxOBJECT_GET_STRUCTURE(poSender->GetOrxObject(), ANIMPOINTER);
 
-          // Gets new anim
-          pstAnim   = orxAnimSet_GetAnim(orxAnimPointer_GetAnimSet(pstAnimPointer), orxAnimPointer_GetCurrentAnim(pstAnimPointer));
-          zNewAnim  = pstAnim ? orxAnim_GetName(pstAnim) : orxSTRING_EMPTY;
+          // Gets current anim
+          u32AnimID = orxAnimPointer_GetCurrentAnim(pstAnimPointer);
+
+          // Valid?
+          if(u32AnimID != orxU32_UNDEFINED)
+          {
+            orxANIM *pstAnim;
+
+            // Gets new anim
+            pstAnim = orxAnimSet_GetAnim(orxAnimPointer_GetAnimSet(pstAnimPointer), u32AnimID);
+
+            // Valid?
+            if(pstAnim)
+            {
+              // Gets its name
+              zNewAnim = orxAnim_GetName(pstAnim);
+            }
+          }
 
           // Calls object callback
           poSender->OnNewAnim(zOldAnim, zNewAnim, (_pstEvent->eID == orxANIM_EVENT_CUT) ? orxTRUE : orxFALSE);
@@ -2163,9 +2148,6 @@ void ScrollObjectBinderBase::DeleteObject(ScrollObject *_poObject, const orxSTRI
     // Calls game callback
     roGame.OnObjectDelete(_poObject);
 
-    // Pushes its section
-    orxConfig_PushSection(_zModelName);
-
     // Blocks object list
     bObjectListBlockBackup = roGame.mbObjectListLocked;
     roGame.mbObjectListLocked = orxTRUE;
@@ -2175,9 +2157,6 @@ void ScrollObjectBinderBase::DeleteObject(ScrollObject *_poObject, const orxSTRI
 
     // Restores object list blocking
     roGame.mbObjectListLocked = bObjectListBlockBackup;
-
-    // Pops section
-    orxConfig_PopSection();
   }
 
   // Gets its name
