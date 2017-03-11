@@ -1883,7 +1883,7 @@ inline void operator delete(void *_p, orxBANK *_pstBank)
   orxBank_Free(_pstBank, _p);
 }
 
-inline orxHASHTABLE *ScrollObjectBinderBase::GetTable()
+orxHASHTABLE *ScrollObjectBinderBase::GetTable()
 {
   if(!spstTable)
   {
@@ -1893,7 +1893,7 @@ inline orxHASHTABLE *ScrollObjectBinderBase::GetTable()
   return spstTable;
 }
 
-inline void ScrollObjectBinderBase::DeleteTable()
+void ScrollObjectBinderBase::DeleteTable()
 {
   orxHASHTABLE           *pstDeleteTable;
   ScrollObjectBinderBase *poBinder;
@@ -1925,13 +1925,13 @@ inline void ScrollObjectBinderBase::DeleteTable()
   spstTable = orxNULL;
 }
 
-inline ScrollObjectBinderBase *ScrollObjectBinderBase::GetDefaultBinder()
+ScrollObjectBinderBase *ScrollObjectBinderBase::GetDefaultBinder()
 {
   // Done!
   return ScrollObjectBinder<ScrollObject>::GetInstance(512);
 }
 
-inline ScrollObjectBinderBase *ScrollObjectBinderBase::GetBinder(const orxSTRING _zName, orxBOOL _bAllowDefault)
+ScrollObjectBinderBase *ScrollObjectBinderBase::GetBinder(const orxSTRING _zName, orxBOOL _bAllowDefault)
 {
   ScrollObjectBinderBase *poResult = orxNULL;
 

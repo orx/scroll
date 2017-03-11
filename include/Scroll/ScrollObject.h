@@ -22,8 +22,8 @@
  *    distribution.
  */
 
-#ifndef _ScrollObject_H_
-#define _ScrollObject_H_
+#ifndef _SCROLLOBJECT_H_
+#define _SCROLLOBJECT_H_
 
 
 //! ScrollObject class
@@ -201,4 +201,4 @@ inline ScrollObject::Flag operator~(ScrollObject::Flag _x1)
 
 #endif // __SCROLL_IMPL__
 
-#endif // _ScrollObject_H_
+#endif // _SCROLLOBJECT_H_
