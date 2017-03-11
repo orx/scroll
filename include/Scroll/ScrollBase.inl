@@ -1051,12 +1051,6 @@ ScrollObject *ScrollBase::GetObject(orxU64 _u64GUID) const
   return poResult;
 }
 
-template<class O> O *ScrollBase::GetObject(orxU64 _u64GUID) const
-{
-  // Done!
-  return ScrollCast<O *>(GetObject(_u64GUID));
-}
-
 ScrollObject *ScrollBase::GetNextObject(const ScrollObject *_poObject, orxBOOL _bChronological) const
 {
   orxLINKLIST_NODE *pstNode;
@@ -1252,6 +1246,7 @@ orxSTATUS ScrollBase::BaseInit()
             && (orxEvent_AddHandler(orxEVENT_TYPE_OBJECT, StaticEventHandler) != orxSTATUS_FAILURE)
             && (orxEvent_AddHandler(orxEVENT_TYPE_ANIM, StaticEventHandler) != orxSTATUS_FAILURE)
             && (orxEvent_AddHandler(orxEVENT_TYPE_RENDER, StaticEventHandler) != orxSTATUS_FAILURE)
+            && (orxEvent_AddHandler(orxEVENT_TYPE_SHADER, StaticEventHandler) != orxSTATUS_FAILURE)
             && (orxEvent_AddHandler(orxEVENT_TYPE_PHYSICS, StaticEventHandler) != orxSTATUS_FAILURE)) ? orxSTATUS_SUCCESS : orxSTATUS_FAILURE;
 
     // Successful?
@@ -1336,6 +1331,7 @@ void ScrollBase::BaseExit()
   orxEvent_RemoveHandler(orxEVENT_TYPE_OBJECT, StaticEventHandler);
   orxEvent_RemoveHandler(orxEVENT_TYPE_ANIM, StaticEventHandler);
   orxEvent_RemoveHandler(orxEVENT_TYPE_RENDER, StaticEventHandler);
+  orxEvent_RemoveHandler(orxEVENT_TYPE_SHADER, StaticEventHandler);
   orxEvent_RemoveHandler(orxEVENT_TYPE_PHYSICS, StaticEventHandler);
 
   // Deletes binder's table
@@ -1694,7 +1690,7 @@ orxSTATUS orxFASTCALL ScrollBase::StaticEventHandler(const orxEVENT *_pstEvent)
           if(_pstEvent->eID == orxPHYSICS_EVENT_CONTACT_ADD)
           {
             // Calls its callback
-            bContinue = poSender->OnCollide(poRecipient, pstPayload->zRecipientPartName, pstPayload->vPosition, vNormal);
+            bContinue = poSender->OnCollide(poRecipient, pstPayload->zSenderPartName, pstPayload->zRecipientPartName, pstPayload->vPosition, vNormal);
           }
           else
           {
@@ -1710,7 +1706,7 @@ orxSTATUS orxFASTCALL ScrollBase::StaticEventHandler(const orxEVENT *_pstEvent)
           if(_pstEvent->eID == orxPHYSICS_EVENT_CONTACT_ADD)
           {
             // Calls its callback
-            poRecipient->OnCollide(poSender, pstPayload->zSenderPartName, pstPayload->vPosition, pstPayload->vNormal);
+            poRecipient->OnCollide(poSender, pstPayload->zRecipientPartName, pstPayload->zSenderPartName, pstPayload->vPosition, pstPayload->vNormal);
           }
           else
           {
@@ -1814,7 +1810,29 @@ orxSTATUS orxFASTCALL ScrollBase::StaticEventHandler(const orxEVENT *_pstEvent)
         if(poSender)
         {
           // Calls object callback
-          eResult = (poSender->OnRender((orxRENDER_EVENT_PAYLOAD *)(_pstEvent->pstPayload))) ? orxSTATUS_SUCCESS : orxSTATUS_FAILURE;
+          eResult = poSender->OnRender(*(orxRENDER_EVENT_PAYLOAD *)_pstEvent->pstPayload) ? orxSTATUS_SUCCESS : orxSTATUS_FAILURE;
+        }
+      }
+
+      break;
+    }
+
+    // Shader event
+    case orxEVENT_TYPE_SHADER:
+    {
+      // Object render start?
+      if(_pstEvent->eID == orxSHADER_EVENT_SET_PARAM)
+      {
+        ScrollObject *poSender;
+
+        // Gets sender object
+        poSender = (ScrollObject *)orxObject_GetUserData(orxOBJECT(_pstEvent->hSender));
+
+        // Valid?
+        if(poSender)
+        {
+          // Calls object callback
+          eResult = poSender->OnShader(*(orxSHADER_EVENT_PAYLOAD *)_pstEvent->pstPayload) ? orxSTATUS_SUCCESS : orxSTATUS_FAILURE;
         }
       }
 

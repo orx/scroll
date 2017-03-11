@@ -261,7 +261,8 @@ public:
                 orxVIEWPORT *   GetMainViewport() const;
                 orxCAMERA *     GetMainCamera() const;
                 ScrollObject *  GetObject(orxU64 _u64GUID) const;
-          template<class O> O * GetObject(orxU64 _u64GUID) const;
+          template<class O> O * GetObject(orxU64 _u64GUID) const {return ScrollCast<O *>(GetObject(_u64GUID));}
+
                 ScrollObject *  GetNextObject(const ScrollObject *_poObject = orxNULL, orxBOOL _bChronological = orxFALSE) const;
           template<class O> O * GetNextObject(const O *_poObject = orxNULL) const;
                 ScrollObject *  GetPreviousObject(const ScrollObject *_poObject = orxNULL, orxBOOL _bChronological = orxFALSE) const;

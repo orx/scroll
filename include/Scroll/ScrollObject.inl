@@ -131,6 +131,21 @@ void ScrollObject::SetPosition(const orxVECTOR &_rvPosition, orxBOOL _bWorld)
   }
 }
 
+orxVECTOR &ScrollObject::GetSize(orxVECTOR &_rvSize) const
+{
+  // Updates result
+  orxObject_GetSize(mpstObject, &_rvSize);
+
+  // Done!
+  return _rvSize;
+}
+
+void ScrollObject::SetSize(const orxVECTOR &_rvSize)
+{
+  // Updates its Size
+  orxObject_SetSize(mpstObject, &_rvSize);
+}
+
 orxVECTOR &ScrollObject::GetScale(orxVECTOR &_rvScale, orxBOOL _bWorld) const
 {
   // Local?
@@ -546,6 +561,44 @@ void ScrollObject::PushConfigSection(orxBOOL _bPushInstanceSection) const
   orxConfig_PushSection(_bPushInstanceSection ? macName : mzModelName);
 }
 
+ScrollObject *ScrollObject::GetOwnedChild() const
+{
+  orxOBJECT    *pstChild;
+  ScrollObject *poResult = orxNULL;
+
+  // Gets child
+  pstChild = orxObject_GetOwnedChild(mpstObject);
+
+  // Valid?
+  if(pstChild)
+  {
+    // Updates result
+    poResult = (ScrollObject *)orxObject_GetUserData(pstChild);
+  }
+
+  // Done!
+  return poResult;
+}
+
+ScrollObject *ScrollObject::GetOwnedSibling() const
+{
+  orxOBJECT    *pstSibling;
+  ScrollObject *poResult = orxNULL;
+
+  // Gets sibling
+  pstSibling = orxObject_GetOwnedSibling(mpstObject);
+
+  // Valid?
+  if(pstSibling)
+  {
+    // Updates result
+    poResult = (ScrollObject *)orxObject_GetUserData(pstSibling);
+  }
+
+  // Done!
+  return poResult;
+}
+
 void ScrollObject::PopConfigSection() const
 {
   // Pops config section
@@ -633,7 +686,7 @@ void ScrollObject::Update(const orxCLOCK_INFO &_rstInfo)
 {
 }
 
-orxBOOL ScrollObject::OnCollide(ScrollObject *_poCollider, const orxSTRING _zPartName, const orxVECTOR &_rvPosition, const orxVECTOR &_rvNormal)
+orxBOOL ScrollObject::OnCollide(ScrollObject *_poCollider, const orxSTRING _zPartName, const orxSTRING _zColliderPartName, const orxVECTOR &_rvPosition, const orxVECTOR &_rvNormal)
 {
   return orxTRUE;
 }
@@ -664,7 +717,12 @@ orxBOOL ScrollObject::OnPauseGame(orxBOOL _bPause)
   return orxTRUE;
 }
 
-orxBOOL ScrollObject::OnRender(orxRENDER_EVENT_PAYLOAD *_pstPayload)
+orxBOOL ScrollObject::OnRender(orxRENDER_EVENT_PAYLOAD &_rstPayload)
+{
+  return orxTRUE;
+}
+
+orxBOOL ScrollObject::OnShader(orxSHADER_EVENT_PAYLOAD &_rstPayload)
 {
   return orxTRUE;
 }
