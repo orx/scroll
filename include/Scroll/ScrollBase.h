@@ -26,7 +26,7 @@
 #define _SCROLLBASE_H_
 
 
-#include "orx/orx.h"
+#include "orx.h"
 
 #ifdef __SCROLL_DEBUG__
   #include <typeinfo>
