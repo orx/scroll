@@ -28,9 +28,17 @@
 
 #include "orx.h"
 
+#if defined(__orxDEBUG__) && !defined(__orxANDROID__) && !defined(__orxANDROID_NATIVE__)
+
+  #define __SCROLL_DEBUG__
+
+#endif // __orxDEBUG__ && !__orxANDROID__ && !__orxANDROID_NATIVE__
+
 #ifdef __SCROLL_DEBUG__
   #include <typeinfo>
 #endif // __SCROLL_DEBUG__
+
+#include <new>
 
 #include "ScrollObject.h"
 
