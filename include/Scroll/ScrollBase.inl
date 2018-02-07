@@ -71,7 +71,7 @@ ScrollBase &ScrollBase::GetInstance()
 }
 
 ScrollBase::ScrollBase() : mzMapName(orxNULL), mpstMainViewport(orxNULL), mpstMainCamera(orxNULL),
-                           mu32NextObjectID(0), mu32RuntimeObjectID(0), mu32LayerNumber(1), mu32FrameCounter(0),
+                           mu32NextObjectID(0), mu32RuntimeObjectID(0), mu32LayerNumber(1), mu32FrameCount(0),
                            mzCurrentObject(orxNULL), mpfnCustomMapSaveFilter(orxNULL),
                            mbEditorMode(orxFALSE), mbDifferentialMode(orxFALSE), mbObjectListLocked(orxFALSE), mbIsRunning(orxFALSE), mbIsPaused(orxFALSE)
 {
@@ -483,7 +483,7 @@ orxSTATUS ScrollBase::LoadMap()
     // Loads map
     if(orxConfig_Load(mzMapName))
     {
-      orxS32 s32ScrollObjectCounter, s32ScrollObjectNumber;
+      orxS32 s32ScrollObjectCount, s32ScrollObjectNumber;
 
       // Selects map section
       orxConfig_SelectSection(szConfigSectionMap);
@@ -496,8 +496,8 @@ orxSTATUS ScrollBase::LoadMap()
       s32ScrollObjectNumber = orxConfig_GetS32(szConfigScrollObjectNumber);
 
       // For all objects to load
-      for(s32ScrollObjectCounter = 0, i = 0, orxString_NPrint(acBuffer, sizeof(acBuffer) - 1, szConfigScrollObjectFormat, i), acBuffer[31] = orxCHAR_NULL;
-          s32ScrollObjectCounter < s32ScrollObjectNumber;
+      for(s32ScrollObjectCount = 0, i = 0, orxString_NPrint(acBuffer, sizeof(acBuffer) - 1, szConfigScrollObjectFormat, i), acBuffer[31] = orxCHAR_NULL;
+          s32ScrollObjectCount < s32ScrollObjectNumber;
           i++, orxString_NPrint(acBuffer, 32, szConfigScrollObjectFormat, i), acBuffer[sizeof(acBuffer) - 1] = orxCHAR_NULL)
       {
         // Has section?
@@ -596,8 +596,8 @@ orxSTATUS ScrollBase::LoadMap()
             orxConfig_ClearSection(acBuffer);
           }
 
-          // Updates counter
-          s32ScrollObjectCounter++;
+          // Updates count
+          s32ScrollObjectCount++;
         }
       }
 
@@ -648,7 +648,7 @@ orxSTATUS ScrollBase::LoadMap()
 orxSTATUS ScrollBase::SaveMap(orxBOOL _bEncrypt, const orxCONFIG_SAVE_FUNCTION _pfnMapSaveFilter)
 {
   ScrollObject *poObject;
-  orxU32        u32Counter;
+  orxU32        u32Count;
   orxSTATUS     eResult = orxSTATUS_FAILURE;
 
   // Valid?
@@ -672,7 +672,7 @@ orxSTATUS ScrollBase::SaveMap(orxBOOL _bEncrypt, const orxCONFIG_SAVE_FUNCTION _
     mbObjectListLocked = orxTRUE;
 
     // For all objects
-    for(poObject = GetNextObject(), u32Counter = 0;
+    for(poObject = GetNextObject(), u32Count = 0;
         poObject;
         poObject = GetNextObject(poObject))
     {
@@ -708,8 +708,8 @@ orxSTATUS ScrollBase::SaveMap(orxBOOL _bEncrypt, const orxCONFIG_SAVE_FUNCTION _
         orxConfig_SetBool(szConfigScrollObjectSmoothing, poObject->TestFlags(ScrollObject::FlagSmoothed));
         orxConfig_SetBool(szConfigScrollObjectTiling, poObject->TestFlags(ScrollObject::FlagTiled));
 
-        // Updates counter
-        u32Counter++;
+        // Updates count
+        u32Count++;
       }
       else
       {
@@ -724,8 +724,8 @@ orxSTATUS ScrollBase::SaveMap(orxBOOL _bEncrypt, const orxCONFIG_SAVE_FUNCTION _
     // Restores map section
     orxConfig_SelectSection(szConfigSectionMap);
 
-    // Stores game object counter
-    orxConfig_SetS32(szConfigScrollObjectNumber, u32Counter);
+    // Stores game object count
+    orxConfig_SetS32(szConfigScrollObjectNumber, u32Count);
 
     // Calls save callback
     OnMapSave(_bEncrypt);
@@ -1014,10 +1014,10 @@ orxBOOL ScrollBase::IsGamePaused() const
   return mbIsPaused;
 }
 
-orxU32 ScrollBase::GetFrameCounter() const
+orxU32 ScrollBase::GetFrameCount() const
 {
   // Done!
-  return mu32FrameCounter;
+  return mu32FrameCount;
 }
 
 orxVIEWPORT *ScrollBase::GetMainViewport() const
@@ -1550,8 +1550,8 @@ orxSTATUS orxFASTCALL ScrollBase::StaticEventHandler(const orxEVENT *_pstEvent)
         // Gets payload
         pstPayload = (orxSYSTEM_EVENT_PAYLOAD *)_pstEvent->pstPayload;
 
-        // Stores frame counter
-        roGame.mu32FrameCounter = pstPayload->u32FrameCounter;
+        // Stores frame count
+        roGame.mu32FrameCount = pstPayload->u32FrameCount;
       }
 
       break;
@@ -1722,8 +1722,28 @@ orxSTATUS orxFASTCALL ScrollBase::StaticEventHandler(const orxEVENT *_pstEvent)
     // Anim event
     case orxEVENT_TYPE_ANIM:
     {
+      // Anim update?
+      if(_pstEvent->eID == orxANIM_EVENT_UPDATE)
+      {
+        ScrollObject *poSender;
+
+        // Gets sender object
+        poSender = (ScrollObject *)orxObject_GetUserData(orxOBJECT(_pstEvent->hSender));
+
+        // Valid?
+        if(poSender)
+        {
+          orxANIM_EVENT_PAYLOAD *pstPayload;
+
+          // Gets payload
+          pstPayload = (orxANIM_EVENT_PAYLOAD *)_pstEvent->pstPayload;
+
+          // Calls object callback
+          poSender->OnAnimUpdate(pstPayload->zAnimName);
+        }
+      }
       // Anim stop, cut or loop?
-      if((_pstEvent->eID == orxANIM_EVENT_STOP) || (_pstEvent->eID == orxANIM_EVENT_CUT) || (_pstEvent->eID == orxANIM_EVENT_LOOP))
+      else if((_pstEvent->eID == orxANIM_EVENT_STOP) || (_pstEvent->eID == orxANIM_EVENT_CUT) || (_pstEvent->eID == orxANIM_EVENT_LOOP))
       {
         ScrollObject *poSender;
 

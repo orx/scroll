@@ -509,7 +509,7 @@ orxSTATUS ScrollObject::AddConditionalTrack(const orxSTRING _zTrackKey, orxS32 _
   if(orxConfig_HasValue(_zTrackKey))
   {
     // Is index valid?
-    if(_s32Index < orxConfig_GetListCounter(_zTrackKey))
+    if(_s32Index < orxConfig_GetListCount(_zTrackKey))
     {
       const orxSTRING zTrack;
 
@@ -697,6 +697,10 @@ orxBOOL ScrollObject::OnSeparate(ScrollObject *_poCollider)
 }
 
 void ScrollObject::OnNewAnim(const orxSTRING _zOldAnim, const orxSTRING _zNewAnim, orxBOOL _bCut)
+{
+}
+
+void ScrollObject::OnAnimUpdate(const orxSTRING _zAnim)
 {
 }
 

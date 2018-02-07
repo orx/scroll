@@ -28,6 +28,7 @@
 
 #include "orx.h"
 
+//! Defines
 #if defined(__orxDEBUG__) && !defined(__orxANDROID__) && !defined(__orxANDROID_NATIVE__)
 
   #define __SCROLL_DEBUG__
@@ -264,7 +265,7 @@ public:
                 orxSTATUS       PauseGame(orxBOOL _bPause);
                 orxBOOL         IsGamePaused() const;
 
-                orxU32          GetFrameCounter() const;
+                orxU32          GetFrameCount() const;
 
                 orxVIEWPORT *   GetMainViewport() const;
                 orxCAMERA *     GetMainCamera() const;
@@ -405,7 +406,7 @@ private:
                 orxU32          mu32NextObjectID;
                 orxU32          mu32RuntimeObjectID;
                 orxU32          mu32LayerNumber;
-                orxU32          mu32FrameCounter;
+                orxU32          mu32FrameCount;
                 orxCONFIG_SAVE_FUNCTION mpfnCustomMapSaveFilter;
 };
 

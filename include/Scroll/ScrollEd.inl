@@ -193,7 +193,7 @@ orxSTATUS ScrollEd::Init()
     orxInput_Load(orxSTRING_EMPTY);
 
     // Has any locale language?
-    if(orxLocale_GetLanguageCounter())
+    if(orxLocale_GetLanguageCount())
     {
       // Selects first available
       orxLocale_SelectLanguage(orxLocale_GetLanguage(0));
@@ -231,7 +231,7 @@ orxSTATUS ScrollEd::Init()
     // Pushes editor section
     orxConfig_PushSection(szConfigSectionEditor);
 
-    // Has default layer counter?
+    // Has default layer count?
     if(orxConfig_HasValue(szConfigLayerNumber))
     {
       // Sets it
@@ -1245,7 +1245,7 @@ orxBOOL ScrollEd::MapSaveFilter(const orxSTRING _zSectionName, const orxSTRING _
 {
   orxBOOL bResult;
 
-  // Is editor section layer counter or encrypt save?
+  // Is editor section layer count or encrypt save?
   if(!orxString_Compare(_zSectionName, szConfigSectionEditor)
   && (!_zKeyName
    || !orxString_Compare(_zKeyName, szConfigLayerIndex)
@@ -1605,8 +1605,8 @@ orxSTATUS ScrollEd::InitSets()
   mpstSetBank = orxBank_Create(32, sizeof(ScrollEdSet), orxBANK_KU32_FLAG_NONE, orxMEMORY_TYPE_MAIN);
 
   // For all config sections
-  for(orxS32 i = 0, s32SectionCounter = orxConfig_GetSectionCounter();
-      i < s32SectionCounter;
+  for(orxS32 i = 0, s32SectionCount = orxConfig_GetSectionCount();
+      i < s32SectionCount;
       i++)
   {
     const orxSTRING zSection;
@@ -1718,7 +1718,7 @@ orxSTATUS ScrollEd::InitSets()
           vSize.fZ = orxFLOAT_1;
 
           // Gets model's index
-          s32ModelIndex = orxBank_GetCounter(poSelectedSet->mpstObjectBank);
+          s32ModelIndex = orxBank_GetCount(poSelectedSet->mpstObjectBank);
 
           // Stores it
           *((ScrollObject **)orxBank_Allocate(poSelectedSet->mpstObjectBank)) = poModel;
@@ -1813,7 +1813,7 @@ void ScrollEd::ExitSets()
 void ScrollEd::ShowPreviousSet()
 {
   // Has sets?
-  if(orxBank_GetCounter(mpstSetBank) > 0)
+  if(orxBank_GetCount(mpstSetBank) > 0)
   {
     ScrollEdSet *poSet;
 
@@ -1827,7 +1827,7 @@ void ScrollEd::ShowPreviousSet()
       poSet->mpoContainer->AddFX(szConfigSetContainerHide, orxFALSE);
 
       // Gets previous one
-      mu32SelectedSet = (mu32SelectedSet == 0) ? orxBank_GetCounter(mpstSetBank) - 1 : mu32SelectedSet - 1;
+      mu32SelectedSet = (mu32SelectedSet == 0) ? orxBank_GetCount(mpstSetBank) - 1 : mu32SelectedSet - 1;
       poSet = (ScrollEdSet *)orxBank_GetAtIndex(mpstSetBank, mu32SelectedSet);
 
       // Pushes hide FX section
@@ -1859,7 +1859,7 @@ void ScrollEd::ShowPreviousSet()
 void ScrollEd::ShowNextSet()
 {
   // Has sets?
-  if(orxBank_GetCounter(mpstSetBank) > 0)
+  if(orxBank_GetCount(mpstSetBank) > 0)
   {
     ScrollEdSet *poSet;
 
@@ -1873,7 +1873,7 @@ void ScrollEd::ShowNextSet()
       poSet->mpoContainer->AddFX(szConfigSetContainerHide, orxFALSE);
 
       // Gets next one
-      mu32SelectedSet = (mu32SelectedSet + 1) % orxBank_GetCounter(mpstSetBank);
+      mu32SelectedSet = (mu32SelectedSet + 1) % orxBank_GetCount(mpstSetBank);
       poSet = (ScrollEdSet *)orxBank_GetAtIndex(mpstSetBank, mu32SelectedSet);
 
       // Pushes hide FX section
@@ -1905,7 +1905,7 @@ void ScrollEd::ShowNextSet()
 void ScrollEd::HideSet()
 {
   // Has sets?
-  if(orxBank_GetCounter(mpstSetBank) > 0)
+  if(orxBank_GetCount(mpstSetBank) > 0)
   {
     ScrollEdSet *poSet;
 
@@ -1961,7 +1961,7 @@ const ScrollObject *ScrollEd::GetSetModel(const orxVECTOR &_rvPosition) const
     u32ModelIndex = orxF2U(vRelativePos.fX + vRelativePos.fY * fContainerSize);
 
     // Valid?
-    if(u32ModelIndex < orxBank_GetCounter(poSet->mpstObjectBank))
+    if(u32ModelIndex < orxBank_GetCount(poSet->mpstObjectBank))
     {
       // Updates result
       poResult = *(ScrollObject **)orxBank_GetAtIndex(poSet->mpstObjectBank, u32ModelIndex);
@@ -1991,10 +1991,10 @@ orxSTATUS ScrollEd::InitUI()
   }
 
   // Creates button bank
-  mpstButtonBank = orxBank_Create((orxS16)orxConfig_GetListCounter(szConfigButtonList), sizeof(ButtonData), orxBANK_KU32_FLAG_NOT_EXPANDABLE, orxMEMORY_TYPE_MAIN);
+  mpstButtonBank = orxBank_Create((orxS16)orxConfig_GetListCount(szConfigButtonList), sizeof(ButtonData), orxBANK_KU32_FLAG_NOT_EXPANDABLE, orxMEMORY_TYPE_MAIN);
 
   // For all buttons
-  for(i = 0, s32Number = orxConfig_GetListCounter(szConfigButtonList); i < s32Number; i++)
+  for(i = 0, s32Number = orxConfig_GetListCount(szConfigButtonList); i < s32Number; i++)
   {
     const orxSTRING zName;
     orxOBJECT      *pstButton;
