@@ -29,20 +29,6 @@ static const orxSTRING szParamEditor = "-editor";
 
 //! Code
 template<class G>
-ScrollObject *Scroll<G>::CreateObject(const orxSTRING _zModelName)
-{
-  // Calls base method
-  return ScrollBase::CreateObject(_zModelName, ScrollObject::FlagRunTime);
-}
-
-template<class G>
-void Scroll<G>::DeleteObject(ScrollObject *_poObject)
-{
-  // Calls base method
-  ScrollBase::DeleteObject(_poObject);
-}
-
-template<class G>
 orxSTATUS Scroll<G>::SetMapName(const orxSTRING _zMapName)
 {
   orxSTATUS eResult;
@@ -113,7 +99,10 @@ orxSTATUS Scroll<G>::Bootstrap() const
 template<class G>
 void Scroll<G>::Execute(int argc, char **argv)
 {
-#ifndef __NO_SCROLLED__
+#ifdef __NO_SCROLLED__
+  // Executes game
+  ScrollBase::GetInstance().Execute(argc, argv);
+#else // __NO_SCROLLED__
   orxBOOL bEditor = orxFALSE;
 
   // For all params
@@ -124,6 +113,7 @@ void Scroll<G>::Execute(int argc, char **argv)
     {
       // Updates editor status
       bEditor = true;
+      break;
     }
   }
 
@@ -138,16 +128,10 @@ void Scroll<G>::Execute(int argc, char **argv)
     // Executes game
     ScrollBase::GetInstance().Execute(argc, argv);
   }
-#else // __NO_SCROLLED__
-
-  // Executes game
-  ScrollBase::GetInstance().Execute(argc, argv);
-
 #endif // __NO_SCROLLED__
 }
 
 #ifdef __orxMSVC__
-
 #include <windows.h>
 
 template<class G>
@@ -163,17 +147,8 @@ void Scroll<G>::Execute()
   // Gets command line
   lpCmdLine = GetCommandLine();
 
-  // Starts with a double quote?
-  if(*orxString_SkipWhiteSpaces(lpCmdLine) == '"')
-  {
-    // Gets first delimiters
-    pcFirstDelimiters = "\"";
-  }
-  else
-  {
-    // Gets first delimiters
-    pcFirstDelimiters = " ";
-  }
+  // Gets first delimiters
+  pcFirstDelimiters = (*orxString_SkipWhiteSpaces(lpCmdLine) == '"') ? "\"" : " ";
 
   // Process command line
   for(argc = 0, pcNextToken = orxNULL, pcToken = strtok_s(lpCmdLine, pcFirstDelimiters, &pcNextToken);
@@ -186,5 +161,4 @@ void Scroll<G>::Execute()
   // Calls main execute method
   Execute(argc, argv);
 }
-
 #endif // __orxMSVC__

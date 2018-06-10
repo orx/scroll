@@ -46,9 +46,9 @@ public:
                 void            Execute();
 #endif // __orxMSVC__
 
-                ScrollObject *  CreateObject(const orxSTRING _zModelName);
+                ScrollObject *  CreateObject(const orxSTRING _zModelName)   {return ScrollBase::CreateObject(_zModelName, ScrollObject::FlagRunTime);}
           template<class O> O * CreateObject(const orxSTRING _zModelName)   {return ScrollCast<O *>(CreateObject(_zModelName));}
-                void            DeleteObject(ScrollObject *_poObject);
+                void            DeleteObject(ScrollObject *_poObject)       {ScrollBase::DeleteObject(_poObject);}
 
                 orxSTATUS       SetMapName(const orxSTRING _zMapName);
           const orxSTRING       GetMapName() const;
