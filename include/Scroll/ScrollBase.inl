@@ -247,13 +247,13 @@ void ScrollBase::DeleteObject(ScrollObject *_poObject)
   }
 }
 
-ScrollObject *ScrollBase::PickObject(const orxVECTOR &_rvPosition, orxU32 _u32GroupID) const
+ScrollObject *ScrollBase::PickObject(const orxVECTOR &_rvPosition, orxSTRINGID _stGroupID) const
 {
   orxOBJECT    *pstObject;
   ScrollObject *poResult = orxNULL;
 
   // Picks object
-  pstObject = orxObject_Pick(&_rvPosition, _u32GroupID);
+  pstObject = orxObject_Pick(&_rvPosition, _stGroupID);
 
   // Found?
   if(pstObject)
@@ -266,12 +266,12 @@ ScrollObject *ScrollBase::PickObject(const orxVECTOR &_rvPosition, orxU32 _u32Gr
   return poResult;
 }
 
-ScrollObject *ScrollBase::PickObject(const orxVECTOR &_rvPosition, const orxVECTOR *_avOffsetList, orxU32 _u32ListSize, orxU32 _u32GroupID) const
+ScrollObject *ScrollBase::PickObject(const orxVECTOR &_rvPosition, const orxVECTOR *_avOffsetList, orxU32 _u32ListSize, orxSTRINGID _stGroupID) const
 {
   ScrollObject *poResult = orxNULL;
 
   // Picks initial position
-  poResult = PickObject(_rvPosition, _u32GroupID);
+  poResult = PickObject(_rvPosition, _stGroupID);
 
   // For all offsets, till found
   for(orxU32 i = 0; (poResult == orxNULL) && (i < _u32ListSize); i++)
@@ -282,14 +282,14 @@ ScrollObject *ScrollBase::PickObject(const orxVECTOR &_rvPosition, const orxVECT
     orxVector_Add(&vPickPosition, &_rvPosition, &_avOffsetList[i]);
 
     // Updates result
-    poResult = PickObject(vPickPosition, _u32GroupID);
+    poResult = PickObject(vPickPosition, _stGroupID);
   }
 
   // Done!
   return poResult;
 }
 
-ScrollObject *ScrollBase::PickObject(const orxVECTOR &_rvPosition, const orxVECTOR &_rvExtent, orxU32 _u32GroupID) const
+ScrollObject *ScrollBase::PickObject(const orxVECTOR &_rvPosition, const orxVECTOR &_rvExtent, orxSTRINGID _stGroupID) const
 {
   orxOBOX       stBox;
   ScrollObject *poResult;
@@ -302,19 +302,19 @@ ScrollObject *ScrollBase::PickObject(const orxVECTOR &_rvPosition, const orxVECT
   orxVector_Set(&stBox.vZ, orxFLOAT_0, orxFLOAT_0, orx2F(2.0f) * _rvExtent.fZ);
 
   // Updates result
-  poResult = PickObject(stBox, _u32GroupID);
+  poResult = PickObject(stBox, _stGroupID);
 
   // Done!
   return poResult;
 }
 
-ScrollObject *ScrollBase::PickObject(const orxOBOX &_rstBox, orxU32 _u32GroupID) const
+ScrollObject *ScrollBase::PickObject(const orxOBOX &_rstBox, orxSTRINGID _stGroupID) const
 {
   orxOBJECT    *pstObject;
   ScrollObject *poResult = orxNULL;
 
   // Picks object
-  pstObject = orxObject_BoxPick(&_rstBox, _u32GroupID);
+  pstObject = orxObject_BoxPick(&_rstBox, _stGroupID);
 
   // Found?
   if(pstObject)

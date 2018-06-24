@@ -35,7 +35,7 @@ ScrollObject::~ScrollObject()
 {
 }
 
-orxBOOL ScrollObject::GetGroupID() const
+orxSTRINGID ScrollObject::GetGroupID() const
 {
   // Done!
   return orxObject_GetGroupID(mpstObject);

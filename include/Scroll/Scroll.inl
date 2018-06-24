@@ -147,7 +147,7 @@ void Scroll<G>::Execute()
   // Gets command line
   lpCmdLine = GetCommandLine();
 
-  // Gets first delimiters
+    // Gets first delimiters
   pcFirstDelimiters = (*orxString_SkipWhiteSpaces(lpCmdLine) == '"') ? "\"" : " ";
 
   // Process command line

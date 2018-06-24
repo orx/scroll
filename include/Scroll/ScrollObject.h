@@ -60,7 +60,7 @@ public:
                 const orxSTRING         GetModelName() const                                      {return mzModelName;}
                 orxU64                  GetGUID() const                                           {return orxStructure_GetGUID(mpstObject);}
 
-                orxU32                  GetGroupID() const;
+                orxSTRINGID             GetGroupID() const;
                 void                    SetGroupID(orxU32 _u32GroupID, orxBOOL _bRecursive = orxTRUE);
 
                 orxBOOL                 IsEnabled() const;
