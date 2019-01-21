@@ -42,9 +42,6 @@ public:
 
   static        G &             GetInstance();
                 void            Execute(int argc, char **argv);
-#ifdef __orxMSVC__
-                void            Execute();
-#endif // __orxMSVC__
 
                 ScrollObject *  CreateObject(const orxSTRING _zModelName)   {return ScrollBase::CreateObject(_zModelName, ScrollObject::FlagRunTime);}
           template<class O> O * CreateObject(const orxSTRING _zModelName)   {return ScrollCast<O *>(CreateObject(_zModelName));}

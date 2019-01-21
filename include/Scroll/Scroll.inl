@@ -130,35 +130,3 @@ void Scroll<G>::Execute(int argc, char **argv)
   }
 #endif // __NO_SCROLLED__
 }
-
-#ifdef __orxMSVC__
-#include <windows.h>
-
-template<class G>
-void Scroll<G>::Execute()
-{
-  static const orxS32 szMaxArgs = 256;
-
-  int   argc;
-  char *argv[szMaxArgs];
-  char *pcToken, *pcNextToken, *pcFirstDelimiters;
-  LPSTR lpCmdLine;
-
-  // Gets command line
-  lpCmdLine = GetCommandLine();
-
-    // Gets first delimiters
-  pcFirstDelimiters = (*orxString_SkipWhiteSpaces(lpCmdLine) == '"') ? "\"" : " ";
-
-  // Process command line
-  for(argc = 0, pcNextToken = orxNULL, pcToken = strtok_s(lpCmdLine, pcFirstDelimiters, &pcNextToken);
-      pcToken && (argc < szMaxArgs);
-      pcToken = strtok_s(orxNULL, " ", &pcNextToken))
-  {
-    argv[argc++] = pcToken;
-  }
-
-  // Calls main execute method
-  Execute(argc, argv);
-}
-#endif // __orxMSVC__
