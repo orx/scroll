@@ -63,6 +63,9 @@ const orxSTRING ScrollBase::szConfigScrollObjectPausable      = "Pausable";
 //! Static variables
 ScrollBase *ScrollBase::spoInstance                           = orxNULL;
 
+template<class O>
+ScrollObjectBinder<O> *ScrollObjectBinder<O>::spoInstance     = orxNULL;
+
 
 //! Code
 ScrollBase &ScrollBase::GetInstance()
@@ -499,9 +502,9 @@ orxSTATUS ScrollBase::LoadMap()
       s32ScrollObjectNumber = orxConfig_GetS32(szConfigScrollObjectNumber);
 
       // For all objects to load
-      for(s32ScrollObjectCount = 0, i = 0, orxString_NPrint(acBuffer, sizeof(acBuffer) - 1, szConfigScrollObjectFormat, i), acBuffer[31] = orxCHAR_NULL;
+      for(s32ScrollObjectCount = 0, i = 0, orxString_NPrint(acBuffer, sizeof(acBuffer), szConfigScrollObjectFormat, i);
           s32ScrollObjectCount < s32ScrollObjectNumber;
-          i++, orxString_NPrint(acBuffer, 32, szConfigScrollObjectFormat, i), acBuffer[sizeof(acBuffer) - 1] = orxCHAR_NULL)
+          i++, orxString_NPrint(acBuffer, sizeof(acBuffer), szConfigScrollObjectFormat, i))
       {
         // Has section?
         if(orxConfig_HasSection(acBuffer))
@@ -1274,7 +1277,7 @@ void ScrollBase::BaseExit()
   // Clears map
   SetMapName(orxNULL);
 
-  // Removes object create handler
+  // Disables object create handler
   orxEvent_SetHandlerIDFlags(StaticEventHandler, orxEVENT_TYPE_OBJECT, orxNULL, orxEVENT_KU32_FLAG_ID_NONE, orxEVENT_GET_FLAG(orxOBJECT_EVENT_CREATE));
 
   // For all objects
@@ -1411,14 +1414,13 @@ orxSTRING ScrollBase::GetNewObjectName(orxCHAR _zInstanceName[32], orxBOOL _bRun
   if(_bRunTime)
   {
     // Creates name
-    orxString_NPrint(zResult, 31, szConfigScrollObjectRuntimeFormat, mu32RuntimeObjectID++);
+    orxString_NPrint(zResult, 32, szConfigScrollObjectRuntimeFormat, mu32RuntimeObjectID++);
   }
   else
   {
     // Creates name
-    orxString_NPrint(zResult, 31, szConfigScrollObjectFormat, mu32NextObjectID++);
+    orxString_NPrint(zResult, 32, szConfigScrollObjectFormat, mu32NextObjectID++);
   }
-  zResult[31] = orxCHAR_NULL;
 
   // Done
   return zResult;
@@ -1852,18 +1854,6 @@ orxHASHTABLE *          ScrollObjectBinderBase::spstTable         = orxNULL;
 
 
 //! Code
-inline void *operator new(size_t _Size, orxBANK *_pstBank)
-{
-  // Done!
-  return orxBank_Allocate(_pstBank);
-}
-
-inline void operator delete(void *_p, orxBANK *_pstBank)
-{
-  // Done!
-  orxBank_Free(_pstBank, _p);
-}
-
 orxHASHTABLE *ScrollObjectBinderBase::GetTable()
 {
   if(!spstTable)
@@ -2030,7 +2020,7 @@ ScrollObject *ScrollObjectBinderBase::CreateObject(orxOBJECT *_pstOrxObject, con
     orxObject_SetUserData(_pstOrxObject, poResult);
 
     // Stores its name
-    poResult->macName[orxString_NPrint(poResult->macName, sizeof(poResult->macName) - 1, "%s", _zInstanceName)] = orxCHAR_NULL;
+    orxString_NPrint(poResult->macName, sizeof(poResult->macName), "%s", _zInstanceName);
 
     // Inits flags
     xFlags = _xFlags;
