@@ -1199,7 +1199,8 @@ orxSTATUS ScrollBase::BaseInit()
             && (orxEvent_AddHandler(orxEVENT_TYPE_ANIM, StaticEventHandler) != orxSTATUS_FAILURE)
             && (orxEvent_AddHandler(orxEVENT_TYPE_RENDER, StaticEventHandler) != orxSTATUS_FAILURE)
             && (orxEvent_AddHandler(orxEVENT_TYPE_SHADER, StaticEventHandler) != orxSTATUS_FAILURE)
-            && (orxEvent_AddHandler(orxEVENT_TYPE_PHYSICS, StaticEventHandler) != orxSTATUS_FAILURE)) ? orxSTATUS_SUCCESS : orxSTATUS_FAILURE;
+            && (orxEvent_AddHandler(orxEVENT_TYPE_PHYSICS, StaticEventHandler) != orxSTATUS_FAILURE)
+            && (orxEvent_AddHandler(orxEVENT_TYPE_FX, StaticEventHandler) != orxSTATUS_FAILURE)) ? orxSTATUS_SUCCESS : orxSTATUS_FAILURE;
 
     // Successful?
     if(eResult != orxSTATUS_FAILURE)
@@ -1211,6 +1212,7 @@ orxSTATUS ScrollBase::BaseInit()
       orxEvent_SetHandlerIDFlags(StaticEventHandler, orxEVENT_TYPE_RENDER, orxNULL, orxEVENT_GET_FLAG(orxRENDER_EVENT_OBJECT_START), orxEVENT_KU32_MASK_ID_ALL);
       orxEvent_SetHandlerIDFlags(StaticEventHandler, orxEVENT_TYPE_SHADER, orxNULL, orxEVENT_GET_FLAG(orxSHADER_EVENT_SET_PARAM), orxEVENT_KU32_MASK_ID_ALL);
       orxEvent_SetHandlerIDFlags(StaticEventHandler, orxEVENT_TYPE_PHYSICS, orxNULL, orxEVENT_GET_FLAG(orxPHYSICS_EVENT_CONTACT_ADD) | orxEVENT_GET_FLAG(orxPHYSICS_EVENT_CONTACT_REMOVE), orxEVENT_KU32_MASK_ID_ALL);
+      orxEvent_SetHandlerIDFlags(StaticEventHandler, orxEVENT_TYPE_FX, orxNULL, orxEVENT_GET_FLAG(orxFX_EVENT_START) | orxEVENT_GET_FLAG(orxFX_EVENT_STOP) | orxEVENT_GET_FLAG(orxFX_EVENT_LOOP), orxEVENT_KU32_MASK_ID_ALL);
 
       // Clears object lists
       orxMemory_Zero(&mstObjectList, sizeof(orxLINKLIST));
@@ -1771,6 +1773,45 @@ orxSTATUS orxFASTCALL ScrollBase::StaticEventHandler(const orxEVENT *_pstEvent)
 
           // Calls object callback
           poSender->OnAnimEvent(pstPayload->zAnimName, pstPayload->stCustom.zName, pstPayload->stCustom.fTime, pstPayload->stCustom.fValue);
+        }
+      }
+
+      break;
+    }
+
+    // FX event
+    case orxEVENT_TYPE_FX:
+    {
+      // FX start?
+      if((_pstEvent->eID == orxFX_EVENT_START) || (_pstEvent->eID == orxFX_EVENT_STOP) || (_pstEvent->eID == orxFX_EVENT_LOOP))
+      {
+        orxFX_EVENT_PAYLOAD *pstPayload;
+        ScrollObject        *poSender;
+
+        // Gets payload
+        pstPayload = (orxFX_EVENT_PAYLOAD *)_pstEvent->pstPayload;
+
+        // Gets sender object
+        poSender = (ScrollObject *)orxObject_GetUserData(orxOBJECT(_pstEvent->hSender));
+
+        // Valid?
+        if(poSender)
+        {
+          if(_pstEvent->eID == orxFX_EVENT_START)
+          {
+            // Calls object callback
+            poSender->OnFXStart(pstPayload->zFXName, pstPayload->pstFX);
+          }
+          else if(_pstEvent->eID == orxFX_EVENT_STOP)
+          {
+            // Calls object callback
+            poSender->OnFXStop(pstPayload->zFXName, pstPayload->pstFX);
+          }
+          else if(_pstEvent->eID == orxFX_EVENT_LOOP)
+          {
+            // Calls object callback
+            poSender->OnFXLoop(pstPayload->zFXName, pstPayload->pstFX);
+          }
         }
       }
 
