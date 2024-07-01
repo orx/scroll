@@ -87,6 +87,9 @@ public:
                 orxCOLOR &              GetColor(orxCOLOR &_rstColor) const;
                 void                    SetColor(const orxCOLOR &_rstColor, orxBOOL _bRecursive = orxTRUE);
 
+                orxFLOAT                GetAlpha() const;
+                void                    SetAlpha(float _fAlpha, orxBOOL _bRecursive = orxTRUE);
+
                 void                    GetFlip(orxBOOL &_rbFlipX, orxBOOL &_rbFlipY) const;
                 void                    SetFlip(orxBOOL _bFlipX, orxBOOL _bFlipY, orxBOOL _bRecursive = orxTRUE);
 
@@ -108,6 +111,8 @@ public:
 
                 orxFLOAT                GetLifeTime() const;
                 void                    SetLifeTime(orxFLOAT _fLifeTime);
+
+                void                    SetParent(ScrollObject *_poParent);
 
                 ScrollObject *          FindChild(const orxSTRING _zPath) const;
                 ScrollObject *          GetChild() const;
@@ -455,6 +460,32 @@ void ScrollObject::SetColor(const orxCOLOR &_rstColor, orxBOOL _bRecursive)
   }
 }
 
+orxFLOAT ScrollObject::GetAlpha() const
+{
+  orxFLOAT fResult;
+
+  // Updates result
+  fResult = orxObject_GetAlpha(mpstObject);
+
+  // Done!
+  return fResult;
+}
+
+void ScrollObject::SetAlpha(float _fAlpha, orxBOOL _bRecursive)
+{
+  // Recursive?
+  if(_bRecursive)
+  {
+    // Updates object's alpha
+    orxObject_SetAlphaRecursive(mpstObject, _fAlpha);
+  }
+  else
+  {
+    // Updates object's alpha
+    orxObject_SetAlpha(mpstObject, _fAlpha);
+  }
+}
+
 void ScrollObject::GetFlip(orxBOOL &_rbFlipX, orxBOOL &_rbFlipY) const
 {
   // Updates result
@@ -681,6 +712,11 @@ void ScrollObject::PushConfigSection(orxBOOL _bPushInstanceSection) const
 {
   // Pushes its model section
   orxConfig_PushSection(_bPushInstanceSection ? macName : mzModelName);
+}
+
+void ScrollObject::SetParent(ScrollObject *_poParent)
+{
+  orxObject_SetParent(mpstObject, _poParent->GetOrxObject());
 }
 
 ScrollObject *ScrollObject::FindChild(const orxSTRING _zPath) const
